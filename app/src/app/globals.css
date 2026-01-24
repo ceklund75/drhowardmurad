@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "./fonts.css";
+@import 'tailwindcss';
+@import './fonts.css';
 /* ============================================
    DESIGN TOKENS (Tailwind v4)
    Theme variables create utilities automatically:
@@ -7,8 +7,8 @@
 
 @theme {
   /* Fonts */
-  --font-heading: "Adobe Caslon Pro", Georgia, serif;
-  --font-body: "Barlow Semi Condensed", Barlow, ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Adobe Caslon Pro', Georgia, serif;
+  --font-body: 'Barlow Semi Condensed', Barlow, ui-sans-serif, system-ui, sans-serif;
 
   /* Neutrals */
   --color-black: #000000;
@@ -104,7 +104,7 @@
   --tracking-tight: -0.01em;
   --tracking-normal: 0em;
   --tracking-wide: 0.05em;
-} 
+}
 
 @theme inline {
   /* Default “accent” used by themed headings/buttons */
@@ -194,11 +194,25 @@
     line-height: var(--text-small--line-height);
   }
 
-  .theme-blue { --color-theme: var(--color-blue-heading); }
-  .theme-pink { --color-theme: var(--color-pink); }
-  .theme-purple { --color-theme: var(--color-medium-purple); }
-  .theme-green { --color-theme: var(--color-green); }
-  .theme-cyan { --color-theme: var(--color-cyan); }
-  .theme-cerulean { --color-theme: var(--color-cerulean); }
-  .theme-intl-orange { --color-theme: var(--color-intl-orange); }
+  .theme-blue {
+    --color-theme: var(--color-blue-heading);
+  }
+  .theme-pink {
+    --color-theme: var(--color-pink);
+  }
+  .theme-purple {
+    --color-theme: var(--color-medium-purple);
+  }
+  .theme-green {
+    --color-theme: var(--color-green);
+  }
+  .theme-cyan {
+    --color-theme: var(--color-cyan);
+  }
+  .theme-cerulean {
+    --color-theme: var(--color-cerulean);
+  }
+  .theme-intl-orange {
+    --color-theme: var(--color-intl-orange);
+  }
 }

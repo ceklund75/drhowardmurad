@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
 
 export const GET_POSTS = gql`
   query GetPosts($first: Int = 3) {
@@ -7,14 +7,14 @@ export const GET_POSTS = gql`
         id
         title
         slug
-         blogPost {
-            __typename
-            introText
+        blogPost {
+          __typename
+          introText
         }
       }
     }
   }
-`;
+`
 
 export const GET_POST_BY_SLUG = gql`
   query GetPostBySlug($slug: ID!) {
@@ -59,7 +59,7 @@ export const GET_POST_BY_SLUG = gql`
       }
     }
   }
-`;
+`
 
 export const GET_PRIMARY_MENU = gql`
   query PrimaryMenu($location: MenuLocationEnum!) {
@@ -73,4 +73,4 @@ export const GET_PRIMARY_MENU = gql`
       }
     }
   }
-`;
+`
