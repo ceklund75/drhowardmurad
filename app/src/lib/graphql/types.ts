@@ -58,3 +58,38 @@ export interface GetPostsResponse {
     }>
   }
 }
+
+export interface FooterIconLink {
+  iconKind: ('twitter' | 'murad' | 'app')[]
+  label: string
+  link: {
+    title?: string
+    url: string
+    target?: string
+  }
+  iconImage?: {
+    node?: {
+      altText?: string
+      sourceUrl: string
+      mediaDetails?: {
+        width?: number
+        height?: number
+      }
+    }
+  }
+}
+
+export interface FooterSettings {
+  footerIconLinks: FooterIconLink[]
+  footerQuote: string
+  footerQuoteAttribution: string
+  footerRow3Html: string
+  footerRow4Html: string
+  footerDisclaimerHtml: string
+}
+
+export interface GetFooterResponse {
+  footer: {
+    footerSettings: FooterSettings
+  }
+}

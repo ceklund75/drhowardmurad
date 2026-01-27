@@ -1,6 +1,7 @@
 import { wpgraphql } from '@/lib/graphql/server'
 
 type MenuItemNode = {
+  cssClasses?: string | string[] | null
   id: string
   parentId: string | null
   label: string
@@ -13,6 +14,7 @@ type MenuQuery = {
 }
 
 export type NavItem = {
+  cssClasses?: string | string[] | null
   id: string
   label: string
   href: string
@@ -33,7 +35,13 @@ function buildTree(nodes: MenuItemNode[]): NavItem[] {
   const roots: NavItem[] = []
 
   for (const n of nodes) {
-    byId.set(n.id, { id: n.id, label: n.label, href: toRelativeHref(n), children: [] })
+    byId.set(n.id, {
+      id: n.id,
+      label: n.label,
+      href: toRelativeHref(n),
+      cssClasses: n.cssClasses || undefined, // add this line
+      children: [],
+    })
   }
 
   for (const n of nodes) {
@@ -49,7 +57,7 @@ export async function getPrimaryMenu(location: string = 'PRIMARY'): Promise<NavI
   const query = `
     query PrimaryMenu($location: MenuLocationEnum!) {
       menuItems(where: { location: $location }) {
-        nodes { id parentId label url path }
+        nodes { id cssClasses parentId label url path }
       }
     }
   `

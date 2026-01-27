@@ -74,3 +74,36 @@ export const GET_PRIMARY_MENU = gql`
     }
   }
 `
+
+export const GET_FOOTER = gql`
+  query GetFooter {
+    footer {
+      footerSettings {
+        footerIconLinks {
+          iconKind
+          label
+          link {
+            url
+            title
+            target
+          }
+          iconImage {
+            node {
+              altText
+              sourceUrl
+              mediaDetails {
+                height
+                width
+              }
+            }
+          }
+        }
+        footerQuote
+        footerQuoteAttribution
+        footerRow3Html
+        footerRow4Html
+        footerDisclaimerHtml
+      }
+    }
+  }
+`

@@ -14,6 +14,14 @@ export default async function TestPage() {
     <main className="mx-auto max-w-3xl space-y-4 p-8">
       <h1 className="text-2xl font-bold">Test posts from WordPress</h1>
       {posts.length === 0 && <p>No posts returned.</p>}
+      <div>
+        <h1>Color Test</h1>
+        <p className="text-pink">Pink</p>
+        <p className="text-blue-heading">Blue</p>
+        <p className="text-back-to-top">Back to Top</p>
+        <div className="text-cyan">A</div>
+        <div className="text-[color:var(--color-cyan)]">B</div>
+      </div>
       <ul className="space-y-3">
         {posts.map((post: any) => (
           <li key={post.id} className="border-b pb-3">

@@ -1,6 +1,5 @@
 'use client'
 
-import React from 'react'
 import { useState, useEffect } from 'react'
 import { cx } from '@/lib/ui'
 
@@ -25,7 +24,7 @@ export function HeaderShell({
   return (
     <header
       className={cx(
-        'group from-gradient-purple to-gradient-pink sticky top-0 z-50 bg-linear-to-r',
+        'from-gradient-purple to-gradient-pink sticky top-0 z-50 bg-linear-to-r',
         className,
       )}
       data-shrunk={shrunk ? 'true' : 'false'}

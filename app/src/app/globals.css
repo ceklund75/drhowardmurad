@@ -215,4 +215,36 @@
   .theme-intl-orange {
     --color-theme: var(--color-intl-orange);
   }
+
+  .menu-link,
+  .menu-toggle {
+    color: var(--menu-item-color, #fff);
+  }
+}
+
+/* ========================================
+   COMPONENT BEHAVIORS
+   (Hover states, dropdowns, toggles, etc.)
+   ======================================== */
+
+/* Menu Dropdown */
+.menu-item-dropdown {
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 250ms ease-in-out,
+    visibility 250ms ease-in-out;
+}
+
+.menu-item:hover > .menu-item-dropdown {
+  visibility: visible;
+  opacity: 1;
+}
+
+.menu-item:hover .chevron-down {
+  transform: rotate(180deg);
+}
+
+.chevron-down {
+  transition: transform 250ms ease-in-out;
 }
