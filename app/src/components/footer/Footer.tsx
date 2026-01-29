@@ -1,7 +1,7 @@
 'use server'
 
 import { wpgraphql } from '@/lib/graphql/server'
-import { GET_FOOTER } from '@/lib/graphql/queries'
+import { QUERY_FOOTER_SETTINGS } from '@/lib/graphql/queries'
 import { FooterClient } from './FooterClient'
 import type { GetFooterResponse } from '@/lib/graphql/types'
 
@@ -9,8 +9,9 @@ export async function Footer() {
   let footerSettings: GetFooterResponse['footer']['footerSettings'] | null = null
 
   try {
-    const query = (GET_FOOTER as any).loc?.source?.body || ''
-    const data = await wpgraphql<GetFooterResponse>(query)
+    const data = await wpgraphql<GetFooterResponse>({
+      query: QUERY_FOOTER_SETTINGS,
+    })
     footerSettings = data?.footer?.footerSettings
   } catch (error) {
     console.error('[Footer] Failed to fetch:', error)

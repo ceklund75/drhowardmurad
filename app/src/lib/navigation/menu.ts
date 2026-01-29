@@ -1,4 +1,5 @@
 import { wpgraphql } from '@/lib/graphql/server'
+import { QUERY_PRIMARY_MENU } from '../graphql/queries'
 
 type MenuItemNode = {
   cssClasses?: string | string[] | null
@@ -54,14 +55,12 @@ function buildTree(nodes: MenuItemNode[]): NavItem[] {
 }
 
 export async function getPrimaryMenu(location: string = 'PRIMARY'): Promise<NavItem[]> {
-  const query = `
-    query PrimaryMenu($location: MenuLocationEnum!) {
-      menuItems(where: { location: $location }) {
-        nodes { id cssClasses parentId label url path }
-      }
-    }
-  `
+  const query = QUERY_PRIMARY_MENU
 
-  const data = await wpgraphql<MenuQuery>(query, { location })
+  const data = await wpgraphql<MenuQuery>({
+    query,
+    variables: { location },
+    revalidate: 86400,
+  })
   return buildTree(data.menuItems.nodes)
 }

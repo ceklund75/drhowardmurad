@@ -15,16 +15,21 @@ export function HeaderShell({
   const [shrunk, setShrunk] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setShrunk(window.scrollY > shrinkAt)
+    const onScroll = () => {
+      const newShrunk = window.scrollY > shrinkAt
+      setShrunk(newShrunk)
+      //  console.log('Scroll:', window.scrollY, 'Shrunk:', newShrunk)
+    }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
+
     return () => window.removeEventListener('scroll', onScroll)
   }, [shrinkAt])
 
   return (
     <header
       className={cx(
-        'from-gradient-purple to-gradient-pink sticky top-0 z-50 bg-linear-to-r',
+        'from-gradient-purple to-gradient-pink group sticky top-0 z-50 bg-linear-to-r',
         className,
       )}
       data-shrunk={shrunk ? 'true' : 'false'}

@@ -1,4 +1,10 @@
-// src/lib/graphql/types.ts
+/**
+ * src/lib/graphql/types.ts
+ * Complete TypeScript types for all WordPress content + ACF field groups
+ * Matches: Posts, Pages, Categories, Footer, Menu
+ */
+
+// ============= Image Types =============
 
 export interface ImageNode {
   altText?: string
@@ -13,33 +19,48 @@ export interface FeaturedImage {
   node?: ImageNode
 }
 
+// ============= Post Types =============
+
 export interface PhotoCreditLink {
-  target?: string
-  title?: string
   url?: string
+  title?: string
+  target?: string
 }
 
 export interface BlogPostACF {
   __typename?: string
-  videoPopupButton?: string
-  learnMoreUrl?: string
   introText?: string
-  imagePhotoCreditLink?: PhotoCreditLink
-  imagePhotoCredit?: string
   expandedContent?: string
-  contentAssociatedImage?: {
-    node?: ImageNode
-  }
+  contentAssociatedImage?: FeaturedImage
   amazonBookUrl?: string
+  learnMoreUrl?: string
+  videoPopupButton?: string
+  imagePhotoCredit?: string
+  imagePhotoCreditLink?: PhotoCreditLink
+}
+
+export interface Category {
+  id: string
+  databaseId: number
+  name: string
+  slug: string
+  description?: string
 }
 
 export interface Post {
   databaseId: number
+  id: string
   uri: string
+  slug: string
   title: string
+  content: string
   excerpt?: string
-  blogPost: BlogPostACF
+  date: string
   featuredImage?: FeaturedImage
+  categories: {
+    nodes: Category[]
+  }
+  blogPost: BlogPostACF
 }
 
 export interface GetPostBySlugResponse {
@@ -48,35 +69,191 @@ export interface GetPostBySlugResponse {
 
 export interface GetPostsResponse {
   posts: {
-    nodes: Array<{
-      id: string
-      title: string
-      slug: string
-      acf?: {
-        introText?: string
-      }
-    }>
+    nodes: Post[]
+    pageInfo: {
+      hasNextPage: boolean
+      endCursor: string | null
+    }
   }
 }
 
-export interface FooterIconLink {
-  iconKind: ('twitter' | 'murad' | 'app')[]
-  label: string
-  link: {
-    title?: string
-    url: string
-    target?: string
-  }
-  iconImage?: {
-    node?: {
-      altText?: string
-      sourceUrl: string
-      mediaDetails?: {
-        width?: number
-        height?: number
-      }
+export interface GetAllPostSlugsResponse {
+  posts: {
+    nodes: Array<{ slug: string }>
+    pageInfo: {
+      hasNextPage: boolean
+      endCursor: string | null
     }
   }
+}
+
+// ============= Page + ACF Types =============
+
+/**
+ * Page Hero section
+ * Supports two modes:
+ * - "home": Video background with hero overlay (subheading, heading, video, fallback, mobile, right image)
+ * - "contentbox": Static background with centered content box (bg image, heading, body, theme color)
+ */
+export interface PageHeroACF {
+  heroType?: 'home' | 'contentbox'
+  heroSubheading?: string // home only
+  heroHeading?: string
+  heroVideoUrl?: string // home only
+  heroFallbackImage?: FeaturedImage // home only
+  heroMobileImage?: FeaturedImage // home only
+  heroRightImage?: FeaturedImage // home only
+  heroBgImage?: FeaturedImage // contentbox only
+  heroMobileBgImage?: FeaturedImage // contentbox only
+  heroBody?: string // contentbox only
+  heroThemeColor?: 'blue' | 'pink' | 'purple' | 'orange' | 'green' | 'cyan' | 'cerulean'
+  heroShowNewsletterForm?: boolean
+  heroNewsletterHeading?: string
+  heroNewsletterSubheading?: string
+}
+
+/**
+ * Text + Image section (fixed layout: image always left, content always right)
+ * Used for: Books, Publications, etc.
+ */
+export interface TextImageFixedSection {
+  sectionBgcolor?: string // Tailwind class: white, gray-50, blue-50, etc.
+  textImageFixedLayoutType?: 'backgroundonly' | 'foreground'
+  sectionBgImage?: FeaturedImage
+  sectionBgHasOverlay?: boolean
+  textImageFixedImageDesktop?: FeaturedImage
+  textImageFixedImageMobile?: FeaturedImage
+  textImageFixedHideImageMobile?: boolean
+  textImageFixedSubheading?: string
+  textImageFixedHeading?: string
+  textImageFixedBody?: string
+  textImageFixedButtonLabel?: string
+  textImageFixedButtonUrl?: string
+  textImageFixedThemeColor?: 'blue' | 'pink' | 'purple' | 'orange' | 'green' | 'cyan' | 'cerulean'
+}
+
+/**
+ * Text + Image section (alternating layout: flexible positioning)
+ * Used for: Home, Innovator, Holistic Wellness, Life Story
+ * Supports: Background-only, Extended Left, Extended Right layouts
+ * Optional: Collapsible items below content
+ */
+export interface TextImageAltCollapsible {
+  textImageAltCollapsibleTitle?: string
+  textImageAltCollapsibleContent?: string
+}
+
+export interface TextImageAltSection {
+  sectionBgcolor?: string
+  textImageAltLayoutType?: 'backgroundonly' | 'extendedleft' | 'extendedright'
+  sectionBgImage?: FeaturedImage
+  sectionBgHasOverlay?: boolean
+  textImageAltExtendedImage?: FeaturedImage
+  textImageAltContentAlignment?: 'left' | 'right'
+  textImageAltAutoAlternate?: boolean
+  textImageAltImageDesktop?: FeaturedImage
+  textImageAltImageMobile?: FeaturedImage
+  textImageAltHideImageMobile?: boolean
+  textImageAltSubheading?: string
+  textImageAltHeading?: string
+  textImageAltBody?: string
+  textImageAltCollapsibleItems?: TextImageAltCollapsible[]
+  textImageAltButtonLabel?: string
+  textImageAltButtonUrl?: string
+  textImageAltThemeColor?: 'blue' | 'pink' | 'purple' | 'orange' | 'green' | 'cyan' | 'cerulean'
+}
+
+/**
+ * Newsletter CTA section
+ * Email signup form with customizable copy and button label
+ */
+export interface PageNewsletterCtaACF {
+  newsletterBgColor?: string
+  newsletterHeading?: string
+  newsletterSubheading?: string
+  newsletterButtonLabel?: string
+}
+
+/**
+ * Complete Page ACF structure
+ * Combines all reusable page components
+ */
+export interface PageACF {
+  pageHero?: PageHeroACF
+  pageTextImageFixed?: TextImageFixedSection[]
+  pageTextImageAlt?: TextImageAltSection[]
+  pageNewsletterCta?: PageNewsletterCtaACF
+}
+
+/**
+ * Page node from WordPress
+ */
+export interface Page {
+  databaseId: number
+  id: string
+  uri: string
+  slug: string
+  title: string
+  content: string
+  excerpt?: string
+  featuredImage?: FeaturedImage
+  pageHero?: PageHeroACF
+  pageTextImageFixed?: TextImageFixedSection[]
+  pageTextImageAlt?: TextImageAltSection[]
+  pageNewsletterCta?: PageNewsletterCtaACF
+}
+
+export interface GetPageByUriResponse {
+  page: Page | null
+}
+
+export interface GetPageBySlugResponse {
+  page: Page | null
+}
+
+/**
+ * Blog index page response (combines /blog Page + posts list)
+ */
+export interface GetBlogIndexResponse {
+  page: Page | null
+  posts: {
+    nodes: Post[]
+    pageInfo: {
+      hasNextPage: boolean
+      endCursor: string | null
+    }
+  }
+}
+
+// ============= Category Types =============
+
+export interface GetAllCategorySlugsResponse {
+  categories: {
+    nodes: Array<{ slug: string }>
+  }
+}
+
+export interface GetPostsByCategoryResponse {
+  posts: {
+    nodes: Post[]
+    pageInfo: {
+      hasNextPage: boolean
+      endCursor: string | null
+    }
+  }
+}
+
+// ============= Footer Types =============
+
+export interface FooterIconLink {
+  iconKind?: 'twitter' | 'murad' | 'app'
+  label: string
+  link: {
+    url: string
+    title?: string
+    target?: string
+  }
+  iconImage?: FeaturedImage
 }
 
 export interface FooterSettings {
@@ -92,4 +269,29 @@ export interface GetFooterResponse {
   footer: {
     footerSettings: FooterSettings
   }
+}
+
+// ============= Menu Types =============
+
+export interface MenuItemNode {
+  id: string
+  parentId?: string | null
+  label: string
+  url: string
+  path?: string | null
+  cssClasses?: string | null
+}
+
+export interface MenuQuery {
+  menuItems: {
+    nodes: MenuItemNode[]
+  }
+}
+
+export interface NavItem {
+  id: string
+  label: string
+  href: string
+  cssClasses?: string
+  children: NavItem[]
 }
