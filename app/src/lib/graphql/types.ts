@@ -53,7 +53,7 @@ export interface Post {
   uri: string
   slug: string
   title: string
-  content: string
+  content?: string
   excerpt?: string
   date: string
   featuredImage?: FeaturedImage

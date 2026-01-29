@@ -50,7 +50,7 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
           </Link>
 
           {/* Desktop nav */}
-          <nav aria-label="Primary" className="hidden md:block">
+          <nav aria-label="Primary" className="hidden lg:block">
             <ul className="flex items-center gap-6">
               {items.map((item) => {
                 const normalizedPathname = pathname.endsWith('/') ? pathname : pathname + '/'
@@ -93,7 +93,7 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
           </nav>
 
           {/* Mobile toggle */}
-          <div className="flex items-center gap-4 md:hidden">
+          <div className="flex items-center gap-4 lg:hidden">
             <button
               type="button"
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}

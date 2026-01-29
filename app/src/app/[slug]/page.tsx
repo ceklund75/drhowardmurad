@@ -6,6 +6,7 @@ import {
   GetAllPostSlugsResponse,
 } from '@/lib/graphql/types'
 import { notFound } from 'next/navigation'
+import { PostRenderer } from '@/components/blog/PostRenderer'
 
 export const dynamic = 'force-dynamic'
 
@@ -62,15 +63,7 @@ export default async function RootResolverPage({ params }: RootResolverPageProps
   }
 
   if (post) {
-    // return <PostRenderer post={post} />;
-    console.log('[RootResolver] Found post:', post.title)
-    return (
-      <main className="mx-auto max-w-3xl p-8">
-        <h1 className="mb-4 text-3xl font-bold">{post.title}</h1>
-        <p className="mb-4 text-sm text-gray-600">{post.date}</p>
-        {/* Add post content here later */}
-      </main>
-    )
+    return <PostRenderer post={post} />
   }
 
   // Step 3: Neither found
