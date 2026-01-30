@@ -20,7 +20,7 @@ export function MobileMenu({ items, onNavigate }: { items: NavItem[]; onNavigate
 
   return (
     <nav aria-label="Mobile primary">
-      <ul className="space-y-4 px-6">
+      <ul className="nav-menu space-y-4 px-6">
         {items.map((item) => {
           const hasChildren = item.children.length > 0
           const expanded = openIds.has(item.id)

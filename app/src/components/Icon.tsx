@@ -5,7 +5,7 @@ import { X, Smartphone } from 'lucide-react'
 interface IconProps {
   kind: 'twitter' | 'murad' | 'app' | ('twitter' | 'murad' | 'app')[]
   image?: {
-    sourceUrl?: string
+    mediaItemUrl?: string
     altText?: string
     mediaDetails?: {
       width?: number
@@ -24,14 +24,13 @@ const iconMap = {
 
 export function Icon({ kind, image, size = 54, className = '' }: IconProps) {
   const iconKind = Array.isArray(kind) ? kind[0] : kind
-
-  if (image?.sourceUrl) {
+  if (image?.mediaItemUrl) {
     const width = image.mediaDetails?.width || size
     const height = image.mediaDetails?.height || size
 
     return (
       <img
-        src={image.sourceUrl}
+        src={image.mediaItemUrl}
         alt={image.altText || iconKind}
         style={{ width, height }}
         className={className}

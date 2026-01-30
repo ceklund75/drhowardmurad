@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { cx } from '@/lib/ui'
 
 export function HeaderShell({
@@ -13,18 +13,36 @@ export function HeaderShell({
   shrinkAt?: number
 }) {
   const [shrunk, setShrunk] = useState(false)
+  const shrunkRef = useRef(shrunk)
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    shrunkRef.current = shrunk
+  }, [shrunk])
 
   useEffect(() => {
     const onScroll = () => {
-      const newShrunk = window.scrollY > shrinkAt
-      setShrunk(newShrunk)
-      //  console.log('Scroll:', window.scrollY, 'Shrunk:', newShrunk)
+      const scrollY = window.scrollY
+
+      // Use ref to access current state without adding to dependencies
+      if (shrunkRef.current) {
+        // When shrunk, require scrolling BELOW threshold to expand
+        if (scrollY < shrinkAt - 5) {
+          setShrunk(false)
+        }
+      } else {
+        // When expanded, require scrolling ABOVE threshold to shrink
+        if (scrollY > shrinkAt + 5) {
+          setShrunk(true)
+        }
+      }
     }
+
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
 
     return () => window.removeEventListener('scroll', onScroll)
-  }, [shrinkAt])
+  }, [shrinkAt]) // Only shrinkAt in dependencies
 
   return (
     <header

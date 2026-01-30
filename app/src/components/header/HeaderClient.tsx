@@ -51,7 +51,7 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
 
           {/* Desktop nav */}
           <nav aria-label="Primary" className="hidden lg:block">
-            <ul className="flex items-center gap-6">
+            <ul className="nav-menu flex items-center gap-6">
               {items.map((item) => {
                 const normalizedPathname = pathname.endsWith('/') ? pathname : pathname + '/'
                 const normalizedHref = item.href.endsWith('/') ? item.href : item.href + '/'
@@ -93,7 +93,7 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
           </nav>
 
           {/* Mobile toggle */}
-          <div className="flex items-center gap-4 lg:hidden">
+          <div className="mobile-menu flex items-center gap-4 lg:hidden">
             <button
               type="button"
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
@@ -113,7 +113,7 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
         aria-hidden="true"
         onClick={() => setMobileMenuOpen(false)}
         className={[
-          'md:hidden',
+          'lg:hidden',
           'fixed right-0 left-0 z-40',
           'top-25.5',
           'h-[calc(100vh-102px)]',
@@ -126,7 +126,7 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
         id={panelId}
         aria-hidden={!mobileMenuOpen}
         className={[
-          'md:hidden',
+          'lg:hidden',
           'fixed right-0 left-0 z-50',
           'top-25.5',
           'h-[calc(100vh-102px)]',

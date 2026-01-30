@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { RawHtml } from '@/components/RawHtml'
+import { themeClassFromCategory } from '@/lib/theme'
 import type { Post } from '@/lib/graphql/types'
 
 interface PostRendererProps {
@@ -12,17 +13,15 @@ export function PostRenderer({ post }: PostRendererProps) {
 
   // Get the first category for breadcrumb
   const primaryCategory = categories?.nodes?.[0]
+  const themeClass = themeClassFromCategory(primaryCategory?.slug)
 
   return (
-    <>
+    <div className={themeClass}>
       {/* Breadcrumb Bar */}
       <div className="bg-light-1 w-full">
         <div className="mx-auto max-w-300 px-4 py-6">
           <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm">
-            <Link
-              href="/blog"
-              className="hover:text-pink text-gray-600 uppercase transition-colors"
-            >
+            <Link href="/blog" className="hover:text-pink text-gray-1 uppercase transition-colors">
               All
             </Link>
             {primaryCategory && (
@@ -30,7 +29,7 @@ export function PostRenderer({ post }: PostRendererProps) {
                 <span className="text-gray-400">/</span>
                 <Link
                   href={`/category/${primaryCategory.slug}`}
-                  className="text-gray-1 hover:text-pink uppercase transition-colors"
+                  className="hover:text-pink text-(--color-theme) uppercase transition-colors"
                 >
                   {primaryCategory.name}
                 </Link>
@@ -42,7 +41,7 @@ export function PostRenderer({ post }: PostRendererProps) {
       {/* Main Content Area - Two Column Layout (Desktop) / Card Layout (Mobile) */}
       <div className="w-full">
         {/* Mobile Card Wrapper (< lg:1024px) */}
-        <div className="mx-[15px] my-[15px] rounded-none bg-white p-[15px] shadow-[0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.24)] lg:hidden">
+        <div className="mobile-card lg:hidden">
           {/* Mobile: Image First */}
           {blogPost?.contentAssociatedImage?.node && (
             <div className="mb-6">
@@ -77,7 +76,7 @@ export function PostRenderer({ post }: PostRendererProps) {
 
           {/* Mobile: Content */}
           <article>
-            <h1 className="mb-4 text-3xl font-bold text-gray-900">{title}</h1>
+            <h1 className="mb-4 text-3xl font-bold text-(--color-theme)">{title}</h1>
 
             {blogPost?.introText && (
               <div className="prose prose-lg mb-6 max-w-none">
@@ -91,14 +90,14 @@ export function PostRenderer({ post }: PostRendererProps) {
         </div>
 
         {/* Desktop Two-Column Layout (>= lg:1024px) */}
-        <div className="hidden w-full gap-6 lg:flex">
+        <div className="hidden w-full gap-12 lg:flex">
           {/* Left Column - 50% width minus half gap */}
-          <div className="flex w-[calc(50%-12px)] justify-end">
+          <div className="flex w-[calc(50%-12px)] justify-end py-6">
             <article
               className="w-full max-w-xl"
               style={{ marginLeft: 'calc((100vw - 1200px) / 2)' }}
             >
-              <h1 className="mb-6 text-4xl font-bold text-gray-900">{title}</h1>
+              <h1 className="mb-6 text-(--color-theme)">{title}</h1>
 
               {blogPost?.introText && (
                 <div className="prose prose-lg mb-6 max-w-none">
@@ -115,9 +114,10 @@ export function PostRenderer({ post }: PostRendererProps) {
           {/* Right Column - 50% width minus half gap */}
           <div className="w-[calc(50%-12px)]">
             {blogPost?.contentAssociatedImage?.node && (
-              <div className="flex justify-end">
+              <div className="flex flex-col items-end">
                 <div className="relative w-[85%]" style={{ aspectRatio: 'auto' }}>
                   <Image
+                    loading="eager"
                     src={blogPost.contentAssociatedImage.node.mediaItemUrl}
                     alt={blogPost.contentAssociatedImage.node.altText || ''}
                     width={blogPost.contentAssociatedImage.node.mediaDetails?.width || 800}
@@ -126,7 +126,7 @@ export function PostRenderer({ post }: PostRendererProps) {
                   />
                 </div>
                 {blogPost.imagePhotoCredit && (
-                  <p className="mt-2 text-right text-xs text-gray-600">
+                  <div className="text-gray-1 mt-2 w-[85%] text-right text-xs">
                     Photo credit:{' '}
                     {blogPost.imagePhotoCreditLink?.url ? (
                       <a
@@ -140,13 +140,13 @@ export function PostRenderer({ post }: PostRendererProps) {
                     ) : (
                       <span>{blogPost.imagePhotoCredit}</span>
                     )}
-                  </p>
+                  </div>
                 )}
               </div>
             )}
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
