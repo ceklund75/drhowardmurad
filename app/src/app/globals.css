@@ -99,8 +99,8 @@
   --text-menu: 15px;
   --text-menu--line-height: 1.5;
 
-  --text-button: 12px;
-  --text-button--line-height: 1.5;
+  --text-button: 16px;
+  --text-button--line-height: 0.75;
 
   /* Letter spacing tokens -> tracking-* utilities */
   --tracking-tight: -0.01em;
@@ -212,6 +212,10 @@
   a.active {
     color: var(--color-pink);
   }
+  a.button-theme:hover,
+  a.button-theme:active {
+    color: var(--color-theme);
+  }
   b,
   strong {
     font-weight: 500;
@@ -278,33 +282,75 @@
   li {
     margin-bottom: 18px;
   }
+}
 
-  .theme-blue {
-    --color-theme: var(--color-blue-heading);
-  }
-  .theme-pink {
-    --color-theme: var(--color-pink);
-  }
-  .theme-purple {
-    --color-theme: var(--color-medium-purple);
-  }
-  .theme-green {
-    --color-theme: var(--color-green);
-  }
-  .theme-cyan {
-    --color-theme: var(--color-cyan);
-  }
-  .theme-cerulean {
-    --color-theme: var(--color-cerulean);
-  }
-  .theme-intl-orange {
-    --color-theme: var(--color-intl-orange);
-  }
+.theme-blue {
+  --color-theme: var(--color-blue-heading);
+  --color-theme-contrast: #ffffff;
+}
+.theme-pink {
+  --color-theme: var(--color-pink);
+  --color-theme-contrast: #ffffff;
+}
+.theme-purple {
+  --color-theme: var(--color-medium-purple);
+  --color-theme-contrast: #ffffff;
+}
+.theme-green {
+  --color-theme: var(--color-green);
+  --color-theme-contrast: #ffffff;
+}
+.theme-cyan {
+  --color-theme: var(--color-cyan);
+  --color-theme-contrast: #ffffff;
+}
+.theme-cerulean {
+  --color-theme: var(--color-cerulean);
+  --color-theme-contrast: #ffffff;
+}
+.theme-intl-orange {
+  --color-theme: var(--color-intl-orange);
+  --color-theme-contrast: #ffffff;
+}
 
-  .menu-link,
-  .menu-toggle {
-    color: var(--menu-item-color, #fff);
-  }
+.menu-link,
+.menu-toggle {
+  color: var(--menu-item-color, #fff);
+}
+
+.border-theme {
+  border-color: var(--color-theme);
+}
+
+.bg-theme {
+  background-color: var(--color-theme);
+}
+
+.text-theme {
+  color: var(--color-theme);
+}
+
+.text-theme-contrast {
+  color: var(--color-theme-contrast, #ffffff);
+}
+
+.focus-visible\:ring-theme:focus-visible {
+  --tw-ring-color: var(--color-theme);
+}
+
+.button-theme {
+  border-color: var(--color-theme);
+  background-color: var(--color-theme);
+  color: var(--color-theme-contrast, #ffffff);
+  transition:
+    color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86),
+    background-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86),
+    border-color 200ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+}
+
+.button-theme:hover {
+  background-color: transparent;
+  color: var(--color-theme);
 }
 
 /* ========================================

@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { ActionButtons } from './ActionButtons'
 import { RawHtml } from '@/components/RawHtml'
 import { themeClassFromCategory } from '@/lib/theme'
 import type { Post } from '@/lib/graphql/types'
@@ -76,15 +77,19 @@ export function PostRenderer({ post }: PostRendererProps) {
 
           {/* Mobile: Content */}
           <article>
-            <h1 className="mb-4 text-3xl font-bold text-(--color-theme)">{title}</h1>
+            <h1 className="mb-4 text-3xl font-bold text-[var(--color-theme)]">{title}</h1>
 
             {blogPost?.introText && (
               <div className="prose prose-lg mb-6 max-w-none">
                 <RawHtml html={blogPost.introText} />
               </div>
             )}
-
-            {/* Placeholder for action buttons - will build in later step */}
+            {/* Placeholder for expanded content (collapsible) - will build in later step */}
+            <ActionButtons
+              amazonUrl={blogPost.amazonBookUrl}
+              learnMoreUrl={blogPost.learnMoreUrl}
+              videoPopupClassName={blogPost.videoPopupButton}
+            />
             {/* Placeholder for share links - will build in later step */}
           </article>
         </div>
@@ -97,7 +102,7 @@ export function PostRenderer({ post }: PostRendererProps) {
               className="w-full max-w-xl"
               style={{ marginLeft: 'calc((100vw - 1200px) / 2)' }}
             >
-              <h1 className="mb-6 text-(--color-theme)">{title}</h1>
+              <h1 className="mb-6 text-[var(--color-theme)]">{title}</h1>
 
               {blogPost?.introText && (
                 <div className="prose prose-lg mb-6 max-w-none">
@@ -106,7 +111,11 @@ export function PostRenderer({ post }: PostRendererProps) {
               )}
 
               {/* Placeholder for expanded content (collapsible) - will build in later step */}
-              {/* Placeholder for action buttons - will build in later step */}
+              <ActionButtons
+                amazonUrl={blogPost.amazonBookUrl}
+                learnMoreUrl={blogPost.learnMoreUrl}
+                videoPopupClassName={blogPost.videoPopupButton}
+              />
               {/* Placeholder for share links - will build in later step */}
             </article>
           </div>
