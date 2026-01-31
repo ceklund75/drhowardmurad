@@ -4,6 +4,8 @@ import { ActionButtons } from './ActionButtons'
 import { RawHtml } from '@/components/RawHtml'
 import { themeClassFromCategory } from '@/lib/theme'
 import type { Post } from '@/lib/graphql/types'
+import { ExpandedContent } from '../ExpandedContent'
+import { ShareThisPost } from './ShareThisPost'
 
 interface PostRendererProps {
   post: Post
@@ -84,13 +86,13 @@ export function PostRenderer({ post }: PostRendererProps) {
                 <RawHtml html={blogPost.introText} />
               </div>
             )}
-            {/* Placeholder for expanded content (collapsible) - will build in later step */}
+            <ExpandedContent html={blogPost?.expandedContent} />
             <ActionButtons
               amazonUrl={blogPost.amazonBookUrl}
               learnMoreUrl={blogPost.learnMoreUrl}
               videoPopupClassName={blogPost.videoPopupButton}
             />
-            {/* Placeholder for share links - will build in later step */}
+            <ShareThisPost post={post} />
           </article>
         </div>
 
@@ -110,13 +112,13 @@ export function PostRenderer({ post }: PostRendererProps) {
                 </div>
               )}
 
-              {/* Placeholder for expanded content (collapsible) - will build in later step */}
+              <ExpandedContent html={blogPost?.expandedContent} />
               <ActionButtons
                 amazonUrl={blogPost.amazonBookUrl}
                 learnMoreUrl={blogPost.learnMoreUrl}
                 videoPopupClassName={blogPost.videoPopupButton}
               />
-              {/* Placeholder for share links - will build in later step */}
+              <ShareThisPost post={post} />
             </article>
           </div>
 
