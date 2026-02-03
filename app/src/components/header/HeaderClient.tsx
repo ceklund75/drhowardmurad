@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { HeaderShell } from './HeaderShell'
@@ -18,7 +18,7 @@ export type NavItem = {
 export function HeaderClient({ items }: { items: NavItem[] }) {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const panelId = useId()
+  const panelId = 'mobile-menu-panel'
 
   useEffect(() => {
     if (!mobileMenuOpen) return

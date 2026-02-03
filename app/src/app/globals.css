@@ -191,6 +191,9 @@
     letter-spacing: var(--tracking-normal);
     font-weight: 500;
   }
+  .quote-heading {
+    font-style: italic;
+  }
 
   p,
   li,
@@ -382,4 +385,8 @@
 
 .mobile-card {
   @apply mx-3.75 my-3.75 rounded-none bg-white p-3.75 shadow-[0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.24)];
+}
+
+.mobile-grid {
+  @apply bg-white shadow-[0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.24)];
 }

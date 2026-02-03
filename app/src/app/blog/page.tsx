@@ -1,50 +1,38 @@
 import { wpgraphql } from '@/lib/graphql/server'
-import { QUERY_ALL_POST_SLUGS } from '@/lib/graphql/queries'
-import { GetAllPostSlugsResponse } from '@/lib/graphql/types'
-import Link from 'next/link'
+import { QUERY_BLOG_INDEX } from '@/lib/graphql/queries'
+import { GetBlogIndexResponse } from '@/lib/graphql/types'
+import { notFound } from 'next/navigation'
+
+import BlogGrid from '@/components/blog/BlogGrid'
+import BlogHero from '@/components/blog/BlogHero'
 
 export const dynamic = 'force-dynamic'
 
 export default async function BlogPage() {
-  let posts: GetAllPostSlugsResponse['posts']['nodes'] = []
-  let error = null
+  console.log('[BlogPage] Fetching blog index data...')
 
-  try {
-    const data = await wpgraphql<GetAllPostSlugsResponse>({
-      query: QUERY_ALL_POST_SLUGS,
-      variables: { first: 20 },
-      revalidate: 3600,
-    })
-    posts = data.posts.nodes
-  } catch (err) {
-    error = err instanceof Error ? err.message : 'Unknown error'
+  const data = await wpgraphql<GetBlogIndexResponse>({
+    query: QUERY_BLOG_INDEX,
+    variables: { first: 12 },
+    // revalidate: 3600, // optional override if you want
+  })
+
+  if (!data?.page) {
+    console.log('[BlogPage] Blog page not found in WordPress')
+    notFound()
   }
 
+  console.log('[BlogPage] Loaded', data.posts.nodes.length, 'posts')
+
   return (
-    <main className="mx-auto max-w-3xl p-8">
-      <h1 className="mb-8 text-3xl font-bold">Blog</h1>
+    <div className="bg-gray-alt lg:bg-white">
+      {/* Hero Section */}
+      {data.page.pageHero && <BlogHero hero={data.page.pageHero} title={data.page.title} />}
 
-      {error && (
-        <div className="mb-8 rounded border border-red-300 bg-red-50 p-4">
-          <p className="text-red-600">{error}</p>
-        </div>
-      )}
-
-      {posts.length === 0 ? (
-        <p className="text-gray-600">No posts found</p>
-      ) : (
-        <div className="space-y-4">
-          {posts.map((post) => (
-            <Link
-              key={post.slug}
-              href={`/${post.slug}`}
-              className="block rounded border border-gray-200 p-4 hover:bg-gray-50"
-            >
-              <p className="text-gray-600">{post.slug}</p>
-            </Link>
-          ))}
-        </div>
-      )}
-    </main>
+      {/* Blog Grid */}
+      <section className="mx-auto px-4 pb-4 lg:pt-4">
+        <BlogGrid posts={data.posts.nodes} />
+      </section>
+    </div>
   )
 }

@@ -1,187 +1,293 @@
 /**
  * src/lib/graphql/queries.ts
- * Minimal queries for footer testing only
+ * GraphQL queries and fragments for WordPress content
+ * Optimized for minimal data transfer
  */
 
-export const QUERY_POSTS_BY_CATEGORY = `
-  query GetPostsByCategory($slug: String!, $first: Int = 10, $after: String) {
-    posts(first: $first, after: $after, where: { categoryName: $slug }) {
-      nodes {
-        databaseId
-        id
-        uri
-        slug
-        title
-        content
-        excerpt
-        date
-        featuredImage {
-          node {
-            altText
-            mediaItemUrl
-            mediaDetails {
-              width
-              height
-            }
-          }
-        }
-        categories(first: 5) {
-          nodes {
-            id
-            databaseId
-            name
-            slug
-          }
-        }
-        blogPost {
-          introText
-          expandedContent
-          contentAssociatedImage {
-            node {
-              altText
-              mediaItemUrl
-              mediaDetails {
-                width
-                height
-              }
-            }
-          }
-          amazonBookUrl
-          learnMoreUrl
-          videoPopupButton
-          imagePhotoCredit
-          imagePhotoCreditLink {
-            url
-            title
-            target
-          }
-        }
+// ============= FRAGMENTS =============
+
+/**
+ * Core image fields used across posts, pages, and ACF
+ */
+export const FRAGMENT_IMAGE_FIELDS = `
+  fragment ImageFields on MediaItem {
+    altText
+    mediaItemUrl
+    mediaDetails {
+      width
+      height
+    }
+  }
+`
+
+/**
+ * Category fields for post categorization
+ */
+export const FRAGMENT_CATEGORY_FIELDS = `
+  fragment CategoryFields on Category {
+    id
+    name
+    slug
+  }
+`
+
+/**
+ * Link fields (used in photo credits, CTAs, footer)
+ */
+export const FRAGMENT_LINK_FIELDS = `
+  fragment LinkFields on AcfLink {
+    url
+    title
+    target
+  }
+`
+
+/**
+ * Blog post ACF fields (full detail for single posts ONLY)
+ */
+export const FRAGMENT_BLOG_POST_ACF = `
+  fragment BlogPostACFFields on BlogPost {
+    introText
+    expandedContent
+    contentAssociatedImage {
+      node {
+        ...ImageFields
       }
-      pageInfo {
-        hasNextPage
-        endCursor
+    }
+    amazonBookUrl
+    learnMoreUrl
+    videoPopupButton
+    imagePhotoCredit
+    imagePhotoCreditLink {
+      ...LinkFields
+    }
+  }
+`
+
+/**
+ * Page Hero ACF fields (used across all pages)
+ */
+export const FRAGMENT_PAGE_HERO = `
+  fragment PageHeroFields on PageHero {
+    heroType
+    heroHeading
+    heroSubheading
+    heroBody
+    heroNewsletterHeading
+    heroNewsletterSubheading
+    heroShowNewsletterForm
+    heroThemeColor
+    heroVideoUrl
+    heroBgImage {
+      node {
+        ...ImageFields
+      }
+    }
+    heroMobileBgImage {
+      node {
+        ...ImageFields
       }
     }
   }
 `
 
-export const QUERY_ALL_CATEGORIES = `
-  query GetAllCategories($first: Int = 100) {
-    categories(first: $first) {
-      nodes {
-        id
-        databaseId
-        name
-        slug
-        description
-      }
-    }
+/**
+ * Pagination info for cursor-based pagination
+ */
+export const FRAGMENT_PAGE_INFO = `
+  fragment PageInfoFields on WPPageInfo {
+    hasNextPage
+    endCursor
   }
 `
 
-export const QUERY_PAGE_BY_URI = `
-  query GetPageByUri($id: ID!) {
-    page(id: $id, idType: URI) {
-    databaseId
+/**
+ * Minimal post fields for card displays (blog index, category archives)
+ * Only includes what's actually displayed on cards
+ */
+export const FRAGMENT_POST_CARD = `
+  fragment PostCardFields on Post {
     id
     uri
     slug
     title
-    excerpt
-    pageHero {
-      heroHeading
-      heroBody
-      heroNewsletterHeading
-      heroNewsletterSubheading
-      heroShowNewsletterForm
-      heroSubheading
-      heroThemeColor
-      heroType
-      heroVideoUrl
-      heroBgImage {
-        node {
-          altText
-          mediaItemUrl
-          mediaDetails {
-            width
-            height
-          }
-        }
+    featuredImage {
+      node {
+        ...ImageFields
       }
     }
-  }
-}`
-
-export const QUERY_POST_BY_SLUG = `
-  query GetPostBySlug($id: ID!) {
-    post(id: $id, idType: SLUG) {
-      databaseId
-      id
-      uri
-      slug
-      title
-      content
-      excerpt
-      date
-      featuredImage {
-        node {
-          altText
-          mediaItemUrl
-          mediaDetails {
-            width
-            height
-          }
-        }
-      }
-      categories(first: 5) {
-        nodes {
-          id
-          databaseId
-          name
-          slug
-        }
-      }
-      blogPost {
-        introText
-        expandedContent
-        contentAssociatedImage {
-          node {
-            altText
-            mediaItemUrl
-            mediaDetails {
-              width
-              height
-            }
-          }
-        }
-        amazonBookUrl
-        learnMoreUrl
-        videoPopupButton
-        imagePhotoCredit
-        imagePhotoCreditLink {
-          url
-          title
-          target
-        }
+    categories(first: 5) {
+      nodes {
+        ...CategoryFields
       }
     }
   }
 `
 
+/**
+ * Full post fields for single post pages
+ * Excludes: content (not used), excerpt (not used), databaseId (not needed)
+ */
+export const FRAGMENT_POST_FULL = `
+  fragment PostFullFields on Post {
+    id
+    uri
+    slug
+    title
+    date
+    featuredImage {
+      node {
+        ...ImageFields
+      }
+    }
+    categories(first: 5) {
+      nodes {
+        ...CategoryFields
+      }
+    }
+    blogPost {
+      ...BlogPostACFFields
+    }
+  }
+`
+
+// ============= QUERIES =============
+
+/**
+ * Fetch single post by slug (for single post pages)
+ * Used by: PostRenderer component
+ */
+export const QUERY_POST_BY_SLUG = `
+  ${FRAGMENT_IMAGE_FIELDS}
+  ${FRAGMENT_CATEGORY_FIELDS}
+  ${FRAGMENT_LINK_FIELDS}
+  ${FRAGMENT_BLOG_POST_ACF}
+  ${FRAGMENT_POST_FULL}
+  
+  query GetPostBySlug($id: ID!) {
+    post(id: $id, idType: SLUG) {
+      ...PostFullFields
+    }
+  }
+`
+
+/**
+ * Fetch posts filtered by category (for category archive pages)
+ * Used by: Category archive page - displays cards, not full posts
+ * Optimized: Uses PostCardFields (minimal) instead of full post data
+ */
+export const QUERY_POSTS_BY_CATEGORY = `
+  ${FRAGMENT_IMAGE_FIELDS}
+  ${FRAGMENT_CATEGORY_FIELDS}
+  ${FRAGMENT_POST_CARD}
+  ${FRAGMENT_PAGE_INFO}
+  
+  query GetPostsByCategory($slug: String!, $first: Int = 10, $after: String) {
+    posts(first: $first, after: $after, where: { categoryName: $slug }) {
+      nodes {
+        ...PostCardFields
+      }
+      pageInfo {
+        ...PageInfoFields
+      }
+    }
+  }
+`
+
+/**
+ * Fetch all post slugs (for static generation)
+ * Absolute minimum: only slugs needed for route generation
+ */
 export const QUERY_ALL_POST_SLUGS = `
+  ${FRAGMENT_PAGE_INFO}
+  
   query GetAllPostSlugs($first: Int = 100, $after: String) {
     posts(first: $first, after: $after) {
       nodes {
         slug
       }
       pageInfo {
-        hasNextPage
-        endCursor
+        ...PageInfoFields
       }
     }
   }
 `
 
+/**
+ * Fetch blog index page (hero + post grid)
+ * Used by: /blog page
+ * Optimized: Minimal post card fields, removed databaseId from page
+ */
+export const QUERY_BLOG_INDEX = `
+  ${FRAGMENT_IMAGE_FIELDS}
+  ${FRAGMENT_PAGE_HERO}
+  ${FRAGMENT_CATEGORY_FIELDS}
+  ${FRAGMENT_POST_CARD}
+  ${FRAGMENT_PAGE_INFO}
+  
+  query GetBlogIndex($first: Int = 12, $after: String) {
+    page(id: "blog", idType: URI) {
+      id
+      uri
+      slug
+      title
+      pageHero {
+        ...PageHeroFields
+      }
+    }
+    
+    posts(first: $first, after: $after, where: { status: PUBLISH }) {
+      nodes {
+        ...PostCardFields
+      }
+      pageInfo {
+        ...PageInfoFields
+      }
+    }
+  }
+`
+
+/**
+ * Fetch page by URI (for static pages)
+ * Optimized: Removed excerpt and databaseId (not used)
+ */
+export const QUERY_PAGE_BY_URI = `
+  ${FRAGMENT_IMAGE_FIELDS}
+  ${FRAGMENT_PAGE_HERO}
+  
+  query GetPageByUri($id: ID!) {
+    page(id: $id, idType: URI) {
+      id
+      uri
+      slug
+      title
+      pageHero {
+        ...PageHeroFields
+      }
+    }
+  }
+`
+
+/**
+ * Fetch all categories (for navigation, filtering)
+ * Optimized: Removed databaseId from fragment (not needed)
+ */
+export const QUERY_ALL_CATEGORIES = `
+  ${FRAGMENT_CATEGORY_FIELDS}
+  
+  query GetAllCategories($first: Int = 100) {
+    categories(first: $first) {
+      nodes {
+        ...CategoryFields
+        description
+      }
+    }
+  }
+`
+
+/**
+ * Fetch primary menu items
+ */
 export const QUERY_PRIMARY_MENU = `
   query PrimaryMenu($location: MenuLocationEnum!) {
     menuItems(where: { location: $location }, first: 100) {
@@ -197,7 +303,13 @@ export const QUERY_PRIMARY_MENU = `
   }
 `
 
+/**
+ * Fetch footer settings and content
+ */
 export const QUERY_FOOTER_SETTINGS = `
+  ${FRAGMENT_IMAGE_FIELDS}
+  ${FRAGMENT_LINK_FIELDS}
+  
   query GetFooterSettings {
     footer {
       footerSettings {
@@ -205,18 +317,11 @@ export const QUERY_FOOTER_SETTINGS = `
           iconKind
           label
           link {
-            url
-            title
-            target
+            ...LinkFields
           }
           iconImage {
             node {
-              altText
-              mediaItemUrl
-              mediaDetails {
-                height
-                width
-              }
+              ...ImageFields
             }
           }
         }
