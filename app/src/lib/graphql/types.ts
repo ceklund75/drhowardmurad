@@ -229,7 +229,13 @@ export interface GetBlogIndexResponse {
 
 export interface GetAllCategorySlugsResponse {
   categories: {
-    nodes: Array<{ slug: string }>
+    nodes: Array<{
+      id: string
+      databaseId: number
+      name: string
+      slug: string
+      description?: string
+    }>
   }
 }
 

@@ -111,6 +111,7 @@ export const FRAGMENT_POST_CARD = `
     uri
     slug
     title
+    date
     featuredImage {
       node {
         ...ImageFields
@@ -182,7 +183,7 @@ export const QUERY_POSTS_BY_CATEGORY = `
   ${FRAGMENT_POST_CARD}
   ${FRAGMENT_PAGE_INFO}
   
-  query GetPostsByCategory($slug: String!, $first: Int = 10, $after: String) {
+  query GetPostsByCategory($slug: String!, $first: Int = 50, $after: String) {
     posts(first: $first, after: $after, where: { categoryName: $slug }) {
       nodes {
         ...PostCardFields
@@ -276,7 +277,7 @@ export const QUERY_ALL_CATEGORIES = `
   ${FRAGMENT_CATEGORY_FIELDS}
   
   query GetAllCategories($first: Int = 100) {
-    categories(first: $first) {
+    categories(first: $first, where: { hideEmpty: true }) {
       nodes {
         ...CategoryFields
         description

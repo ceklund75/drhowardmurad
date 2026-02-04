@@ -63,6 +63,8 @@ export default function PostCard({ post }: PostCardProps) {
             {post.title}
           </Link>
         </h3>
+        {/*optional post date for pagination testing */}
+        {/* <div className="text-dark-4 py-2 text-xs">{post.date}</div> */}
       </div>
     </article>
   )

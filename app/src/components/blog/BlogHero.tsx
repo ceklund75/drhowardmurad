@@ -6,9 +6,10 @@ import { RawHtml } from '../RawHtml'
 interface BlogHeroProps {
   hero: PageHeroACF
   title?: string
+  hideForm?: boolean
 }
 
-export default function BlogHero({ hero, title }: BlogHeroProps) {
+export default function BlogHero({ hero, title, hideForm = false }: BlogHeroProps) {
   const themeClass = themeClassFromAcf(hero.heroThemeColor)
   const hasDesktopBg = hero.heroBgImage?.node?.mediaItemUrl
   const hasMobileBg = hero.heroMobileBgImage?.node?.mediaItemUrl
@@ -50,7 +51,7 @@ export default function BlogHero({ hero, title }: BlogHeroProps) {
             )}
 
             {/* Newsletter Section - Placeholder for future form */}
-            {hero.heroShowNewsletterForm && (
+            {hero.heroShowNewsletterForm && !hideForm && (
               <div className="mt-8">
                 {hero.heroNewsletterHeading && (
                   <p className="mb-4 text-base text-white lg:text-lg">

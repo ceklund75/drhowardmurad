@@ -1,71 +1,107 @@
-import { wpgraphql } from '@/lib/graphql/server'
-import { QUERY_POSTS_BY_CATEGORY, QUERY_ALL_CATEGORIES } from '@/lib/graphql/queries'
-import { GetPostsByCategoryResponse, GetAllCategorySlugsResponse } from '@/lib/graphql/types'
-import Link from 'next/link'
+import React from 'react'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import { wpgraphql } from '@/lib/graphql/server'
+import {
+  QUERY_POSTS_BY_CATEGORY,
+  QUERY_ALL_CATEGORIES,
+  QUERY_PAGE_BY_URI,
+} from '@/lib/graphql/queries'
+import {
+  GetPostsByCategoryResponse,
+  GetAllCategorySlugsResponse,
+  GetPageByUriResponse,
+} from '@/lib/graphql/types'
+import { themeClassFromCategory } from '@/lib/theme'
+import BlogGrid from '@/components/blog/BlogGrid'
+import BlogHero from '@/components/blog/BlogHero'
 
-export async function generateStaticParams() {
-  try {
-    const response: GetAllCategorySlugsResponse = await wpgraphql<GetAllCategorySlugsResponse>({
-      query: QUERY_ALL_CATEGORIES,
-      variables: { first: 100 },
-      revalidate: false,
-    })
-
-    return response.categories.nodes.map((cat) => ({ slug: cat.slug }))
-  } catch (error) {
-    console.error('[generateStaticParams] Failed to fetch categories:', error)
-    return []
-  }
+interface CategoryPageProps {
+  params: Promise<{ slug: string }>
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = await params
 
-  let posts: any[] = []
-  let error: string | null = null
-
-  try {
-    const data = await wpgraphql<GetPostsByCategoryResponse>({
+  const [postsData, categoriesData, blogPageData] = await Promise.all([
+    wpgraphql<GetPostsByCategoryResponse>({
       query: QUERY_POSTS_BY_CATEGORY,
-      variables: { slug, first: 20 },
+      variables: { slug, first: 50, after: null },
       revalidate: 3600,
-    })
-    posts = data.posts.nodes
-  } catch (err) {
-    error = err instanceof Error ? err.message : 'Unknown error'
-  }
+    }),
+    wpgraphql<GetAllCategorySlugsResponse>({
+      query: QUERY_ALL_CATEGORIES,
+      variables: { first: 100 },
+      revalidate: 3600,
+    }),
+    wpgraphql<GetPageByUriResponse>({
+      query: QUERY_PAGE_BY_URI,
+      variables: { id: '/blog' },
+      revalidate: 3600,
+    }),
+  ])
 
-  if (posts.length === 0 && !error) {
+  const posts = postsData.posts.nodes
+  if (!posts.length) {
     notFound()
   }
 
+  const allCategories = categoriesData.categories.nodes
+  const blogPage = blogPageData.page
+
   return (
-    <main className="mx-auto max-w-3xl p-8">
-      <h1 className="mb-8 text-3xl font-bold">Category: {slug}</h1>
-
-      {error && (
-        <div className="mb-8 rounded border border-red-300 bg-red-50 p-4">
-          <p className="text-red-600">{error}</p>
-        </div>
-      )}
-
-      {posts.length === 0 ? (
-        <p className="text-gray-600">No posts in this category</p>
-      ) : (
-        <div className="space-y-4">
-          {posts.map((post) => (
-            <Link
-              key={post.slug}
-              href={`/${post.slug}`}
-              className="block rounded border border-gray-200 p-4 hover:bg-gray-50"
-            >
-              <h2 className="mb-2 font-semibold">{post.title}</h2>
-              <p className="text-sm text-gray-600">{post.slug}</p>
+    <>
+      {blogPage?.pageHero && <BlogHero hero={blogPage.pageHero} hideForm={true} />}
+      {/* Breadcrumb Bar with ALL categories */}
+      <div className="bg-light-1 w-full">
+        <div className="mx-auto max-w-300 px-4 py-6">
+          <nav
+            aria-label="Categories"
+            className="flex flex-wrap items-center justify-center gap-3 text-sm"
+          >
+            {/* "All" link */}
+            <Link href="/blog" className="text-gray-1 hover:text-pink uppercase transition-colors">
+              All
             </Link>
-          ))}
+
+            <span className="text-gray-400">/</span>
+
+            {/* All categories, each themed */}
+            <ul className="flex flex-wrap items-center justify-center gap-3">
+              {allCategories.map((cat, index) => {
+                const themeClass = themeClassFromCategory(cat.slug)
+                const isActive = cat.slug === slug
+
+                return (
+                  <React.Fragment key={cat.id}>
+                    {index > 0 && <span className="text-gray-400">/</span>}
+                    <li>
+                      <span className={themeClass}>
+                        <Link
+                          href={`/category/${cat.slug}`}
+                          className={[
+                            'uppercase transition-colors',
+                            isActive
+                              ? 'font-semibold text-[var(--color-theme)]'
+                              : 'text-[var(--color-theme)]/80 hover:text-[var(--color-theme)]',
+                          ].join(' ')}
+                        >
+                          {cat.name}
+                        </Link>
+                      </span>
+                    </li>
+                  </React.Fragment>
+                )
+              })}
+            </ul>
+          </nav>
         </div>
-      )}
-    </main>
+      </div>
+
+      {/* Grid */}
+      <section className="mx-auto p-4">
+        <BlogGrid posts={posts} />
+      </section>
+    </>
   )
 }

@@ -1,38 +1,41 @@
-import { wpgraphql } from '@/lib/graphql/server'
-import { QUERY_BLOG_INDEX } from '@/lib/graphql/queries'
-import { GetBlogIndexResponse } from '@/lib/graphql/types'
 import { notFound } from 'next/navigation'
-
-import BlogGrid from '@/components/blog/BlogGrid'
+import { fetchBlogPage, getTotalBlogPages } from '@/lib/blog/pagination'
 import BlogHero from '@/components/blog/BlogHero'
-
-export const dynamic = 'force-dynamic'
+import BlogGrid from '@/components/blog/BlogGrid'
 
 export default async function BlogPage() {
-  console.log('[BlogPage] Fetching blog index data...')
+  const pageNumber = 1
 
-  const data = await wpgraphql<GetBlogIndexResponse>({
-    query: QUERY_BLOG_INDEX,
-    variables: { first: 12 },
-    // revalidate: 3600, // optional override if you want
-  })
+  const [data, totalPages] = await Promise.all([fetchBlogPage(pageNumber), getTotalBlogPages()])
 
-  if (!data?.page) {
-    console.log('[BlogPage] Blog page not found in WordPress')
+  if (!data || !data.page) {
     notFound()
   }
 
-  console.log('[BlogPage] Loaded', data.posts.nodes.length, 'posts')
+  const { posts } = data
 
   return (
-    <div className="bg-gray-alt lg:bg-white">
-      {/* Hero Section */}
-      {data.page.pageHero && <BlogHero hero={data.page.pageHero} title={data.page.title} />}
+    <>
+      {data.page.pageHero && (
+        <BlogHero hero={data.page.pageHero} title={data.page.title} hideForm={false} />
+      )}
 
-      {/* Blog Grid */}
-      <section className="mx-auto px-4 pb-4 lg:pt-4">
-        <BlogGrid posts={data.posts.nodes} />
+      <section className="mx-auto p-4">
+        <BlogGrid posts={posts.nodes} />
+
+        {/* Pagination controls */}
+        <div className="mt-12 flex justify-center gap-4">
+          {/* No previous for page 1 */}
+          {pageNumber < totalPages && (
+            <a
+              href="/blog/page/2"
+              className="inline-flex items-center border border-[var(--color-gray-1)] px-4 py-2 text-sm font-semibold tracking-wide text-[var(--color-gray-1)] uppercase transition-colors hover:bg-[var(--color-gray-1)] hover:text-white"
+            >
+              Next Page
+            </a>
+          )}
+        </div>
       </section>
-    </div>
+    </>
   )
 }
