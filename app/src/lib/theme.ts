@@ -26,3 +26,10 @@ export function themeClassFromCategory(categorySlug?: string): string {
   if (!categorySlug) return THEME_CLASS_BY_ACF_VALUE.pink // default fallback
   return CATEGORY_THEME_MAP[categorySlug] || THEME_CLASS_BY_ACF_VALUE.pink
 }
+
+export function themeClassFromPageColor(
+  color?: 'blue' | 'pink' | 'purple' | 'orange' | 'green' | 'cyan' | 'cerulean',
+): string {
+  if (!color) return ''
+  return `theme-${color}`
+}

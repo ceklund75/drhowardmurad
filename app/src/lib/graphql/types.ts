@@ -96,7 +96,7 @@ export interface GetAllPostSlugsResponse {
  * - "contentbox": Static background with centered content box (bg image, heading, body, theme color)
  */
 export interface PageHeroACF {
-  heroType?: 'home' | 'contentbox'
+  heroType?: string[] | 'home' | 'contentbox'
   heroSubheading?: string // home only
   heroHeading?: string
   heroVideoUrl?: string // home only
@@ -112,12 +112,20 @@ export interface PageHeroACF {
   heroNewsletterSubheading?: string
 }
 
+export interface PageTextImageAltWrapper {
+  pageSectionsTextImageAlt?: TextImageAltSection[]
+}
+
+export interface PageTextImageFixedWrapper {
+  pageSectionsTextImageFixed?: TextImageFixedSection[]
+}
+
 /**
  * Text + Image section (fixed layout: image always left, content always right)
  * Used for: Books, Publications, etc.
  */
 export interface TextImageFixedSection {
-  sectionBgcolor?: string // Tailwind class: white, gray-50, blue-50, etc.
+  sectionBgColor?: string[] | string // Tailwind class: white, gray-50, blue-50, etc.
   textImageFixedLayoutType?: 'backgroundonly' | 'foreground'
   sectionBgImage?: FeaturedImage
   sectionBgHasOverlay?: boolean
@@ -144,12 +152,12 @@ export interface TextImageAltCollapsible {
 }
 
 export interface TextImageAltSection {
-  sectionBgcolor?: string
+  sectionBgColor?: string[] | string // Tailwind class: white, gray-50, blue-50, etc.
   textImageAltLayoutType?: 'backgroundonly' | 'extendedleft' | 'extendedright'
   sectionBgImage?: FeaturedImage
   sectionBgHasOverlay?: boolean
   textImageAltExtendedImage?: FeaturedImage
-  textImageAltContentAlignment?: 'left' | 'right'
+  textImageAltContentAlignment?: string[] | 'left' | 'right'
   textImageAltAutoAlternate?: boolean
   textImageAltImageDesktop?: FeaturedImage
   textImageAltImageMobile?: FeaturedImage
@@ -197,9 +205,10 @@ export interface Page {
   content: string
   excerpt?: string
   featuredImage?: FeaturedImage
+
   pageHero?: PageHeroACF
-  pageTextImageFixed?: TextImageFixedSection[]
-  pageTextImageAlt?: TextImageAltSection[]
+  pageTextImageFixed?: PageTextImageFixedWrapper
+  pageTextImageAlt?: PageTextImageAltWrapper
   pageNewsletterCta?: PageNewsletterCtaACF
 }
 

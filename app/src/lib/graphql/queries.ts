@@ -78,12 +78,22 @@ export const FRAGMENT_PAGE_HERO = `
     heroShowNewsletterForm
     heroThemeColor
     heroVideoUrl
+    heroFallbackImage {
+     node {
+        ...ImageFields
+      }
+    }
     heroBgImage {
       node {
         ...ImageFields
       }
     }
-    heroMobileBgImage {
+    heroMobileImage {
+      node {
+        ...ImageFields
+      }
+    }
+    heroRightImage {
       node {
         ...ImageFields
       }
@@ -250,20 +260,97 @@ export const QUERY_BLOG_INDEX = `
 
 /**
  * Fetch page by URI (for static pages)
- * Optimized: Removed excerpt and databaseId (not used)
  */
 export const QUERY_PAGE_BY_URI = `
   ${FRAGMENT_IMAGE_FIELDS}
   ${FRAGMENT_PAGE_HERO}
-  
   query GetPageByUri($id: ID!) {
     page(id: $id, idType: URI) {
       id
       uri
       slug
       title
+
       pageHero {
         ...PageHeroFields
+      }
+
+      pageTextImageAlt {
+        pageSectionsTextImageAlt {
+          sectionBgColor
+          sectionBgHasOverlay
+          sectionBgImage {
+            node {
+              ...ImageFields
+            }
+          }
+          textImageAltAutoAlternate
+          textImageAltBody
+          textImageAltButtonLabel
+          textImageAltButtonUrl
+          textImageAltCollapsibleItems {
+            textImageAltCollapsibleContent
+            textImageAltCollapsibleTitle
+          }
+          textImageAltContentAlignment
+          textImageAltExtendedImage {
+            node {
+              ...ImageFields
+            }
+          }
+          textImageAltHeading
+          textImageAltHideImageMobile
+          textImageAltImageDesktop {
+            node {
+              ...ImageFields
+            }
+          }
+          textImageAltImageMobile {
+            node {
+              ...ImageFields
+            }
+          }
+          textImageAltThemeColor
+          textImageAltSubheading
+          textImageAltLayoutType
+        }
+      }
+
+      pageTextImageFixed {
+        pageSectionsTextImageFixed {
+          sectionBgColor
+          sectionBgHasOverlay
+          sectionBgImage {
+            node {
+              ...ImageFields
+            }
+          }
+          textImageFixedLayoutType
+          textImageFixedImageDesktop {
+            node {
+              ...ImageFields
+            }
+          }
+          textImageFixedImageMobile {
+            node {
+              ...ImageFields
+            }
+          }
+          textImageFixedHideImageMobile
+          textImageFixedSubheading
+          textImageFixedHeading
+          textImageFixedBody
+          textImageFixedButtonLabel
+          textImageFixedButtonUrl
+          textImageFixedThemeColor
+        }
+      }
+
+      pageNewsletterCta {
+        newsletterBgColor
+        newsletterHeading
+        newsletterSubheading
+        newsletterButtonLabel
       }
     }
   }
