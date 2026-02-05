@@ -9,17 +9,17 @@ export function PageNewsletterCta({ cta }: PageNewsletterCtaProps) {
   const { newsletterBgColor, newsletterHeading, newsletterSubheading, newsletterButtonLabel } = cta
 
   return (
-    <section className={newsletterBgColor ?? 'bg-gray-100'}>
-      <div className="mx-auto max-w-4xl px-6 py-16">
-        <div className="rounded bg-white p-6 shadow-sm">
-          <div className="space-y-4 border border-[var(--color-medium-purple)] p-6 text-center">
+    <section className={newsletterBgColor ?? 'bg-gray-alt'}>
+      <div className="mx-auto max-w-4xl px-6 py-36">
+        <div className="bg-white p-2 shadow-sm">
+          <div className="space-y-4 border border-[var(--color-medium-purple)]/30 p-12 text-center">
             {newsletterHeading && (
-              <h2 className="text-2xl font-semibold text-[var(--color-medium-purple)]">
+              <h4 className="text-light text-4xl text-[var(--color-medium-purple)]">
                 {newsletterHeading}
-              </h2>
+              </h4>
             )}
             {newsletterSubheading && (
-              <p className="text-sm text-[var(--color-medium-purple)]">{newsletterSubheading}</p>
+              <p className="text-[var(--color-medium-purple)]">{newsletterSubheading}</p>
             )}
 
             <div className="mt-4">

@@ -25,10 +25,9 @@ export function PageRenderer({ page }: PageRendererProps) {
   const fixedSections = pageTextImageFixed?.pageSectionsTextImageFixed ?? []
 
   return (
-    <main>
+    <main className="bg-gray-alt">
       {heroType === 'home' && pageHero && <HomeHeroVideo hero={pageHero} />}
       {/* {heroType === 'contentbox' && pageHero && <PageHeroContentBox hero={pageHero} />} */}
-
       {altSections.map((section, index) => (
         <PageSectionTextImage key={index} section={section} index={index} />
       ))}

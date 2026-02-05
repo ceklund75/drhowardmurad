@@ -5,7 +5,8 @@ export function cx(...parts: Array<string | false | null | undefined>) {
 export const buttonClassName = (className?: string) =>
   cx(
     'inline-flex items-center justify-center',
-    'h-[50px] px-8 py-[18px]',
+    'h-[40px] px-6 py-[15px]',
+    'md:h-[50px] md:px-8 md:py-[18px]',
     'border',
     'text-[16px] font-medium uppercase tracking-normal',
     'leading-[0.75]',

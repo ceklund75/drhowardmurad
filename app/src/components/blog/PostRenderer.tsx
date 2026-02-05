@@ -44,7 +44,7 @@ export function PostRenderer({ post }: PostRendererProps) {
       {/* Main Content Area - Two Column Layout (Desktop) / Card Layout (Mobile) */}
       <div className="w-full">
         {/* Mobile Card Wrapper (< lg:1024px) */}
-        <div className="mobile-card lg:hidden">
+        <div className="mobile-card bg-white lg:hidden">
           {/* Mobile: Image First */}
           {blogPost?.contentAssociatedImage?.node && (
             <div className="mb-6">
