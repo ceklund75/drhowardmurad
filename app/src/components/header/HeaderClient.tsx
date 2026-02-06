@@ -38,14 +38,14 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
           className={[
             'flex items-center justify-between',
             'h-25.5 transition-[height] duration-200',
-            'group-data-[shrunk=true]:h-16',
+            'md:group-data-[shrunk=true]:h-16',
           ].join(' ')}
         >
           <Link href="/" aria-label="Dr. Howard Murad" className="block w-68.5 shrink-0">
             <img
               src="/images/dhm-logo-signature.svg"
               alt="Dr. Howard Murad"
-              className="h-21 w-auto transition-[height] duration-200 group-data-[shrunk=true]:h-16"
+              className="h-21 w-auto transition-[height] duration-200 md:group-data-[shrunk=true]:h-16"
             />
           </Link>
 

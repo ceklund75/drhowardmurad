@@ -55,3 +55,24 @@ export function cssClassesToMenuColorVar(
   if (!key) return undefined
   return `var(--color-${key})`
 }
+
+export function normalizeAlignment(
+  raw?: string[] | 'left' | 'right',
+): 'left' | 'right' | undefined {
+  if (!raw) return undefined
+  if (Array.isArray(raw)) return raw[0] as 'left' | 'right'
+  return raw
+}
+
+export function normalizeLayoutType(
+  raw?: string[] | 'backgroundonly' | 'extendedleft' | 'extendedright',
+): 'backgroundonly' | 'extendedleft' | 'extendedright' | undefined {
+  if (!raw) return undefined
+  if (Array.isArray(raw)) return raw[0] as 'backgroundonly' | 'extendedleft' | 'extendedright'
+  return raw
+}
+
+export function resolveStringFromArray(raw?: string[] | string): string | undefined {
+  if (!raw) return undefined
+  return Array.isArray(raw) ? raw[0] : raw
+}

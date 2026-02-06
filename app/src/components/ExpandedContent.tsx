@@ -2,7 +2,6 @@
 
 import { useId, useState } from 'react'
 import { RawHtml } from '@/components/RawHtml'
-import { buttonClassName } from '@/lib/ui'
 
 interface ExpandedContentProps {
   html?: string | null

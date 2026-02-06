@@ -33,3 +33,32 @@ export function themeClassFromPageColor(
   if (!color) return ''
   return `theme-${color}`
 }
+
+export function tintBgClassFromValue(raw?: string[] | string): string {
+  const value = Array.isArray(raw) ? raw[0] : raw
+  switch (value) {
+    case 'white':
+      return 'bg-white'
+    case 'gray-alt':
+      return 'bg-gray-alt'
+    case 'light-blue':
+      return 'bg-tint-light-blue'
+    case 'pale-yellow':
+      return 'bg-tint-pale-yellow'
+    case 'pale-orange':
+      return 'bg-tint-pale-orange'
+    case 'paler-orange':
+      return 'bg-tint-paler-orange'
+    case 'pale-yellow-2':
+      return 'bg-tint-pale-yellow-2'
+    case 'light-pink':
+      return 'bg-tint-light-pink'
+    default:
+      return ''
+  }
+}
+
+export function bgImageObjectClass(imageSide?: 'left' | 'right'): string {
+  if (!imageSide) return ''
+  return `object-${imageSide}`
+}

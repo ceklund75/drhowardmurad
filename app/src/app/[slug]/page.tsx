@@ -7,6 +7,7 @@ import {
 } from '@/lib/graphql/types'
 import { notFound } from 'next/navigation'
 import { PostRenderer } from '@/components/blog/PostRenderer'
+import { PageRenderer } from '@/components/pages/PageRenderer'
 
 export const dynamic = 'force-dynamic'
 
@@ -36,14 +37,8 @@ export default async function RootResolverPage({ params }: RootResolverPageProps
   }
 
   if (page) {
-    //return <PageRenderer page={page} />
-    console.log('[RootResolver] Found page:', page.title)
-    return (
-      <main className="mx-auto max-w-3xl p-8">
-        <h1 className="mb-4 text-3xl font-bold">{page.title}</h1>
-        <div>{page.excerpt} </div>
-      </main>
-    )
+    console.log('page', page)
+    return <PageRenderer page={page} />
   }
 
   // if no Page, try to fetch as Post

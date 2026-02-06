@@ -15,8 +15,6 @@ export function HomeHeroVideo({ hero }: HomeHeroVideoProps) {
     heroRightImage,
   } = hero
 
-  console.log('HERO RIGHT IMAGE DATA:', JSON.stringify(hero.heroRightImage, null, 2))
-
   return (
     <section className="relative min-h-[360px] overflow-hidden md:min-h-[520px] lg:min-h-[640px] xl:min-h-[800px]">
       {/* background video / images with absolute inset-0 */}

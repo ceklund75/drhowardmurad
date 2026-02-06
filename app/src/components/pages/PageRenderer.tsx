@@ -1,6 +1,6 @@
 import { Page, PageHeroACF } from '@/lib/graphql/types'
 import { HomeHeroVideo } from './HomeHeroVideo'
-//import { PageHeroContentBox } from './PageHeroContentBox'
+import PageHero from './PageHero'
 import { PageSectionTextImage } from './PageSectionTextImage'
 //import { PageSectionTextImageFixed } from './PageSectionTextImageFixed'
 import { PageNewsletterCta } from './PageNewsletterCta'
@@ -20,6 +20,12 @@ export function PageRenderer({ page }: PageRendererProps) {
   const { pageHero, pageTextImageAlt, pageTextImageFixed, pageNewsletterCta } = page
 
   const heroType = resolveHeroType(pageHero)
+  console.log('PAGE HERO DEBUG:', {
+    slug: page.slug,
+    heroHeading: pageHero?.heroHeading,
+    heroTypeRaw: page.pageHero?.heroType,
+    heroTypeResolved: heroType,
+  })
 
   const altSections = pageTextImageAlt?.pageSectionsTextImageAlt ?? []
   const fixedSections = pageTextImageFixed?.pageSectionsTextImageFixed ?? []
@@ -27,7 +33,9 @@ export function PageRenderer({ page }: PageRendererProps) {
   return (
     <main className="bg-gray-alt">
       {heroType === 'home' && pageHero && <HomeHeroVideo hero={pageHero} />}
-      {/* {heroType === 'contentbox' && pageHero && <PageHeroContentBox hero={pageHero} />} */}
+      {heroType === 'contentbox' && pageHero && (
+        <PageHero hero={pageHero} title={page.title} hideForm={true} />
+      )}
       {altSections.map((section, index) => (
         <PageSectionTextImage key={index} section={section} index={index} />
       ))}

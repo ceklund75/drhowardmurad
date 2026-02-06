@@ -1,18 +1,13 @@
 // components/pages/PageSectionTextImage.tsx
-import clsx from 'clsx'
-import { TextImageAltSection } from '@/lib/graphql/types'
-import { themeClassFromPageColor } from '@/lib/theme'
 import Image from 'next/image'
-import { buttonClassName } from '@/lib/ui'
+import { TextImageAltSection } from '@/lib/graphql/types'
+import { tintBgClassFromValue, themeClassFromAcf, bgImageObjectClass } from '@/lib/theme'
+import { buttonClassName, cx, normalizeAlignment, resolveStringFromArray } from '@/lib/ui'
+import { PageSectionCollapsibleList } from './PageSectionCollapsibleList'
 
 interface PageSectionTextImageProps {
   section: TextImageAltSection
   index: number
-}
-
-function resolveBgColor(raw?: string[] | string): string | undefined {
-  if (!raw) return undefined
-  return Array.isArray(raw) ? raw[0] : raw
 }
 
 export function PageSectionTextImage({ section, index }: PageSectionTextImageProps) {
@@ -20,6 +15,8 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
     sectionBgColor,
     sectionBgImage,
     sectionBgHasOverlay,
+    textImageAltLayoutType,
+    textImageAltExtendedImage,
     textImageAltImageDesktop,
     textImageAltImageMobile,
     textImageAltHideImageMobile,
@@ -33,94 +30,127 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
   } = section
 
   const imageSide = resolveImagePosition(section, index)
-  const bgColorClass = resolveBgColor(section.sectionBgColor)
-  const themeClass = themeClassFromPageColor(section.textImageAltThemeColor)
+  const bgColorClass = tintBgClassFromValue(sectionBgColor)
+  const themeClass = themeClassFromAcf(textImageAltThemeColor)
+  const bgImageObjectAlignment = bgImageObjectClass(imageSide)
+  const layoutType = resolveLayoutType(section)
 
-  if (index === 0) {
-    console.log('HOME ALT SECTION 0:', {
-      layoutType: section.textImageAltLayoutType,
-      align: section.textImageAltContentAlignment,
-      autoAlt: section.textImageAltAutoAlternate,
-    })
-  }
-
+  const imgW = textImageAltExtendedImage?.node?.mediaDetails?.width || 800
+  const imgH = textImageAltExtendedImage?.node?.mediaDetails?.height || 600
   // Background wrapper
   return (
     <section className="page-section">
       {/* DESKTOP */}
-      <div className={clsx('relative hidden lg:block', bgColorClass)}>
-        {sectionBgImage?.node?.mediaItemUrl && (
+      <div className={cx('relative hidden overflow-hidden lg:block', bgColorClass)}>
+        {layoutType === 'backgroundonly' && sectionBgImage?.node?.mediaItemUrl && (
           <Image
             src={sectionBgImage.node.mediaItemUrl}
             alt={sectionBgImage.node.altText || ''}
             fill
-            className="object-cover"
+            className={`object-cover ${bgImageObjectAlignment}`}
           />
+        )}
+
+        {layoutType !== 'backgroundonly' && textImageAltExtendedImage?.node?.mediaItemUrl && (
+          <div
+            className={cx(
+              'pointer-events-none absolute top-0 z-0 flex',
+              layoutType === 'extendedleft' ? 'left-0 justify-start' : 'right-0 justify-end',
+            )}
+          >
+            <div className="min-h-120 min-w-120 xl:min-h-162 xl:min-w-162">
+              <Image
+                src={textImageAltExtendedImage.node.mediaItemUrl}
+                alt={textImageAltExtendedImage.node.altText || ''}
+                fill
+                className="object-cover"
+              />
+            </div>
+          </div>
         )}
 
         {sectionBgHasOverlay && <div className="absolute inset-0 bg-black/30" aria-hidden="true" />}
 
-        <div className="relative mx-auto max-w-300 px-4 py-16 md:py-36">
-          <div
-            className={`flex flex-col gap-14 md:grid md:grid-cols-2 md:items-center ${
-              imageSide === 'left' ? '' : 'md:[&>div:first-child]:order-2'
-            }`}
-          >
-            {/* Image column */}
-            <div className="flex justify-center">
-              {textImageAltImageDesktop?.node?.mediaItemUrl && (
-                <div className="relative h-64 w-full max-w-md">
-                  <Image
-                    src={textImageAltImageDesktop.node.mediaItemUrl}
-                    alt={textImageAltImageDesktop.node.altText || ''}
-                    fill
-                    className="object-cover object-bottom"
-                  />
-                </div>
+        <div className="relative mx-auto flex py-[2%] lg:min-h-120 lg:max-w-240 xl:min-h-155 xl:max-w-300">
+          <div className="flex w-full flex-col">
+            {/* Row 1: image + main content */}
+            <div
+              className={cx(
+                'grid gap-14 md:grid-cols-2 md:items-center',
+                imageSide === 'left' ? '' : 'md:[&>div:first-child]:order-2',
               )}
+            >
+              {/* Image column */}
+              <div className="flex justify-center">
+                <div className="relative h-[360px] w-full max-w-xl lg:h-[440px] xl:h-[560px]">
+                  {textImageAltImageDesktop?.node?.mediaItemUrl && (
+                    <Image
+                      src={textImageAltImageDesktop.node.mediaItemUrl}
+                      alt={textImageAltImageDesktop.node.altText || ''}
+                      fill
+                      className={cx('w-full object-contain', bgImageObjectAlignment)}
+                    />
+                  )}
+                </div>
+              </div>
+
+              {/* Content column (no collapsible here) */}
+              <div className={cx('flex items-center', themeClass)}>
+                <div className="w-full space-y-4 py-12">
+                  {textImageAltSubheading && (
+                    <p className="h4 tracking-wide text-[var(--color-theme)] italic">
+                      {textImageAltSubheading}
+                    </p>
+                  )}
+
+                  {textImageAltHeading && (
+                    <h3 className="mb-4 text-3xl font-light text-balance text-[var(--color-theme)] md:text-[34px]">
+                      {textImageAltHeading}
+                    </h3>
+                  )}
+
+                  {textImageAltBody && (
+                    <div
+                      className="prose max-w-none"
+                      dangerouslySetInnerHTML={{ __html: textImageAltBody }}
+                    />
+                  )}
+
+                  {textImageAltButtonLabel && textImageAltButtonUrl && (
+                    <div className="mt-6">
+                      <a href={textImageAltButtonUrl} className={buttonClassName('button-theme')}>
+                        {textImageAltButtonLabel}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
-            {/* Content column */}
-            <div className={themeClass}>
-              {textImageAltSubheading && (
-                <p className="mb-2 text-sm tracking-wide text-[var(--color-theme)] uppercase">
-                  {textImageAltSubheading}
-                </p>
-              )}
-              {textImageAltHeading && (
-                <h3 className="mb-4 text-3xl font-light text-balance text-[var(--color-theme)] md:text-[34px]">
-                  {textImageAltHeading}
-                </h3>
-              )}
-              {textImageAltBody && (
-                <div
-                  className="prose max-w-none"
-                  dangerouslySetInnerHTML={{ __html: textImageAltBody }}
-                />
-              )}
+            {/* Row 2: aligned “Read more” + collapsible under content column */}
+            {textImageAltCollapsibleItems?.length ? (
+              <div
+                className={cx(
+                  'grid gap-14 md:grid-cols-2',
+                  imageSide === 'left' ? '' : 'md:[&>div:first-child]:order-2',
+                )}
+              >
+                {/* Empty spacer under image column */}
+                <div />
 
-              {textImageAltButtonLabel && textImageAltButtonUrl && (
-                <div className="mt-6">
-                  <a href={textImageAltButtonUrl} className={buttonClassName('button-theme')}>
-                    {textImageAltButtonLabel}
-                  </a>
+                {/* Column under content: read more + collapsible */}
+                <div className={cx('-mt-20 space-y-4 xl:-mt-36', themeClass)}>
+                  <PageSectionCollapsibleList items={textImageAltCollapsibleItems} />
                 </div>
-              )}
-
-              {textImageAltCollapsibleItems?.length ? (
-                <div className="mt-6 space-y-4">
-                  {/* You can re-use your existing collapsible component or build a simple one */}
-                  {/* For now, you can leave this unimplemented or as a basic list */}
-                </div>
-              ) : null}
-            </div>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
 
       {/* MOBILE */}
-      <div className={clsx('mobile-card relative lg:hidden', bgColorClass)}>
-        {textImageAltImageMobile?.node?.mediaItemUrl && (
+      <div className={cx('mobile-card relative lg:hidden', bgColorClass)}>
+        {textImageAltImageMobile?.node?.mediaItemUrl && !textImageAltHideImageMobile && (
           <div className="relative block w-full overflow-hidden">
             <Image
               src={textImageAltImageMobile.node.mediaItemUrl}
@@ -134,7 +164,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
         )}
         <div className={`mt-6 ${themeClass}`}>
           {textImageAltSubheading && (
-            <p className="mb-1 text-sm tracking-wide text-[var(--color-theme)] uppercase">
+            <p className="h4 mb-1 tracking-wide text-[var(--color-theme)] italic">
               {textImageAltSubheading}
             </p>
           )}
@@ -160,8 +190,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
 
           {textImageAltCollapsibleItems?.length ? (
             <div className="mt-6 space-y-4">
-              {/* You can re-use your existing collapsible component or build a simple one */}
-              {/* For now, you can leave this unimplemented or as a basic list */}
+              <PageSectionCollapsibleList items={textImageAltCollapsibleItems} />
             </div>
           ) : null}
         </div>
@@ -190,8 +219,22 @@ function resolveImagePosition(section: TextImageAltSection, index: number): 'lef
   return 'right'
 }
 
-function normalizeAlignment(raw?: string[] | 'left' | 'right'): 'left' | 'right' | undefined {
-  if (!raw) return undefined
-  if (Array.isArray(raw)) return raw[0] as 'left' | 'right'
-  return raw
+function resolveLayoutType(
+  section: TextImageAltSection,
+): 'backgroundonly' | 'extendedleft' | 'extendedright' {
+  const layoutType = resolveStringFromArray(section.textImageAltLayoutType)
+
+  if (layoutType === 'backgroundonly') {
+    return 'backgroundonly'
+  }
+
+  if (layoutType === 'extendedleft') {
+    return 'extendedleft'
+  }
+
+  if (layoutType === 'extendedright') {
+    return 'extendedright'
+  }
+
+  return 'backgroundonly'
 }

@@ -7,6 +7,6 @@ interface BlogHeroProps {
   hideForm?: boolean
 }
 
-export default function BlogHero({ hero, title, hideForm = false }: BlogHeroProps) {
+export default function PageHero({ hero, title, hideForm = false }: BlogHeroProps) {
   return <ContentBoxHero hero={hero} title={title} hideForm={hideForm} />
 }

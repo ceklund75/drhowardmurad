@@ -316,6 +316,30 @@
   --color-theme-contrast: #ffffff;
 }
 
+.bg-tint-light-blue {
+  background-color: var(--color-tint-light-blue);
+}
+
+.bg-tint-pale-yellow {
+  background-color: var(--color-tint-pale-yellow);
+}
+
+.bg-tint-pale-orange {
+  background-color: var(--color-tint-pale-orange);
+}
+
+.bg-tint-paler-orange {
+  background-color: var(--color-tint-paler-orange);
+}
+
+.bg-tint-pale-yellow-2 {
+  background-color: var(--color-tint-pale-yellow-2);
+}
+
+.bg-tint-light-pink {
+  background-color: var(--color-tint-light-pink);
+}
+
 .menu-link,
 .menu-toggle {
   color: var(--menu-item-color, #fff);
