@@ -62,7 +62,8 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
               <Image
                 src={textImageAltExtendedImage.node.mediaItemUrl}
                 alt={textImageAltExtendedImage.node.altText || ''}
-                fill
+                width={imgW}
+                height={imgH}
                 className="object-cover"
               />
             </div>

@@ -10,8 +10,8 @@ export function PageNewsletterCta({ cta }: PageNewsletterCtaProps) {
 
   return (
     <section className={newsletterBgColor ?? 'bg-gray-alt'}>
-      <div className="mx-auto max-w-4xl px-6 py-36">
-        <div className="bg-white p-2 shadow-sm">
+      <div className="mx-auto max-w-4xl px-3.75 pb-3.75 lg:px-6 lg:py-36">
+        <div className="mobile-grid p-2">
           <div className="space-y-4 border border-[var(--color-medium-purple)]/30 p-12 text-center">
             {newsletterHeading && (
               <h4 className="text-light text-4xl text-[var(--color-medium-purple)]">

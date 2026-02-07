@@ -412,7 +412,7 @@
 }
 
 .mobile-grid {
-  @apply bg-white shadow-[0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.24)];
+  @apply bg-white shadow-[0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.24)] lg:shadow-none;
 }
 
 /* ANIMATIONS */

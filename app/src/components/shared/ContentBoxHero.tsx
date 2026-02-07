@@ -17,7 +17,7 @@ export function ContentBoxHero({ hero, title, hideForm = false }: ContentboxHero
   const desktopSrc = desktopBg
 
   return (
-    <section className="relative overflow-hidden">
+    <section className="bg-gray-alt relative overflow-hidden">
       {desktopSrc && (
         <div className="absolute inset-0 z-0 hidden lg:block">
           <Image
@@ -33,19 +33,19 @@ export function ContentBoxHero({ hero, title, hideForm = false }: ContentboxHero
 
       {/* Desktop */}
       <div
-        className={`relative z-10 hidden min-h-145 items-center justify-center px-4 py-12 lg:flex lg:py-16 ${themeClass}`}
+        className={`relative z-10 hidden min-h-160 items-center justify-center px-4 py-12 lg:flex lg:py-16 ${themeClass}`}
       >
-        <div className="mx-auto max-w-[60%] min-w-75 bg-[var(--color-theme)]/80 p-2">
+        <div className="mx-auto max-w-[58%] min-w-75 bg-[var(--color-theme)]/80 p-2">
           <div className="border border-white p-13 text-center">
             {hero.heroHeading && (
-              <h1 className="mb-6 text-2xl leading-relaxed font-normal text-white italic lg:text-3xl lg:text-4xl">
-                "{hero.heroHeading}"
+              <h1 className="mb-1 text-2xl leading-snug font-normal text-white italic lg:text-[40px]">
+                “{hero.heroHeading}”
               </h1>
             )}
 
             {/* Body Text - Centered paragraphs */}
             {hero.heroBody && (
-              <div className="mb-6 text-lg leading-relaxed text-balance text-white">
+              <div className="text-lg leading-snug text-balance text-white">
                 <RawHtml html={hero.heroBody} />
               </div>
             )}
@@ -85,7 +85,7 @@ export function ContentBoxHero({ hero, title, hideForm = false }: ContentboxHero
       </div>
 
       {/* Mobile */}
-      <div className="relative z-10 m-3.75 lg:hidden">
+      <div className="relative z-10 mx-3.75 mt-3.75 lg:hidden">
         <div className="bg-white p-3.75">
           <h1 className="h3 text-pink mt-2">{title}</h1>
           {/* Image */}
@@ -103,14 +103,16 @@ export function ContentBoxHero({ hero, title, hideForm = false }: ContentboxHero
           )}
           <div className={`pt-4 ${themeClass}`}>
             <div className="bg-[var(--color-theme)]/80 p-2">
-              <div className="border border-white p-4 text-center">
+              <div className="border border-white p-6 text-center">
                 {hero.heroHeading && (
-                  <h2 className="h3 mb-4 text-white italic">"{hero.heroHeading}"</h2>
+                  <h2 className="h4 mb-1 text-[27px] leading-snug text-balance text-white italic">
+                    “{hero.heroHeading}”
+                  </h2>
                 )}
 
                 {hero.heroBody && (
                   <div
-                    className="mb-4 leading-relaxed text-white"
+                    className="leading-snug text-white"
                     dangerouslySetInnerHTML={{ __html: hero.heroBody }}
                   />
                 )}

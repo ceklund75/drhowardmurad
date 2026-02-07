@@ -79,7 +79,9 @@ export function PostRenderer({ post }: PostRendererProps) {
 
           {/* Mobile: Content */}
           <article>
-            <h1 className="mb-4 text-3xl font-bold text-[var(--color-theme)]">{title}</h1>
+            <h1 className="mb-4 text-3xl leading-0 text-balance text-[var(--color-theme)]">
+              {title}
+            </h1>
 
             {blogPost?.introText && (
               <div className="prose prose-lg mb-6 max-w-none">

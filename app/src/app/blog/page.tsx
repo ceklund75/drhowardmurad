@@ -20,7 +20,7 @@ export default async function BlogPage() {
         <BlogHero hero={data.page.pageHero} title={data.page.title} hideForm={false} />
       )}
 
-      <section className="mx-auto p-4">
+      <section className="bg-gray-alt mx-auto p-4 lg:bg-white">
         <BlogGrid posts={posts.nodes} />
 
         {/* Pagination controls */}
