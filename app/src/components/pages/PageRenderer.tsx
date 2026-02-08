@@ -1,7 +1,7 @@
 import { Page, PageHeroACF } from '@/lib/graphql/types'
 import { HomeHeroVideo } from './HomeHeroVideo'
 import PageHero from './PageHero'
-import { PageSectionTextImage } from './PageSectionTextImage'
+import { PageSectionTextImage } from './PageSection/PageSectionTextImage'
 //import { PageSectionTextImageFixed } from './PageSectionTextImageFixed'
 import { PageNewsletterCta } from './PageNewsletterCta'
 
