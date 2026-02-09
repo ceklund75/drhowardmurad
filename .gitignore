@@ -142,3 +142,6 @@ vite.config.ts.timestamp-*
 docs/state-of-project.md
 .vscode/settings.json
 .vscode/launch.json
+app/video-modals.json
+app/scripts/analyze-video-modals.ts
+app/scripts/extract-video-modals.ts

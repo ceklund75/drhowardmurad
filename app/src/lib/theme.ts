@@ -59,6 +59,6 @@ export function tintBgClassFromValue(raw?: string[] | string): string {
 }
 
 export function bgImageObjectClass(imageSide?: 'left' | 'right'): string {
-  if (!imageSide) return ''
+  if (!imageSide) return 'object-center'
   return `object-${imageSide}`
 }

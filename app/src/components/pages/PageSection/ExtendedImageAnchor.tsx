@@ -27,7 +27,8 @@ export function ExtendedImageAnchor({
         alt={image.node.altText || ''}
         width={imgW}
         height={imgH}
-        className="ext-anchor-img h-auto max-h-[800px] min-h-[480px] w-auto object-cover lg:min-h-[520px] lg:max-w-[90%] xl:min-h-[648px]"
+        // className="ext-anchor-img h-[420px] w-auto max-w-[700px] min-w-[300px] object-cover lg:max-h-[560px] lg:min-h-[520px] lg:max-w-[700px] lg:min-w-[480px] xl:max-h-[720px] xl:min-h-[640px] xl:max-w-[900px] xl:min-w-[580px]"
+        className="ext-anchor-img h-[420px] w-auto max-w-[700px] min-w-[300px] object-cover lg:h-[530px] lg:max-w-[760px] lg:min-w-[480px] xl:h-[600px] xl:max-w-[900px] xl:min-w-[580px] 2xl:h-[775px] 2xl:min-w-[725px]"
       />
     </div>
   )
