@@ -37,7 +37,7 @@ export function DesktopMainRow(props: {
   return (
     <div
       className={cx(
-        'grid gap-14 md:grid-cols-2 md:items-stretch',
+        'grid gap-20 md:grid-cols-2 md:items-stretch',
         imageSide === 'left' ? '' : 'md:[&>div:first-child]:order-2',
       )}
     >
@@ -123,7 +123,7 @@ export function DesktopCollapsibleRow(props: {
   return (
     <div
       className={cx(
-        '-mt-40 grid gap-14 pb-8 md:grid-cols-2',
+        '-mt-25 grid gap-20 pb-8 md:grid-cols-2 xl:-mt-40',
         imageSide === 'left' ? '' : 'md:[&>div:first-child]:order-2',
       )}
     >

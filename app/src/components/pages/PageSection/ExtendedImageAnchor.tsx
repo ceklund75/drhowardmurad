@@ -27,7 +27,7 @@ export function ExtendedImageAnchor({
         alt={image.node.altText || ''}
         width={imgW}
         height={imgH}
-        className="h-auto max-h-[800px] min-h-[480px] w-auto object-cover lg:min-h-[580px] xl:min-h-[648px]"
+        className="ext-anchor-img h-auto max-h-[800px] min-h-[480px] w-auto object-cover lg:min-h-[520px] lg:max-w-[90%] xl:min-h-[648px]"
       />
     </div>
   )
