@@ -6,6 +6,7 @@ export const THEME_CLASS_BY_ACF_VALUE = {
   green: 'theme-green',
   cyan: 'theme-cyan',
   cerulean: 'theme-cerulean',
+  darkpurple: 'theme-dark-purple',
 } as const
 
 export type ThemeAcfValue = keyof typeof THEME_CLASS_BY_ACF_VALUE
@@ -28,7 +29,7 @@ export function themeClassFromCategory(categorySlug?: string): string {
 }
 
 export function themeClassFromPageColor(
-  color?: 'blue' | 'pink' | 'purple' | 'orange' | 'green' | 'cyan' | 'cerulean',
+  color?: 'blue' | 'pink' | 'purple' | 'orange' | 'green' | 'cyan' | 'cerulean' | 'darkpurple',
 ): string {
   if (!color) return ''
   return `theme-${color}`

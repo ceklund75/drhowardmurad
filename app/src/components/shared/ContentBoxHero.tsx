@@ -26,6 +26,7 @@ export function ContentBoxHero({ hero, title, hideForm = false }: ContentboxHero
             fill
             className="object-cover object-[center_top]"
             priority
+            sizes="100vw"
             quality={90}
           />
         </div>

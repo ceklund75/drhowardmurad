@@ -20,12 +20,6 @@ export function PageRenderer({ page }: PageRendererProps) {
   const { pageHero, pageTextImageAlt, pageTextImageFixed, pageNewsletterCta } = page
 
   const heroType = resolveHeroType(pageHero)
-  console.log('PAGE HERO DEBUG:', {
-    slug: page.slug,
-    heroHeading: pageHero?.heroHeading,
-    heroTypeRaw: page.pageHero?.heroType,
-    heroTypeResolved: heroType,
-  })
 
   const altSections = pageTextImageAlt?.pageSectionsTextImageAlt ?? []
   const fixedSections = pageTextImageFixed?.pageSectionsTextImageFixed ?? []

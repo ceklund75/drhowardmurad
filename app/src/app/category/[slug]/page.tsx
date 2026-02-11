@@ -53,20 +53,18 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     <>
       {blogPage?.pageHero && <BlogHero hero={blogPage.pageHero} hideForm={true} />}
       {/* Breadcrumb Bar with ALL categories */}
-      <div className="bg-light-1 w-full">
-        <div className="mx-auto max-w-300 px-4 py-6">
+      <div className="bg-gray-alt lg:bg-light-1 w-full pt-3.75 lg:pt-0">
+        <div className="bg-light-1 mx-auto max-w-300 px-4 py-6">
           <nav
             aria-label="Categories"
             className="flex flex-wrap items-center justify-center gap-3 text-sm"
           >
-            {/* "All" link */}
             <Link href="/blog" className="text-gray-1 hover:text-pink uppercase transition-colors">
               All
             </Link>
 
             <span className="text-gray-400">/</span>
 
-            {/* All categories, each themed */}
             <ul className="flex flex-wrap items-center justify-center gap-3">
               {allCategories.map((cat, index) => {
                 const themeClass = themeClassFromCategory(cat.slug)
@@ -99,7 +97,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       </div>
 
       {/* Grid */}
-      <section className="mx-auto p-4">
+      <section className="bg-gray-alt mx-auto p-4 lg:bg-white">
         <BlogGrid posts={posts} />
       </section>
     </>

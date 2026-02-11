@@ -160,6 +160,9 @@ export interface TextImageAltSection {
   textImageAltContentAlignment?: string[] | 'left' | 'right'
   textImageAltAutoAlternate?: boolean
   textImageAltImageDesktop?: FeaturedImage
+  textImageAltImageHeightPreset?: string | string[]
+  textImageAltImageObjectPosition?: string | string[]
+  textImageAltImageObjectFit?: string | string[]
   textImageAltImageMobile?: FeaturedImage
   textImageAltHideImageMobile?: boolean
   textImageAltSubheading?: string

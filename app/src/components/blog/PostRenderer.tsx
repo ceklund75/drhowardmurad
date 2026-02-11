@@ -3,9 +3,10 @@ import Link from 'next/link'
 import { ActionButtons } from './ActionButtons'
 import { RawHtml } from '@/components/RawHtml'
 import { themeClassFromCategory } from '@/lib/theme'
-import type { Post } from '@/lib/graphql/types'
+import type { Post, PageNewsletterCtaACF } from '@/lib/graphql/types'
 import { ExpandedContent } from '../ExpandedContent'
 import { ShareThisPost } from './ShareThisPost'
+import { PageNewsletterCta } from '../pages/PageNewsletterCta'
 
 interface PostRendererProps {
   post: Post
@@ -17,13 +18,23 @@ export function PostRenderer({ post }: PostRendererProps) {
   // Get the first category for breadcrumb
   const primaryCategory = categories?.nodes?.[0]
   const themeClass = themeClassFromCategory(primaryCategory?.slug)
+  const newsletterCta: PageNewsletterCtaACF = {
+    newsletterBgColor: 'bg-gray-alt',
+    newsletterHeading: 'Modern Wellness Digest',
+    newsletterSubheading:
+      'Sign-up to receive periodic updates and wellness insights from Dr. Murad himself.',
+    newsletterButtonLabel: 'SIGN-UP',
+  }
 
   return (
     <div className={themeClass}>
       {/* Breadcrumb Bar */}
       <div className="bg-light-1 w-full">
         <div className="mx-auto max-w-300 px-4 py-6">
-          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm">
+          <nav
+            aria-label="Breadcrumb"
+            className="flex items-center justify-center gap-2 text-sm lg:justify-start"
+          >
             <Link href="/blog" className="hover:text-pink text-gray-1 uppercase transition-colors">
               All
             </Link>
@@ -79,7 +90,7 @@ export function PostRenderer({ post }: PostRendererProps) {
 
           {/* Mobile: Content */}
           <article>
-            <h1 className="mb-4 text-3xl leading-0 text-balance text-[var(--color-theme)]">
+            <h1 className="tracking-snug mb-4 text-3xl text-balance text-[var(--color-theme)]">
               {title}
             </h1>
 
@@ -159,6 +170,9 @@ export function PostRenderer({ post }: PostRendererProps) {
             )}
           </div>
         </div>
+      </div>
+      <div className="bg-gray-alt pt-3.75 lg:pt-0">
+        <PageNewsletterCta cta={newsletterCta} />
       </div>
     </div>
   )

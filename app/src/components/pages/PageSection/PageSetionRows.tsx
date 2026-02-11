@@ -1,6 +1,12 @@
 import Image from 'next/image'
 import { FeaturedImage, TextImageAltSection } from '@/lib/graphql/types'
-import { cx, buttonClassName } from '@/lib/ui'
+import {
+  cx,
+  buttonClassName,
+  type HeightConfig,
+  resolveObjectFit,
+  resolveObjectPosition,
+} from '@/lib/ui'
 import { PageSectionCollapsibleList } from './PageSectionCollapsibleList'
 
 export function DesktopMainRow(props: {
@@ -19,6 +25,9 @@ export function DesktopMainRow(props: {
   panelId?: string
   onToggle?: () => void
   toggleRef?: React.RefObject<HTMLButtonElement | null>
+  heightConfig: HeightConfig['mainRow']
+  objectPosition?: string | string[]
+  objectFit?: string | string[]
 }) {
   const {
     imageSide,
@@ -36,26 +45,43 @@ export function DesktopMainRow(props: {
     panelId,
     onToggle,
     toggleRef,
+    heightConfig,
+    objectPosition,
+    objectFit,
   } = props
 
+  const positionValue = resolveObjectPosition(objectPosition)
+  const fitValue = resolveObjectFit(objectFit)
   return (
     <div
       className={cx(
         'grid gap-14',
-        'lg:grid-cols-2 lg:items-center', // Two columns + vertical centering
-        'lg:min-h-[600px] xl:min-h-[680px]', // Min heights matching image heights
-        imageSide === 'left' ? '' : 'lg:[&>div:first-child]:order-2',
+        'lg:grid-cols-2 lg:items-center',
+        heightConfig.minHeight.lg,
+        heightConfig.minHeight.xl,
+        imageSide === 'right' ? 'lg:[&>div:first-child]:order-2' : '',
       )}
     >
-      {/* Image column */}
+      {/* Image column - ALWAYS RENDER THE DIV */}
       <div className="flex justify-center">
         {textImageAltImageDesktop?.node?.mediaItemUrl && (
-          <div className="relative h-[360px] w-full max-w-xl lg:min-h-[600px] xl:min-h-[680px]">
+          <div
+            className={cx(
+              'relative w-full max-w-xl',
+              heightConfig.imageHeight.base,
+              heightConfig.imageHeight.lg,
+              heightConfig.imageHeight.xl,
+            )}
+          >
             <Image
               src={textImageAltImageDesktop.node.mediaItemUrl}
               alt={textImageAltImageDesktop.node.altText || ''}
               fill
-              className={cx('w-full object-contain', bgImageObjectAlignment)}
+              className={cx('w-full object-contain')}
+              style={{
+                objectFit: fitValue,
+                objectPosition: positionValue,
+              }}
             />
           </div>
         )}
@@ -64,12 +90,13 @@ export function DesktopMainRow(props: {
       {/* Content column */}
       <div
         className={cx(
-          'flex flex-col justify-center', // Centers content vertically
-          'lg:h-[600px] xl:h-[680px]', // Fixed height matching image
+          'relative flex flex-col justify-center py-12',
+          heightConfig.contentHeight.lg,
+          heightConfig.contentHeight.xl,
           themeClass,
         )}
       >
-        <div className="space-y-4 py-12">
+        <div className="space-y-4">
           {textImageAltSubheading && (
             <p className="h4 tracking-wide text-[var(--color-theme)] italic">
               {textImageAltSubheading}
@@ -118,6 +145,7 @@ export function DesktopMainRow(props: {
   )
 }
 
+// DesktopCollapsibleRow remains unchanged
 export function DesktopCollapsibleRow(props: {
   imageSide: 'left' | 'right'
   themeClass: string
@@ -127,6 +155,7 @@ export function DesktopCollapsibleRow(props: {
   items?: TextImageAltSection['textImageAltCollapsibleItems']
 }) {
   const { imageSide, themeClass, isOpen, panelId, labelledById, items } = props
+
   if (!isOpen || !items?.length) return null
 
   return (
@@ -134,10 +163,12 @@ export function DesktopCollapsibleRow(props: {
       className={cx(
         'grid gap-14 lg:mt-8',
         'lg:grid-cols-2',
-        imageSide === 'left' ? '' : 'lg:[&>div:first-child]:order-2',
+        imageSide === 'right' ? 'lg:[&>div:first-child]:order-2' : '',
       )}
     >
-      <div className="hidden lg:block" /> {/* spacer under image column */}
+      {/* spacer under image column */}
+      <div className="hidden lg:block" />
+
       <div className={cx('space-y-3', themeClass)}>
         <PageSectionCollapsibleList items={items} panelId={panelId} labelledById={labelledById} />
       </div>

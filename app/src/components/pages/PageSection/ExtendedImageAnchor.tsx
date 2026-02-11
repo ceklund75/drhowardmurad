@@ -1,25 +1,57 @@
 import Image from 'next/image'
-import { cx } from '@/lib/ui'
+import { cx, resolveObjectPosition, resolveObjectFit, type HeightConfig } from '@/lib/ui'
 import { FeaturedImage } from '@/lib/graphql/types'
 
 export function ExtendedImageAnchor({
   layoutType,
   image,
+  heightConfig,
+  objectPosition,
+  objectFit,
 }: {
   layoutType: 'extendedleft' | 'extendedright' | 'backgroundonly'
   image: FeaturedImage
+  heightConfig: HeightConfig['extendedImage']
+  objectPosition?: string | string[]
+  objectFit?: string | string[]
 }) {
   const imgW = image?.node?.mediaDetails?.width || 800
   const imgH = image?.node?.mediaDetails?.height || 600
 
-  // backgroundonly should not render here; guard earlier
   if (!image?.node?.mediaItemUrl) return null
+
+  const positionValue = resolveObjectPosition(objectPosition)
+  const fitValue = resolveObjectFit(objectFit)
+
+  const normalizedPosition = Array.isArray(objectPosition) ? objectPosition[0] : objectPosition
+  const getJustify = () => {
+    // If objectPosition includes 'left', justify to start
+    if (normalizedPosition?.includes('left')) return 'justify-start'
+    // If objectPosition includes 'right', justify to end
+    if (normalizedPosition?.includes('right')) return 'justify-end'
+    // If objectPosition is 'center' or 'top' or 'bottom', center the image
+    if (
+      normalizedPosition === 'center' ||
+      normalizedPosition === 'top' ||
+      normalizedPosition === 'bottom'
+    ) {
+      return 'justify-center'
+    }
+    // Default: respect layoutType
+    return layoutType === 'extendedleft' ? 'justify-start' : 'justify-end'
+  }
 
   return (
     <div
       className={cx(
         'pointer-events-none absolute top-0 z-0 flex',
-        layoutType === 'extendedleft' ? 'left-0 justify-start' : 'right-0 justify-end',
+        // Width constraint on parent
+        'w-full lg:w-[50vw]',
+        // Position based on layout type
+        layoutType === 'extendedleft' && 'left-0',
+        layoutType === 'extendedright' && 'right-0',
+        // Justify based on objectPosition or default to layoutType
+        getJustify(),
       )}
     >
       <Image
@@ -27,8 +59,26 @@ export function ExtendedImageAnchor({
         alt={image.node.altText || ''}
         width={imgW}
         height={imgH}
-        // className="ext-anchor-img h-[420px] w-auto max-w-[700px] min-w-[300px] object-cover lg:max-h-[560px] lg:min-h-[520px] lg:max-w-[700px] lg:min-w-[480px] xl:max-h-[720px] xl:min-h-[640px] xl:max-w-[900px] xl:min-w-[580px]"
-        className="ext-anchor-img h-[420px] w-auto max-w-[700px] min-w-[300px] object-cover lg:h-[530px] lg:max-w-[760px] lg:min-w-[480px] xl:h-[600px] xl:max-w-[900px] xl:min-w-[580px] 2xl:h-[775px] 2xl:min-w-[725px]"
+        className={cx(
+          // Base and small screens
+          'w-auto max-w-[500px] min-w-[300px]',
+          // Large screens - can grow within 50vw parent
+          'lg:max-w-full lg:min-w-[380px]',
+          // XL screens
+          'xl:max-w-full xl:min-w-[480px]',
+          // 2XL screens
+          '2xl:max-w-full 2xl:min-w-[580px]',
+          // Heights from config
+          heightConfig.base,
+          heightConfig.lg,
+          heightConfig.xl,
+          heightConfig['2xl'],
+        )}
+        style={{
+          objectFit: fitValue,
+          objectPosition: positionValue,
+        }}
+        priority
       />
     </div>
   )

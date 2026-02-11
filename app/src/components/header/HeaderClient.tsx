@@ -45,6 +45,7 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
             <img
               src="/images/dhm-logo-signature.svg"
               alt="Dr. Howard Murad"
+              onClick={() => setMobileMenuOpen(false)}
               className="h-21 w-auto transition-[height] duration-200 md:group-data-[shrunk=true]:h-16"
             />
           </Link>
@@ -95,14 +96,36 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
           {/* Mobile toggle */}
           <div className="mobile-menu flex items-center gap-4 lg:hidden">
             <button
-              type="button"
+              onClick={() => setMobileMenuOpen((v) => !v)}
+              className="relative inline-flex h-6 w-6 items-center justify-center text-white"
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileMenuOpen}
               aria-controls={panelId}
-              onClick={() => setMobileMenuOpen((v) => !v)}
-              className="inline-flex items-center justify-center text-white"
             >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              <span className="sr-only">{mobileMenuOpen ? 'Close menu' : 'Open menu'}</span>
+              <span className="relative flex h-5 w-5 flex-col items-center justify-center">
+                {/* Top bar */}
+                <span
+                  className={[
+                    'absolute h-0.5 w-5 bg-current transition-all duration-300',
+                    mobileMenuOpen ? 'translate-y-0 rotate-45' : '-translate-y-1.5',
+                  ].join(' ')}
+                />
+                {/* Middle bar - flattens to line */}
+                <span
+                  className={[
+                    'absolute h-0.5 w-5 bg-current transition-all duration-300',
+                    mobileMenuOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100',
+                  ].join(' ')}
+                />
+                {/* Bottom bar */}
+                <span
+                  className={[
+                    'absolute h-0.5 w-5 bg-current transition-all duration-300',
+                    mobileMenuOpen ? 'translate-y-0 -rotate-45' : 'translate-y-1.5',
+                  ].join(' ')}
+                />
+              </span>
             </button>
           </div>
         </div>
@@ -110,38 +133,26 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
 
       {/* Mobile panel */}
       <div
-        aria-hidden="true"
-        onClick={() => setMobileMenuOpen(false)}
         className={[
           'lg:hidden',
           'fixed right-0 left-0 z-40',
-          'top-25.5',
-          'h-[calc(100vh-102px)]',
-          'bg-black/40 backdrop-blur-sm',
-          'transition-opacity duration-300 ease-out',
-          mobileMenuOpen ? 'opacity-100' : 'pointer-events-none opacity-0',
-        ].join(' ')}
-      />
-      <div
-        id={panelId}
-        aria-hidden={!mobileMenuOpen}
-        className={[
-          'lg:hidden',
-          'fixed right-0 left-0 z-50',
-          'top-25.5',
-          'h-[calc(100vh-102px)]',
-          'bg-gray-alt',
-          'shadow-[0_-12px_24px_rgba(0,0,0,0.35)]',
-          'overflow-auto',
-          'py-9',
-          'transition-opacity duration-300 ease-out',
-          'motion-reduce:transition-none',
-          mobileMenuOpen
-            ? 'pointer-events-auto translate-y-0 opacity-100'
-            : 'pointer-events-none -translate-y-3 opacity-0',
+          'top-[102px]', // Use exact pixel value or var
+          'overflow-hidden',
+          'transition-all duration-300 ease-in-out',
+          mobileMenuOpen ? 'h-[calc(100vh-102px)]' : 'h-0', // Animate height instead of transform
         ].join(' ')}
       >
-        <MobileMenu items={items} onNavigate={() => setMobileMenuOpen(false)} />
+        {/* Background overlay */}
+        <div onClick={() => setMobileMenuOpen(false)} className="bg-gray-alt absolute inset-0" />
+
+        {/* Menu content - slides down with parent */}
+        <div className="relative z-10 h-full overflow-y-auto py-9">
+          <MobileMenu
+            items={items}
+            onNavigate={() => setMobileMenuOpen(false)}
+            isOpen={mobileMenuOpen}
+          />
+        </div>
       </div>
     </HeaderShell>
   )

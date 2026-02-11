@@ -1,14 +1,29 @@
 'use client'
 
-import { useId, useState } from 'react'
+import { useId, useState, useEffect } from 'react'
 import Link from 'next/link'
 import type { NavItem } from './HeaderClient'
 import { cssClassesToMenuColorVar } from '@/lib/ui'
 import { ChevronDown } from 'lucide-react'
 
-export function MobileMenu({ items, onNavigate }: { items: NavItem[]; onNavigate: () => void }) {
+export function MobileMenu({
+  items,
+  onNavigate,
+  isOpen,
+}: {
+  items: NavItem[]
+  onNavigate: () => void
+  isOpen: boolean
+}) {
   const baseId = useId()
   const [openIds, setOpenIds] = useState<Set<string>>(() => new Set())
+
+  // Reset expanded menus when mobile menu closes
+  useEffect(() => {
+    if (!isOpen) {
+      setOpenIds(new Set())
+    }
+  }, [isOpen])
 
   const toggle = (id: string) => {
     setOpenIds((prev) => {
@@ -39,7 +54,10 @@ export function MobileMenu({ items, onNavigate }: { items: NavItem[]; onNavigate
                 <Link
                   href={item.href}
                   className="menu-link text-lg font-medium tracking-wide uppercase transition-colors"
-                  onClick={onNavigate}
+                  onClick={(e) => {
+                    // Don't close immediately - let Next.js start navigation first
+                    setTimeout(() => onNavigate(), 50)
+                  }}
                 >
                   {item.label}
                 </Link>
@@ -82,7 +100,10 @@ export function MobileMenu({ items, onNavigate }: { items: NavItem[]; onNavigate
                           <Link
                             href={child.href}
                             className="menu-link block text-lg font-medium uppercase transition-colors"
-                            onClick={onNavigate}
+                            onClick={(e) => {
+                              // Don't close immediately - let Next.js start navigation first
+                              setTimeout(() => onNavigate(), 50)
+                            }}
                           >
                             {child.label}
                           </Link>

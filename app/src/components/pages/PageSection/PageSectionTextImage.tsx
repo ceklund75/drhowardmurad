@@ -4,7 +4,13 @@ import Image from 'next/image'
 
 import { TextImageAltSection } from '@/lib/graphql/types'
 import { tintBgClassFromValue, themeClassFromAcf, bgImageObjectClass } from '@/lib/theme'
-import { buttonClassName, cx, normalizeAlignment, resolveStringFromArray } from '@/lib/ui'
+import {
+  buttonClassName,
+  cx,
+  normalizeAlignment,
+  resolveHeightConfig,
+  resolveStringFromArray,
+} from '@/lib/ui'
 import { PageSectionCollapsibleList } from './PageSectionCollapsibleList'
 import { ExtendedImageAnchor } from './ExtendedImageAnchor'
 import { DesktopMainRow, DesktopCollapsibleRow } from './PageSetionRows'
@@ -19,7 +25,6 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
     sectionBgColor,
     sectionBgImage,
     sectionBgHasOverlay,
-    textImageAltLayoutType,
     textImageAltExtendedImage,
     textImageAltImageDesktop,
     textImageAltImageMobile,
@@ -31,6 +36,10 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
     textImageAltButtonUrl,
     textImageAltCollapsibleItems,
     textImageAltThemeColor,
+    // NEW FIELDS
+    textImageAltImageHeightPreset,
+    textImageAltImageObjectPosition,
+    textImageAltImageObjectFit,
   } = section
 
   const imageSide = resolveImagePosition(section, index)
@@ -39,15 +48,17 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
   const bgImageObjectAlignment = bgImageObjectClass(imageSide)
   const layoutType = resolveLayoutType(section)
 
+  // NEW: Resolve height configuration
+  const heightConfig = resolveHeightConfig(textImageAltImageHeightPreset)
+
   const [isOpen, setIsOpen] = useState(false)
   const baseId = useId()
   const buttonId = `${baseId}-toggle`
   const panelId = `${baseId}-panel`
   const hasCollapsible = !!textImageAltCollapsibleItems?.length
-
   const [isMounted, setIsMounted] = useState(false)
   const toggleRef = useRef<HTMLButtonElement>(null)
-  const collapsibleDesktopRef = useRef<HTMLDivElement | null>(null)
+  const collapsibleDesktopRef = useRef<HTMLDivElement>(null)
 
   // Calculate spacing only after mount to avoid hydration issues
   useEffect(() => {
@@ -66,11 +77,6 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
     const currentGap = collapsibleRect.top - toggleRect.bottom
     const adjustment = currentGap - desiredSpacing
 
-    console.log('Toggle bottom:', toggleRect.bottom)
-    console.log('Collapsible top:', collapsibleRect.top)
-    console.log('Current gap:', currentGap)
-    console.log('Adjustment needed:', adjustment)
-
     if (adjustment > 0) {
       collapsibleDesktopRef.current.style.transform = `translateY(-${adjustment}px)`
     }
@@ -80,9 +86,8 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
   return (
     <>
       <section className={cx('relative hidden overflow-hidden lg:block', bgColorClass)}>
-        {/* DESKTOP */}
         <div className="relative hidden lg:block">
-          {/* Background image */}
+          {/* Background image - unchanged */}
           {layoutType === 'backgroundonly' && sectionBgImage?.node?.mediaItemUrl && (
             <Image
               src={sectionBgImage.node.mediaItemUrl}
@@ -92,16 +97,21 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
             />
           )}
 
-          {/* Extended image */}
+          {/* Extended image - WITH NEW PROPS */}
           {layoutType !== 'backgroundonly' && textImageAltExtendedImage?.node?.mediaItemUrl && (
-            <ExtendedImageAnchor layoutType={layoutType} image={textImageAltExtendedImage} />
+            <ExtendedImageAnchor
+              layoutType={layoutType}
+              image={textImageAltExtendedImage}
+              heightConfig={heightConfig.extendedImage}
+              objectPosition={textImageAltImageObjectPosition}
+              objectFit={textImageAltImageObjectFit}
+            />
           )}
 
           {sectionBgHasOverlay && <div className="absolute inset-0 bg-white/50" />}
 
-          {/* Main content area */}
-          <div className="relative mx-auto lg:max-w-240 lg:py-12 xl:max-w-300 xl:py-0">
-            {/* Main row with self-contained centering */}
+          <div className="relative mx-auto lg:max-w-240 xl:max-w-300">
+            {/* Main row - WITH NEW PROPS */}
             <DesktopMainRow
               imageSide={imageSide}
               themeClass={themeClass}
@@ -118,13 +128,14 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
               panelId={panelId}
               onToggle={() => setIsOpen((prev) => !prev)}
               toggleRef={toggleRef}
+              heightConfig={heightConfig.mainRow}
+              objectPosition={textImageAltImageObjectPosition}
+              objectFit={textImageAltImageObjectFit}
             />
 
+            {/* Collapsible row - unchanged */}
             {hasCollapsible && (
-              <div
-                ref={collapsibleDesktopRef}
-                className={!isOpen ? 'hidden lg:block' : ''} // Always render at lg+
-              >
+              <div ref={collapsibleDesktopRef} className={!isOpen ? 'hidden lg:block' : ''}>
                 <DesktopCollapsibleRow
                   imageSide={imageSide}
                   themeClass={themeClass}

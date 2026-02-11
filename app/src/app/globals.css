@@ -29,6 +29,7 @@
   --color-blue-heading: #015dcf;
   --color-pink: #c3158a;
   --color-medium-purple: #91298c;
+  --color-dark-purple: #74409a;
   --color-green: #6baf1a;
   --color-cyan: #09b0a2;
   --color-cerulean: #0cb4ce;
@@ -297,6 +298,10 @@
 }
 .theme-purple {
   --color-theme: var(--color-medium-purple);
+  --color-theme-contrast: #ffffff;
+}
+.theme-dark-purple {
+  --color-theme: var(--color-dark-purple);
   --color-theme-contrast: #ffffff;
 }
 .theme-green {

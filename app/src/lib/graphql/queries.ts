@@ -305,6 +305,9 @@ export const QUERY_PAGE_BY_URI = `
               ...ImageFields
             }
           }
+          textImageAltImageHeightPreset
+          textImageAltImageObjectPosition
+          textImageAltImageObjectFit
           textImageAltImageMobile {
             node {
               ...ImageFields
