@@ -14,6 +14,7 @@ import {
 import { PageSectionCollapsibleList } from './PageSectionCollapsibleList'
 import { ExtendedImageAnchor } from './ExtendedImageAnchor'
 import { DesktopMainRow, DesktopCollapsibleRow } from './PageSetionRows'
+import { SectionButton } from './SectionButton'
 
 interface PageSectionTextImageProps {
   section: TextImageAltSection
@@ -32,11 +33,9 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
     textImageAltSubheading,
     textImageAltHeading,
     textImageAltBody,
-    textImageAltButtonLabel,
-    textImageAltButtonUrl,
+    textImageAltButton,
     textImageAltCollapsibleItems,
     textImageAltThemeColor,
-    // NEW FIELDS
     textImageAltImageHeightPreset,
     textImageAltImageObjectPosition,
     textImageAltImageObjectFit,
@@ -85,9 +84,12 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
   // Background wrapper
   return (
     <>
-      <section className={cx('relative hidden overflow-hidden lg:block', bgColorClass)}>
+      <section
+        className={cx('relative hidden overflow-hidden lg:block', bgColorClass)}
+        id={section.sectionAnchorId || undefined}
+      >
         <div className="relative hidden lg:block">
-          {/* Background image - unchanged */}
+          {/* Background image*/}
           {layoutType === 'backgroundonly' && sectionBgImage?.node?.mediaItemUrl && (
             <Image
               src={sectionBgImage.node.mediaItemUrl}
@@ -97,7 +99,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
             />
           )}
 
-          {/* Extended image - WITH NEW PROPS */}
+          {/* Extended image*/}
           {layoutType !== 'backgroundonly' && textImageAltExtendedImage?.node?.mediaItemUrl && (
             <ExtendedImageAnchor
               layoutType={layoutType}
@@ -111,7 +113,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
           {sectionBgHasOverlay && <div className="absolute inset-0 bg-white/50" />}
 
           <div className="relative mx-auto lg:max-w-240 xl:max-w-300">
-            {/* Main row - WITH NEW PROPS */}
+            {/* Main row */}
             <DesktopMainRow
               imageSide={imageSide}
               themeClass={themeClass}
@@ -120,8 +122,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
               textImageAltSubheading={textImageAltSubheading}
               textImageAltHeading={textImageAltHeading}
               textImageAltBody={textImageAltBody}
-              textImageAltButtonLabel={textImageAltButtonLabel}
-              textImageAltButtonUrl={textImageAltButtonUrl}
+              textImageAltButton={textImageAltButton}
               hasCollapsible={hasCollapsible}
               isOpen={isOpen}
               buttonId={buttonId}
@@ -133,7 +134,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
               objectFit={textImageAltImageObjectFit}
             />
 
-            {/* Collapsible row - unchanged */}
+            {/* Collapsible row*/}
             {hasCollapsible && (
               <div ref={collapsibleDesktopRef} className={!isOpen ? 'hidden lg:block' : ''}>
                 <DesktopCollapsibleRow
@@ -149,7 +150,10 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
           </div>
         </div>
       </section>
-      <section className={cx('bg-gray-alt relative overflow-hidden lg:hidden')}>
+      <section
+        className={cx('bg-gray-alt relative overflow-hidden lg:hidden')}
+        id={section.sectionAnchorId || undefined}
+      >
         {/* MOBILE */}
         <div className={cx('mobile-card relative space-y-6', bgColorClass)}>
           {textImageAltImageMobile?.node?.mediaItemUrl && !textImageAltHideImageMobile && (
@@ -184,7 +188,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
             )}
 
             {hasCollapsible && textImageAltCollapsibleItems?.length && (
-              <div className="mt-6">
+              <div className="mt-4">
                 <button
                   id={`${buttonId}-mobile`}
                   type="button"
@@ -208,11 +212,12 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
               </div>
             )}
 
-            {textImageAltButtonLabel && textImageAltButtonUrl && (
-              <div className="mt-6">
-                <a href={textImageAltButtonUrl} className={buttonClassName('button-theme')}>
-                  {textImageAltButtonLabel}
-                </a>
+            {textImageAltButton && (
+              <div className="mt-4">
+                <SectionButton
+                  button={textImageAltButton}
+                  className={buttonClassName('button-theme')}
+                />
               </div>
             )}
           </div>

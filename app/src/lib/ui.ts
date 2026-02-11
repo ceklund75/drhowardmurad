@@ -110,8 +110,8 @@ export function resolveHeightConfig(preset?: string | string[]): HeightConfig {
       },
       mainRow: {
         minHeight: {
-          lg: 'lg:min-h-[480px]',
-          xl: 'xl:min-h-[560px]',
+          lg: 'lg:min-h-[580px]',
+          xl: 'xl:min-h-[640px]',
         },
         contentHeight: {
           lg: 'lg:h-[480px]',
@@ -119,8 +119,8 @@ export function resolveHeightConfig(preset?: string | string[]): HeightConfig {
         },
         imageHeight: {
           base: 'h-[300px]',
-          lg: 'lg:min-h-[480px]',
-          xl: 'xl:min-h-[560px]',
+          lg: 'lg:min-h-[400px]',
+          xl: 'xl:min-h-[480px]',
         },
       },
     },
@@ -224,4 +224,14 @@ export function resolveObjectFit(fit?: string | string[]): 'cover' | 'contain' {
 export function resolveStringFromArray(raw?: string[] | string): string | undefined {
   if (!raw) return undefined
   return Array.isArray(raw) ? raw[0] : raw
+}
+
+// Helper to extract single value from ACF arrays
+export type AcfSelectValue = string | string[] | null | undefined
+
+export function normalizeAcfSelect(value: AcfSelectValue): string | undefined {
+  if (Array.isArray(value)) {
+    return value[0] || undefined
+  }
+  return value || undefined
 }

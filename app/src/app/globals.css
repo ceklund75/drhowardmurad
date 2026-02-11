@@ -452,3 +452,21 @@
 .delay-1200 {
   animation-delay: 1200ms;
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optional: Offset for fixed headers */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

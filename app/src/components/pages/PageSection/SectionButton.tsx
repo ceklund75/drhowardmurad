@@ -1,0 +1,89 @@
+'use client'
+
+import Link from 'next/link'
+import { useState } from 'react'
+import { TextImageAltButton } from '@/lib/graphql/types'
+import { buttonClassName, normalizeAcfSelect } from '@/lib/ui'
+
+import { VideoModal } from '@/components/modals/VideoModal'
+
+interface SectionButtonProps {
+  button: TextImageAltButton
+  className?: string
+}
+
+export function SectionButton({ button, className }: SectionButtonProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  if (!button?.buttonLabel) return null
+
+  const { buttonLabel, buttonLink, buttonModal } = button
+  const buttonType = normalizeAcfSelect(button.buttonType)
+
+  // Link button (internal or external)
+  if (buttonType === 'link' && buttonLink) {
+    const linkType = normalizeAcfSelect(buttonLink.linkType)
+    const isInternal = linkType === 'internal'
+
+    // Internal link - get first node from connection
+    if (isInternal && buttonLink.internalLink?.nodes?.[0]?.uri) {
+      return (
+        <Link
+          href={buttonLink.internalLink.nodes[0].uri}
+          className={className || buttonClassName('button-theme')}
+        >
+          {buttonLabel}
+        </Link>
+      )
+    }
+
+    // External link
+    if (!isInternal && buttonLink.externalUrl) {
+      const target = normalizeAcfSelect(buttonLink.externalTarget) || '_self'
+
+      return (
+        <a
+          href={buttonLink.externalUrl}
+          target={target}
+          rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+          className={className || buttonClassName('button-theme')}
+        >
+          {buttonLabel}
+        </a>
+      )
+    }
+
+    // Missing link configuration
+    if (isInternal && !buttonLink.internalLink?.nodes?.[0]) {
+      console.warn(`Button "${buttonLabel}" is set to internal but has no page selected`)
+      return null
+    }
+  }
+
+  // Modal button
+  if (buttonType === 'modal' && buttonModal) {
+    const modalType = normalizeAcfSelect(buttonModal.modalType)
+
+    return (
+      <>
+        <button
+          type="button"
+          onClick={() => setIsModalOpen(true)}
+          className={className || buttonClassName('button-theme')}
+        >
+          {buttonLabel}
+        </button>
+
+        {modalType === 'video' && buttonModal.modalContent && (
+          <VideoModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            videoUrl={buttonModal.modalContent}
+          />
+        )}
+      </>
+    )
+  }
+
+  return null
+}

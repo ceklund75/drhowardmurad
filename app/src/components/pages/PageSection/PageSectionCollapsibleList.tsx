@@ -13,7 +13,11 @@ export function PageSectionCollapsibleList({ items, panelId, labelledById }: Col
   if (!items || items.length === 0) return null
 
   return (
-    <div id={panelId} aria-labelledby={labelledById} className="space-y-4">
+    <div
+      id={panelId}
+      aria-labelledby={labelledById}
+      className="space-y-4 transition-all duration-500 ease-in-out"
+    >
       {items.map((item, index) =>
         item.textImageAltCollapsibleContent ? (
           <RawHtml key={index} html={item.textImageAltCollapsibleContent} />

@@ -277,6 +277,7 @@ export const QUERY_PAGE_BY_URI = `
 
       pageTextImageAlt {
         pageSectionsTextImageAlt {
+          sectionAnchorId
           sectionBgColor
           sectionBgHasOverlay
           sectionBgImage {
@@ -288,6 +289,31 @@ export const QUERY_PAGE_BY_URI = `
           textImageAltBody
           textImageAltButtonLabel
           textImageAltButtonUrl
+           textImageAltButton {
+            buttonLabel
+            buttonType
+            buttonLink {
+              linkType
+              internalLink {
+                nodes {
+                  ... on Page {
+                    id
+                    uri
+                  }
+                  ... on Post {
+                    id
+                    uri
+                  }
+                }
+              }
+              externalUrl
+              externalTarget
+            }
+            buttonModal {
+              modalType
+              modalContent
+            }
+          }
           textImageAltCollapsibleItems {
             textImageAltCollapsibleContent
             textImageAltCollapsibleTitle

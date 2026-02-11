@@ -18,8 +18,6 @@ interface RootResolverPageProps {
 export default async function RootResolverPage({ params }: RootResolverPageProps) {
   const { slug } = await params
 
-  console.log('[RootResolver] Resolving:', slug)
-
   //Try to fetch as Page first
   let page: GetPageByUriResponse['page'] | null = null
   let pageError: string | null = null
@@ -37,7 +35,7 @@ export default async function RootResolverPage({ params }: RootResolverPageProps
   }
 
   if (page) {
-    console.log('page', page)
+    //console.log('page', page)
     return <PageRenderer page={page} />
   }
 

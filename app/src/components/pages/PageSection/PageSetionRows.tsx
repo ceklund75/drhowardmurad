@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { FeaturedImage, TextImageAltSection } from '@/lib/graphql/types'
+import { FeaturedImage, TextImageAltSection, TextImageAltButton } from '@/lib/graphql/types'
 import {
   cx,
   buttonClassName,
@@ -8,6 +8,7 @@ import {
   resolveObjectPosition,
 } from '@/lib/ui'
 import { PageSectionCollapsibleList } from './PageSectionCollapsibleList'
+import { SectionButton } from './SectionButton'
 
 export function DesktopMainRow(props: {
   imageSide: 'left' | 'right'
@@ -17,8 +18,7 @@ export function DesktopMainRow(props: {
   textImageAltSubheading?: string
   textImageAltHeading?: string
   textImageAltBody?: string
-  textImageAltButtonLabel?: string
-  textImageAltButtonUrl?: string
+  textImageAltButton?: TextImageAltButton
   hasCollapsible?: boolean
   isOpen?: boolean
   buttonId?: string
@@ -37,8 +37,7 @@ export function DesktopMainRow(props: {
     textImageAltSubheading,
     textImageAltHeading,
     textImageAltBody,
-    textImageAltButtonLabel,
-    textImageAltButtonUrl,
+    textImageAltButton,
     hasCollapsible,
     isOpen,
     buttonId,
@@ -49,6 +48,8 @@ export function DesktopMainRow(props: {
     objectPosition,
     objectFit,
   } = props
+
+  console.log('textImageAltImageDesktop: ', textImageAltImageDesktop)
 
   const positionValue = resolveObjectPosition(objectPosition)
   const fitValue = resolveObjectFit(objectFit)
@@ -116,11 +117,19 @@ export function DesktopMainRow(props: {
             />
           )}
 
-          {textImageAltButtonLabel && textImageAltButtonUrl && (
+          {/* {textImageAltButtonLabel && textImageAltButtonUrl && (
             <div className="mt-6">
               <a href={textImageAltButtonUrl} className={buttonClassName('button-theme')}>
                 {textImageAltButtonLabel}
               </a>
+            </div>
+          )} */}
+          {textImageAltButton && (
+            <div className="mt-6">
+              <SectionButton
+                button={textImageAltButton}
+                className={buttonClassName('button-theme')}
+              />
             </div>
           )}
 

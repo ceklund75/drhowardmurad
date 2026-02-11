@@ -151,7 +151,36 @@ export interface TextImageAltCollapsible {
   textImageAltCollapsibleContent?: string
 }
 
+export interface InternalLinkNode {
+  id: string
+  uri: string
+}
+
+export interface InternalLinkConnection {
+  nodes: InternalLinkNode[] // Array of nodes
+}
+
+export interface TextImageAltButtonLink {
+  linkType?: string | string[]
+  internalLink?: InternalLinkConnection | null
+  externalUrl?: string | null
+  externalTarget?: string | string[]
+}
+
+export interface TextImageAltButtonModal {
+  modalType?: string | string[] | null
+  modalContent?: string | null
+}
+
+export interface TextImageAltButton {
+  buttonLabel?: string
+  buttonType?: string | string[]
+  buttonLink?: TextImageAltButtonLink | null
+  buttonModal?: TextImageAltButtonModal | null
+}
+
 export interface TextImageAltSection {
+  sectionAnchorId?: string | null
   sectionBgColor?: string[] | string // Tailwind class: white, gray-50, blue-50, etc.
   textImageAltLayoutType?: 'backgroundonly' | 'extendedleft' | 'extendedright'
   sectionBgImage?: FeaturedImage
@@ -171,6 +200,7 @@ export interface TextImageAltSection {
   textImageAltCollapsibleItems?: TextImageAltCollapsible[]
   textImageAltButtonLabel?: string
   textImageAltButtonUrl?: string
+  textImageAltButton?: TextImageAltButton
   textImageAltThemeColor?: 'blue' | 'pink' | 'purple' | 'orange' | 'green' | 'cyan' | 'cerulean'
 }
 
@@ -195,6 +225,8 @@ export interface PageACF {
   pageTextImageAlt?: TextImageAltSection[]
   pageNewsletterCta?: PageNewsletterCtaACF
 }
+
+export type AcfSelectValue = string | string[] | null | undefined
 
 /**
  * Page node from WordPress
