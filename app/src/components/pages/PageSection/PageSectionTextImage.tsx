@@ -151,7 +151,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
         </div>
       </section>
       <section
-        className={cx('mobile-card overflow-hiddenlg:hidden relative', bgColorClass)}
+        className={cx('mobile-card relative overflow-hidden lg:hidden', bgColorClass)}
         id={section.sectionAnchorId || undefined}
       >
         {/* MOBILE */}

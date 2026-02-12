@@ -39,7 +39,7 @@ export function ContentBoxHero({ hero, title, hideForm = false }: ContentboxHero
         <div className="mx-auto max-w-[58%] min-w-75 bg-[var(--color-theme)]/80 p-2">
           <div className="border border-white p-13 text-center">
             {hero.heroHeading && (
-              <h1 className="mb-1 text-2xl leading-snug font-normal text-white italic lg:text-[40px]">
+              <h1 className="mb-1 text-2xl leading-snug font-normal text-balance text-white italic lg:text-[40px]">
                 “{hero.heroHeading}”
               </h1>
             )}

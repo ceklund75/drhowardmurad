@@ -114,8 +114,8 @@ export function resolveHeightConfig(preset?: string | string[]): HeightConfig {
           xl: 'xl:min-h-[640px]',
         },
         contentHeight: {
-          lg: 'lg:h-[480px]',
-          xl: 'xl:h-[560px]',
+          lg: 'lg:min-h-[480px]',
+          xl: 'xl:min-h-[560px]',
         },
         imageHeight: {
           base: 'h-[300px]',
@@ -133,16 +133,16 @@ export function resolveHeightConfig(preset?: string | string[]): HeightConfig {
       },
       mainRow: {
         minHeight: {
-          lg: 'lg:min-h-[720px]',
+          lg: 'lg:min-h-[680px]',
           xl: 'xl:min-h-[800px]',
         },
         contentHeight: {
-          lg: 'lg:h-[720px]',
-          xl: 'xl:h-[800px]',
+          lg: 'lg:min-h-[680px]',
+          xl: 'xl:min-h-[800px]',
         },
         imageHeight: {
           base: 'h-[420px]',
-          lg: 'lg:min-h-[720px]',
+          lg: 'lg:min-h-[680px]',
           xl: 'xl:min-h-[800px]',
         },
       },
@@ -160,8 +160,8 @@ export function resolveHeightConfig(preset?: string | string[]): HeightConfig {
           xl: 'xl:min-h-[1000px]',
         },
         contentHeight: {
-          lg: 'lg:h-[900px]',
-          xl: 'xl:h-[1000px]',
+          lg: 'lg:min-h-[900px]',
+          xl: 'xl:min-h-[1000px]',
         },
         imageHeight: {
           base: 'h-[480px]',
@@ -172,24 +172,24 @@ export function resolveHeightConfig(preset?: string | string[]): HeightConfig {
     },
     default: {
       extendedImage: {
-        base: 'h-[420px]',
-        lg: 'lg:h-[530px]',
-        xl: 'xl:h-[600px]',
-        '2xl': '2xl:h-[775px]',
+        base: 'h-[400px]',
+        lg: 'lg:h-[500px]',
+        xl: 'xl:h-[580px]',
+        '2xl': '2xl:h-[640px]',
       },
       mainRow: {
         minHeight: {
-          lg: 'lg:min-h-[580px]',
-          xl: 'xl:min-h-[680px]',
+          lg: 'lg:min-h-[520px]',
+          xl: 'xl:min-h-[580px]',
         },
         contentHeight: {
-          lg: 'lg:min-h-[580px]',
-          xl: 'xl:min-h-[680px]',
+          lg: 'lg:min-h-[520px]',
+          xl: 'xl:min-h-[580px]',
         },
         imageHeight: {
           base: 'h-[360px]',
-          lg: 'lg:min-h-[580px]',
-          xl: 'xl:min-h-[680px]',
+          lg: 'lg:min-h-[520px]',
+          xl: 'xl:min-h-[580px]',
         },
       },
     },

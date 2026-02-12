@@ -42,6 +42,8 @@ export function tintBgClassFromValue(raw?: string[] | string): string {
       return 'bg-white'
     case 'gray-alt':
       return 'bg-gray-alt'
+    case 'color-light-1':
+      return 'bg-light-1'
     case 'light-blue':
       return 'bg-tint-light-blue'
     case 'pale-yellow':

@@ -91,7 +91,8 @@ export function DesktopMainRow(props: {
       {/* Content column */}
       <div
         className={cx(
-          'relative flex flex-col justify-center py-12',
+          'relative flex flex-col justify-center py-[15%]',
+          imageSide === 'right' ? 'pr-6' : 'pl-6',
           heightConfig.contentHeight.lg,
           heightConfig.contentHeight.xl,
           themeClass,
