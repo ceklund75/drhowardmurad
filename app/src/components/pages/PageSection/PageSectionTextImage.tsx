@@ -151,18 +151,20 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
         </div>
       </section>
       <section
-        className={cx('bg-gray-alt relative overflow-hidden lg:hidden')}
+        className={cx('mobile-card overflow-hiddenlg:hidden relative', bgColorClass)}
         id={section.sectionAnchorId || undefined}
       >
         {/* MOBILE */}
-        <div className={cx('mobile-card relative space-y-6', bgColorClass)}>
+        <div className={cx('relatives space-y-6')}>
           {textImageAltImageMobile?.node?.mediaItemUrl && !textImageAltHideImageMobile && (
-            <div className="relative aspect-video w-full">
+            <div className="relative w-full">
               <Image
                 src={textImageAltImageMobile.node.mediaItemUrl}
                 alt={textImageAltImageMobile.node.altText || ''}
-                fill
-                className="object-cover"
+                width={textImageAltImageMobile.node.mediaDetails?.width || 800}
+                height={textImageAltImageMobile.node.mediaDetails?.height || 600}
+                className="h-auto w-full"
+                sizes="100vw"
               />
             </div>
           )}
@@ -175,7 +177,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
             )}
 
             {textImageAltHeading && (
-              <h3 className="mb-4 text-3xl font-light text-balance text-[var(--color-theme)]">
+              <h3 className="mb-4 font-light text-balance text-[var(--color-theme)]">
                 {textImageAltHeading}
               </h3>
             )}
@@ -213,7 +215,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
             )}
 
             {textImageAltButton && (
-              <div className="mt-4">
+              <div className="mt-6 mb-1.5">
                 <SectionButton
                   button={textImageAltButton}
                   className={buttonClassName('button-theme')}
