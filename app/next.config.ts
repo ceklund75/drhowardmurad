@@ -3,6 +3,7 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
+  trailingSlash: true,
   images: {
     unoptimized: false,
     qualities: [25, 50, 75, 85, 90, 100],

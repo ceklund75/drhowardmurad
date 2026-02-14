@@ -49,8 +49,6 @@ export function DesktopMainRow(props: {
     objectFit,
   } = props
 
-  console.log('textImageAltImageDesktop: ', textImageAltImageDesktop)
-
   const positionValue = resolveObjectPosition(objectPosition)
   const fitValue = resolveObjectFit(objectFit)
   return (

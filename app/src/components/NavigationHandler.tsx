@@ -15,7 +15,7 @@ export function NavigationHandler() {
       // Scroll to anchor
       const element = document.querySelector(hash)
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' })
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }
     } else {
       // Scroll to top for regular navigation

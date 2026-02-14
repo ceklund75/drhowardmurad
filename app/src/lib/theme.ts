@@ -5,6 +5,7 @@ export const THEME_CLASS_BY_ACF_VALUE = {
   orange: 'theme-intl-orange',
   green: 'theme-green',
   cyan: 'theme-cyan',
+  darkcyan: 'theme-dark-cyan',
   cerulean: 'theme-cerulean',
   darkpurple: 'theme-dark-purple',
 } as const

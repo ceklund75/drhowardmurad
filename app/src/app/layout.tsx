@@ -1,9 +1,9 @@
 import './globals.css'
-import { Suspense } from 'react'
 import { Header } from '@/components/header/Header'
 import { Footer } from '@/components/footer/Footer'
 import { BackToTopButton } from '@/components/ui/BackToTopButton'
 import { NavigationHandler } from '@/components/NavigationHandler'
+import { Suspense } from 'react'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

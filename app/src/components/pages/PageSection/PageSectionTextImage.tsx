@@ -23,6 +23,7 @@ interface PageSectionTextImageProps {
 
 export function PageSectionTextImage({ section, index }: PageSectionTextImageProps) {
   const {
+    sectionAnchorId,
     sectionBgColor,
     sectionBgImage,
     sectionBgHasOverlay,
@@ -55,17 +56,19 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
   const buttonId = `${baseId}-toggle`
   const panelId = `${baseId}-panel`
   const hasCollapsible = !!textImageAltCollapsibleItems?.length
-  const [isMounted, setIsMounted] = useState(false)
   const toggleRef = useRef<HTMLButtonElement>(null)
   const collapsibleDesktopRef = useRef<HTMLDivElement>(null)
 
   // Calculate spacing only after mount to avoid hydration issues
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
+  // const [isMounted, setIsMounted] = useState(false)
+
+  // useEffect(() => {
+  //   setIsMounted(true)
+  // }, [])
 
   useEffect(() => {
-    if (!isMounted || !toggleRef.current || !collapsibleDesktopRef.current) return
+    if (typeof window === 'undefined') return
+    if (!toggleRef.current || !collapsibleDesktopRef.current) return
     if (window.innerWidth < 1024) return
 
     const toggleRect = toggleRef.current.getBoundingClientRect()
@@ -79,15 +82,14 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
     if (adjustment > 0) {
       collapsibleDesktopRef.current.style.transform = `translateY(-${adjustment}px)`
     }
-  }, [isMounted])
+  }, [])
+
+  console.log('sectionAnchorId', sectionAnchorId)
 
   // Background wrapper
   return (
-    <>
-      <section
-        className={cx('relative hidden overflow-hidden lg:block', bgColorClass)}
-        id={section.sectionAnchorId || undefined}
-      >
+    <section id={sectionAnchorId || undefined}>
+      <div className={cx('foo relative hidden overflow-hidden lg:block', bgColorClass)}>
         <div className="relative hidden lg:block">
           {/* Background image*/}
           {layoutType === 'backgroundonly' && sectionBgImage?.node?.mediaItemUrl && (
@@ -149,12 +151,9 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
             )}
           </div>
         </div>
-      </section>
-      <section
-        className={cx('mobile-card relative overflow-hidden lg:hidden', bgColorClass)}
-        id={section.sectionAnchorId || undefined}
-      >
-        {/* MOBILE */}
+      </div>
+      {/* MOBILE */}
+      <div className={cx('mobile-card foo relative overflow-hidden lg:hidden', bgColorClass)}>
         <div className={cx('relatives space-y-6')}>
           {textImageAltImageMobile?.node?.mediaItemUrl && !textImageAltHideImageMobile && (
             <div className="relative w-full">
@@ -224,8 +223,8 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
             )}
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   )
 }
 

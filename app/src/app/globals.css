@@ -320,6 +320,10 @@
   --color-theme: var(--color-intl-orange);
   --color-theme-contrast: #ffffff;
 }
+.theme-dark-cyan {
+  --color-theme: var(--color-dark-cyan);
+  --color-theme-contrast: #ffffff;
+}
 
 .bg-tint-light-blue {
   background-color: var(--color-tint-light-blue);
@@ -455,6 +459,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 80px;
 }
 
 /* Optional: Offset for fixed headers */
