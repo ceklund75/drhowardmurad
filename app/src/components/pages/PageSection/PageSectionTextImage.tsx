@@ -13,7 +13,7 @@ import {
 } from '@/lib/ui'
 import { PageSectionCollapsibleList } from './PageSectionCollapsibleList'
 import { ExtendedImageAnchor } from './ExtendedImageAnchor'
-import { DesktopMainRow, DesktopCollapsibleRow } from './PageSetionRows'
+import { DesktopMainRow, DesktopCollapsibleRow } from './PageSectionRows'
 import { SectionButton } from './SectionButton'
 
 interface PageSectionTextImageProps {
@@ -47,17 +47,15 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
   const themeClass = themeClassFromAcf(textImageAltThemeColor)
   const bgImageObjectAlignment = bgImageObjectClass(imageSide)
   const layoutType = resolveLayoutType(section)
-
-  // NEW: Resolve height configuration
   const heightConfig = resolveHeightConfig(textImageAltImageHeightPreset)
+  const hasCollapsible = !!textImageAltCollapsibleItems?.length
 
+  const toggleRef = useRef<HTMLButtonElement>(null)
+  const collapsibleDesktopRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
   const baseId = useId()
   const buttonId = `${baseId}-toggle`
   const panelId = `${baseId}-panel`
-  const hasCollapsible = !!textImageAltCollapsibleItems?.length
-  const toggleRef = useRef<HTMLButtonElement>(null)
-  const collapsibleDesktopRef = useRef<HTMLDivElement>(null)
 
   // Calculate spacing only after mount to avoid hydration issues
   // const [isMounted, setIsMounted] = useState(false)
@@ -75,7 +73,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
     const collapsibleRect = collapsibleDesktopRef.current.getBoundingClientRect()
 
     // Calculate how much to pull up the collapsible to be near toggle
-    const desiredSpacing = 16 // 32px below toggle button
+    const desiredSpacing = 0
     const currentGap = collapsibleRect.top - toggleRect.bottom
     const adjustment = currentGap - desiredSpacing
 
@@ -84,11 +82,10 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
     }
   }, [])
 
-  console.log('sectionAnchorId', sectionAnchorId)
-
   // Background wrapper
   return (
     <section id={sectionAnchorId || undefined}>
+      {/* Desktop Layout */}
       <div className={cx('foo relative hidden overflow-hidden lg:block', bgColorClass)}>
         <div className="relative hidden lg:block">
           {/* Background image*/}
@@ -152,7 +149,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
           </div>
         </div>
       </div>
-      {/* MOBILE */}
+      {/* Mobile Layout */}
       <div className={cx('mobile-card foo relative overflow-hidden lg:hidden', bgColorClass)}>
         <div className={cx('relatives space-y-6')}>
           {textImageAltImageMobile?.node?.mediaItemUrl && !textImageAltHideImageMobile && (
@@ -170,13 +167,13 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
 
           <div className={themeClass}>
             {textImageAltSubheading && (
-              <p className="h4 mb-3 tracking-wide text-[var(--color-theme)] italic">
+              <p className="h4 mb-3 tracking-wide text-(--color-theme) italic">
                 {textImageAltSubheading}
               </p>
             )}
 
             {textImageAltHeading && (
-              <h3 className="mb-4 font-light text-balance text-[var(--color-theme)]">
+              <h3 className="mb-4 font-light text-balance text-(--color-theme)">
                 {textImageAltHeading}
               </h3>
             )}
@@ -189,11 +186,11 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
             )}
 
             {hasCollapsible && textImageAltCollapsibleItems?.length && (
-              <div className="mt-4">
+              <div className="mt-2">
                 <button
                   id={`${buttonId}-mobile`}
                   type="button"
-                  className="cursor-pointer text-sm font-medium text-[var(--color-theme)] uppercase underline underline-offset-4"
+                  className="cursor-pointer text-sm font-medium text-(--color-theme) uppercase underline underline-offset-4"
                   aria-expanded={!!isOpen}
                   aria-controls={`${panelId}-mobile`}
                   onClick={() => setIsOpen((prev) => !prev)}
@@ -202,7 +199,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
                 </button>
 
                 {isOpen && (
-                  <div className="mt-4 space-y-4">
+                  <div className="mt-2 space-y-4">
                     <PageSectionCollapsibleList
                       items={textImageAltCollapsibleItems}
                       panelId={`${panelId}-mobile`}

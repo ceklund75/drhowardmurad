@@ -24,17 +24,33 @@ export function SectionButton({ button, className }: SectionButtonProps) {
   if (buttonType === 'link' && buttonLink) {
     const linkType = normalizeAcfSelect(buttonLink.linkType)
     const isInternal = linkType === 'internal'
+    const internalLnkNode = isInternal ? buttonLink.internalLink?.nodes?.[0] : null
 
     // Internal link - get first node from connection
-    if (isInternal && buttonLink.internalLink?.nodes?.[0]?.uri) {
-      return (
-        <Link
-          href={buttonLink.internalLink.nodes[0].uri}
-          className={className || buttonClassName('button-theme')}
-        >
-          {buttonLabel}
-        </Link>
-      )
+    if (isInternal && internalLnkNode) {
+      if (internalLnkNode.__typename === 'MediaItem') {
+        return (
+          <Link
+            href={internalLnkNode.mediaItemUrl}
+            className={className || buttonClassName('button-theme')}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {buttonLabel}
+          </Link>
+        )
+      }
+
+      if (
+        (internalLnkNode.__typename === 'Page' || internalLnkNode.__typename === 'Post') &&
+        internalLnkNode.uri
+      ) {
+        return (
+          <Link href={internalLnkNode.uri} className={className || buttonClassName('button-theme')}>
+            {buttonLabel}
+          </Link>
+        )
+      }
     }
 
     // External link

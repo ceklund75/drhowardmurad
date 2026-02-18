@@ -98,13 +98,11 @@ export function DesktopMainRow(props: {
       >
         <div className="space-y-4">
           {textImageAltSubheading && (
-            <p className="h4 tracking-wide text-[var(--color-theme)] italic">
-              {textImageAltSubheading}
-            </p>
+            <p className="h4 tracking-wide text-(--color-theme) italic">{textImageAltSubheading}</p>
           )}
 
           {textImageAltHeading && (
-            <h3 className="mb-4 text-3xl font-light text-balance text-[var(--color-theme)] md:text-[34px]">
+            <h3 className="mb-4 text-3xl font-light text-balance text-(--color-theme) md:text-[34px]">
               {textImageAltHeading}
             </h3>
           )}
@@ -116,15 +114,8 @@ export function DesktopMainRow(props: {
             />
           )}
 
-          {/* {textImageAltButtonLabel && textImageAltButtonUrl && (
-            <div className="mt-6">
-              <a href={textImageAltButtonUrl} className={buttonClassName('button-theme')}>
-                {textImageAltButtonLabel}
-              </a>
-            </div>
-          )} */}
-          {textImageAltButton && (
-            <div className="mt-6">
+          {textImageAltButton && textImageAltButton?.buttonLabel && (
+            <div className="section-button mt-6">
               <SectionButton
                 button={textImageAltButton}
                 className={buttonClassName('button-theme')}
@@ -138,7 +129,9 @@ export function DesktopMainRow(props: {
                 id={buttonId}
                 ref={toggleRef}
                 type="button"
-                className="cursor-pointer text-sm font-medium text-[var(--color-theme)] uppercase underline underline-offset-4"
+                className={cx(
+                  'cursor-pointer text-sm font-medium text-(--color-theme) uppercase underline underline-offset-4',
+                )}
                 aria-expanded={!!isOpen}
                 aria-controls={panelId}
                 onClick={onToggle}
@@ -153,7 +146,6 @@ export function DesktopMainRow(props: {
   )
 }
 
-// DesktopCollapsibleRow remains unchanged
 export function DesktopCollapsibleRow(props: {
   imageSide: 'left' | 'right'
   themeClass: string
@@ -177,7 +169,7 @@ export function DesktopCollapsibleRow(props: {
       {/* spacer under image column */}
       <div className="hidden lg:block" />
 
-      <div className={cx('space-y-3', themeClass)}>
+      <div className={cx('space-y-3', themeClass, imageSide === 'right' ? 'pr-6' : 'pl-6')}>
         <PageSectionCollapsibleList items={items} panelId={panelId} labelledById={labelledById} />
       </div>
     </div>

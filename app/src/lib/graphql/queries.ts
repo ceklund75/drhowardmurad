@@ -296,6 +296,7 @@ export const QUERY_PAGE_BY_URI = `
               linkType
               internalLink {
                 nodes {
+                  __typename
                   ... on Page {
                     id
                     uri
@@ -304,6 +305,10 @@ export const QUERY_PAGE_BY_URI = `
                     id
                     uri
                   }
+                  ... on MediaItem {
+                    id
+                    mediaItemUrl                  
+                  }  
                 }
               }
               externalUrl

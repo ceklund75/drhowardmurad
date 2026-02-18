@@ -146,15 +146,21 @@ export interface TextImageFixedSection {
  * Supports: Background-only, Extended Left, Extended Right layouts
  * Optional: Collapsible items below content
  */
+
 export interface TextImageAltCollapsible {
   textImageAltCollapsibleTitle?: string
   textImageAltCollapsibleContent?: string
 }
 
-export interface InternalLinkNode {
-  id: string
-  uri: string
+export interface InternalLinkConnection {
+  __typename: 'AcfContentNodeConnection' // The connection wrapper
+  nodes: InternalLinkNode[] // The actual nodes
 }
+
+export type InternalLinkNode =
+  | { __typename: 'Page'; id: string; uri: string }
+  | { __typename: 'Post'; id: string; uri: string }
+  | { __typename: 'MediaItem'; id: string; mediaItemUrl: string }
 
 export interface InternalLinkConnection {
   nodes: InternalLinkNode[] // Array of nodes
