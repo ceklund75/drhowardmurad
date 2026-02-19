@@ -17,12 +17,12 @@ function resolveHeroType(hero: PageHeroACF | undefined): 'home' | 'contentbox' |
 }
 
 export function PageRenderer({ page }: PageRendererProps) {
-  const { pageHero, pageTextImageAlt, pageTextImageFixed, pageNewsletterCta } = page
-
+  // const { pageHero, pageTextImageAlt, pageTextImageFixed, pageNewsletterCta } = page
+  const { pageHero, pageTextImageAlt, pageNewsletterCta } = page
   const heroType = resolveHeroType(pageHero)
 
   const altSections = pageTextImageAlt?.pageSectionsTextImageAlt ?? []
-  const fixedSections = pageTextImageFixed?.pageSectionsTextImageFixed ?? []
+  //const fixedSections = pageTextImageFixed?.pageSectionsTextImageFixed ?? []
 
   return (
     <main className="bg-gray-alt">

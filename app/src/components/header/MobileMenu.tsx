@@ -1,6 +1,6 @@
 'use client'
 
-import { useId, useState, useEffect } from 'react'
+import { useId, useState } from 'react'
 import Link from 'next/link'
 import type { NavItem } from './HeaderClient'
 import { cssClassesToMenuColorVar } from '@/lib/ui'
@@ -19,16 +19,22 @@ export function MobileMenu({
   const [openIds, setOpenIds] = useState<Set<string>>(() => new Set())
 
   // Reset expanded menus when mobile menu closes
-  useEffect(() => {
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen)
+  if (prevIsOpen !== isOpen) {
+    setPrevIsOpen(isOpen)
     if (!isOpen) {
       setOpenIds(new Set())
     }
-  }, [isOpen])
+  }
 
   const toggle = (id: string) => {
     setOpenIds((prev) => {
       const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
       return next
     })
   }

@@ -198,15 +198,17 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
                   {isOpen ? 'Read less' : 'Read more'}
                 </button>
 
-                {isOpen && (
-                  <div className="mt-2 space-y-4">
-                    <PageSectionCollapsibleList
-                      items={textImageAltCollapsibleItems}
-                      panelId={`${panelId}-mobile`}
-                      labelledById={`${buttonId}-mobile`}
-                    />
+                <div className={`collapsible-grid ${isOpen ? 'is-open' : ''}`}>
+                  <div className="min-h-0">
+                    <div className="mt-2 space-y-4">
+                      <PageSectionCollapsibleList
+                        items={textImageAltCollapsibleItems}
+                        panelId={`${panelId}-mobile`}
+                        labelledById={`${buttonId}-mobile`}
+                      />
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             )}
 

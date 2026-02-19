@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './fonts.css';
+
 /* ============================================
    DESIGN TOKENS (Tailwind v4)
    Theme variables create utilities automatically:
@@ -457,9 +458,29 @@
   animation-delay: 1200ms;
 }
 
+.collapsible-grid {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 300ms ease-in-out;
+}
+
+.collapsible-grid.is-open {
+  grid-template-rows: 1fr;
+}
+
+.collapsible-grid > * {
+  overflow: hidden;
+  min-height: 0;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
+}
+
+[input]:focus,
+[button]:focus {
+  @apply focus:border-gray-1 focus:border focus:ring-0 focus:outline-0;
 }
 
 /* Optional: Offset for fixed headers */

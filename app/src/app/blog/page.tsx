@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { fetchBlogPage, getTotalBlogPages } from '@/lib/blog/pagination'
 import BlogHero from '@/components/blog/BlogHero'
 import BlogGrid from '@/components/blog/BlogGrid'
@@ -27,12 +28,12 @@ export default async function BlogPage() {
         <div className="mt-12 flex justify-center gap-4">
           {/* No previous for page 1 */}
           {pageNumber < totalPages && (
-            <a
+            <Link
               href="/blog/page/2"
               className="inline-flex items-center border border-[var(--color-gray-1)] px-4 py-2 text-sm font-semibold tracking-wide text-[var(--color-gray-1)] uppercase transition-colors hover:bg-[var(--color-gray-1)] hover:text-white"
             >
               Next Page
-            </a>
+            </Link>
           )}
         </div>
       </section>

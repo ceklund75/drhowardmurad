@@ -156,21 +156,33 @@ export function DesktopCollapsibleRow(props: {
 }) {
   const { imageSide, themeClass, isOpen, panelId, labelledById, items } = props
 
-  if (!isOpen || !items?.length) return null
+  if (!items?.length) return null
 
   return (
-    <div
-      className={cx(
-        'grid gap-14 lg:mt-8',
-        'lg:grid-cols-2',
-        imageSide === 'right' ? 'lg:[&>div:first-child]:order-2' : '',
-      )}
-    >
-      {/* spacer under image column */}
-      <div className="hidden lg:block" />
+    <div className={`collapsible-grid ${isOpen ? 'is-open' : ''}`}>
+      <div className="min-h-0">
+        <div
+          className={cx(
+            'grid gap-14 lg:mt-8',
+            'lg:grid-cols-2',
+            imageSide === 'right' ? 'lg:[&>div:first-child]:order-2' : '',
+          )}
+        >
+          {/* spacer under image column */}
+          <div className="hidden lg:block" />
 
-      <div className={cx('space-y-3', themeClass, imageSide === 'right' ? 'pr-6' : 'pl-6')}>
-        <PageSectionCollapsibleList items={items} panelId={panelId} labelledById={labelledById} />
+          <div
+            id={panelId}
+            aria-labelledby={labelledById}
+            className={cx('space-y-3', themeClass, imageSide === 'right' ? 'pr-6' : 'pl-6')}
+          >
+            <PageSectionCollapsibleList
+              items={items}
+              panelId={panelId}
+              labelledById={labelledById}
+            />
+          </div>
+        </div>
       </div>
     </div>
   )

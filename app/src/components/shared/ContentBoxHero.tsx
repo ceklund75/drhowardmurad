@@ -2,6 +2,7 @@ import Image from 'next/image'
 import type { PageHeroACF } from '@/lib/graphql/types'
 import { themeClassFromAcf } from '@/lib/theme'
 import { RawHtml } from '../RawHtml'
+import { NewsletterInlineForm } from '../forms/NewsletterInlineForm'
 
 interface ContentboxHeroProps {
   hero: PageHeroACF
@@ -36,7 +37,7 @@ export function ContentBoxHero({ hero, title, hideForm = false }: ContentboxHero
       <div
         className={`relative z-10 hidden min-h-160 items-center justify-center px-4 py-12 lg:flex lg:py-16 ${themeClass}`}
       >
-        <div className="mx-auto max-w-[58%] min-w-75 bg-[var(--color-theme)]/80 p-2">
+        <div className="mx-auto max-w-[58%] min-w-75 bg-(--color-theme)/80 p-2">
           <div className="border border-white p-13 text-center">
             {hero.heroHeading && (
               <h1 className="mb-1 text-2xl leading-snug font-normal text-balance text-white italic lg:text-[40px]">
@@ -67,17 +68,8 @@ export function ContentBoxHero({ hero, title, hideForm = false }: ContentboxHero
                 )}
 
                 {/* Placeholder button - inline form will be added when building newsletter modal */}
-                <div className="flex flex-col items-center justify-center gap-3 lg:flex-row">
-                  <button
-                    className="bg-white px-8 py-3 text-sm font-semibold text-[var(--color-theme)] uppercase transition-colors hover:bg-white/90"
-                    aria-label="Subscribe to newsletter"
-                    type="button"
-                  >
-                    Sign-Up
-                  </button>
-                  <span className="text-xs text-white/70 lg:text-sm">
-                    (Form will be inline: First Name | Email | Submit)
-                  </span>
+                <div className="mt-4">
+                  <NewsletterInlineForm buttonLabel={'SIGN-UP'} variant="contentbox" />
                 </div>
               </div>
             )}

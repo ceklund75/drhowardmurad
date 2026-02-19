@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { HeaderShell } from './HeaderShell'
 import { MobileMenu } from '@/components/header/MobileMenu'
-import { ChevronDown, Menu, X } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 
 export type NavItem = {
   cssClasses?: string | string[] | null
@@ -37,16 +38,20 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
         <div
           className={[
             'flex items-center justify-between',
-            'h-25.5 transition-[height] duration-200',
+            'h-22.5 transition-[height] duration-200 md:h-25.5',
             'md:group-data-[shrunk=true]:h-16',
           ].join(' ')}
         >
-          <Link href="/" aria-label="Dr. Howard Murad" className="block w-68.5 shrink-0">
-            <img
+          <Link
+            href="/"
+            aria-label="Dr. Howard Murad"
+            className="relative block h-18 w-68.5 shrink-0 transition-[height] duration-200 md:h-20 md:group-data-[shrunk=true]:h-16"
+          >
+            <Image
               src="/images/dhm-logo-signature.svg"
               alt="Dr. Howard Murad"
+              fill={true}
               onClick={() => setMobileMenuOpen(false)}
-              className="h-21 w-auto transition-[height] duration-200 md:group-data-[shrunk=true]:h-16"
             />
           </Link>
 

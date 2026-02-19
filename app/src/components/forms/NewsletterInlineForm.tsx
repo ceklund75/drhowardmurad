@@ -1,10 +1,23 @@
 'use client'
-
+import { cx } from '@/lib/ui'
 interface NewsletterInlineFormProps {
   buttonLabel?: string
+  variant?: 'default' | 'contentbox'
 }
 
-export function NewsletterInlineForm({ buttonLabel = 'Sign Up' }: NewsletterInlineFormProps) {
+export function NewsletterInlineForm({
+  buttonLabel = 'Sign Up',
+  variant = 'default',
+}: NewsletterInlineFormProps) {
+  const isDefault = variant === 'default'
+
+  const inputClass = isDefault
+    ? 'border-medium-purple text-medium-purple placeholder:text-medium-purple/90'
+    : 'border-white bg-white text-[var(--color-theme)] placeholder:text-[var(--color-theme)]/90'
+  const inputButton = isDefault
+    ? 'border-medium-purple text-medium-purple hover:bg-medium-purple border hover:text-white'
+    : 'border-white text-[var(--color-theme)] bg-white hover:bg-transparent hover:text-white'
+
   return (
     <form
       className="flex flex-col gap-3 sm:flex-row sm:items-center"
@@ -14,17 +27,20 @@ export function NewsletterInlineForm({ buttonLabel = 'Sign Up' }: NewsletterInli
         type="text"
         name="firstName"
         placeholder="First name"
-        className="w-full border border-[var(--color-medium-purple)] px-3 py-2 text-sm"
+        className={cx('w-full border px-3 py-2 text-sm', inputClass)}
       />
       <input
         type="email"
         name="email"
         placeholder="Email"
-        className="w-full border border-[var(--color-medium-purple)] px-3 py-2 text-sm"
+        className={cx('w-full border px-3 py-2 text-sm', inputClass)}
       />
       <button
         type="submit"
-        className="border border-[var(--color-medium-purple)] px-5 py-2 text-sm font-semibold whitespace-nowrap text-[var(--color-medium-purple)] transition hover:bg-[var(--color-medium-purple)] hover:text-white"
+        className={cx(
+          'w-[80%] border px-5 py-2 text-sm font-semibold whitespace-nowrap transition',
+          inputButton,
+        )}
       >
         {buttonLabel}
       </button>

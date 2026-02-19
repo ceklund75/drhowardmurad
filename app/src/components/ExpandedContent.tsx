@@ -8,10 +8,10 @@ interface ExpandedContentProps {
 }
 
 export function ExpandedContent({ html }: ExpandedContentProps) {
-  if (!html) return null
-
   const [isOpen, setIsOpen] = useState(false)
   const regionId = useId()
+
+  if (!html) return null
 
   return (
     <section className="mb-6">
@@ -25,9 +25,11 @@ export function ExpandedContent({ html }: ExpandedContentProps) {
         {isOpen ? 'Read Less' : 'Read More'}
       </button>
 
-      <div id={regionId} hidden={!isOpen} className="mt-4">
-        <div className="prose prose-lg max-w-none">
-          <RawHtml html={html} />
+      <div className={`collapsible-grid ${isOpen ? 'is-open' : ''}`}>
+        <div id={regionId} className="min-h-0">
+          <div className="prose prose-lg mt-4 max-w-none">
+            <RawHtml html={html} />
+          </div>
         </div>
       </div>
     </section>
