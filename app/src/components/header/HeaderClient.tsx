@@ -141,10 +141,10 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
         className={[
           'lg:hidden',
           'fixed right-0 left-0 z-40',
-          'top-[102px]', // Use exact pixel value or var
+          'top-20', // Use exact pixel value or var
           'overflow-hidden',
           'transition-all duration-300 ease-in-out',
-          mobileMenuOpen ? 'h-[calc(100vh-102px)]' : 'h-0', // Animate height instead of transform
+          mobileMenuOpen ? 'h-[calc(100vh-80px)]' : 'h-0', // Animate height instead of transform
         ].join(' ')}
       >
         {/* Background overlay */}

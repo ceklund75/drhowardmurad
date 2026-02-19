@@ -1,4 +1,3 @@
-// app/page.tsx
 import { wpgraphql } from '@/lib/graphql/server'
 import { QUERY_PAGE_BY_URI } from '@/lib/graphql/queries'
 import { GetPageByUriResponse } from '@/lib/graphql/types'
