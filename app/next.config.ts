@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    cpus: 2, // max concurrent static generation workers
+  },
+  staticPageGenerationTimeout: 120, // increase from default 60s
 }
 
 export default nextConfig

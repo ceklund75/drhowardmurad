@@ -1,26 +1,29 @@
 import { wpgraphql, wpgraphqlBatch } from '@/lib/graphql/server'
-import { QUERY_PAGE_BY_URI, QUERY_POST_BY_SLUG, QUERY_ALL_POST_SLUGS } from '@/lib/graphql/queries'
+import {
+  QUERY_PAGE_BY_URI,
+  QUERY_POST_BY_SLUG,
+  QUERY_ALL_POST_SLUGS,
+  QUERY_ALL_PAGE_SLUGS,
+} from '@/lib/graphql/queries'
 import {
   GetPageByUriResponse,
   GetPostBySlugResponse,
   GetAllPostSlugsResponse,
+  GetAllPageSlugsResponse,
 } from '@/lib/graphql/types'
 import { notFound } from 'next/navigation'
 import { PostRenderer } from '@/components/blog/PostRenderer'
 import { PageRenderer } from '@/components/pages/PageRenderer'
 
-export const dynamic = 'force-dynamic'
-
 interface RootResolverPageProps {
-  params: Promise<{ slug: string[] }>
+  params: Promise<{ slug: string }>
 }
 
 export default async function RootResolverPage({ params }: RootResolverPageProps) {
   const { slug } = await params
 
-  //Try to fetch as Page first
+  // Try Page first
   let page: GetPageByUriResponse['page'] | null = null
-  let pageError: string | null = null
 
   try {
     const data = await wpgraphql<GetPageByUriResponse>({
@@ -30,18 +33,15 @@ export default async function RootResolverPage({ params }: RootResolverPageProps
     })
     page = data.page
   } catch (err) {
-    pageError = err instanceof Error ? err.message : 'Unknown error'
-    console.log('[RootResolver] Page query failed:', pageError)
+    console.log('[RootResolver] Page query failed:', err instanceof Error ? err.message : err)
   }
 
   if (page) {
-    //console.log('page', page)
     return <PageRenderer page={page} />
   }
 
-  // if no Page, try to fetch as Post
+  // Try Post second
   let post: GetPostBySlugResponse['post'] | null = null
-  let postError: string | null = null
 
   try {
     const data = await wpgraphql<GetPostBySlugResponse>({
@@ -51,51 +51,68 @@ export default async function RootResolverPage({ params }: RootResolverPageProps
     })
     post = data.post
   } catch (err) {
-    postError = err instanceof Error ? err.message : 'Unknown error'
-    console.log('[RootResolver] Post query failed:', postError)
+    console.log('[RootResolver] Post query failed:', err instanceof Error ? err.message : err)
   }
 
   if (post) {
     return <PostRenderer post={post} />
   }
 
-  // Step 3: Neither found
+  // Neither found
   notFound()
 }
 
 export async function generateStaticParams() {
   try {
     const allSlugs: string[] = []
-    let hasMore = true
-    let after: string | null = null
 
-    console.log('[generateStaticParams] Starting post slug collection...')
+    // Pages
+    {
+      let hasMorePages = true
+      let after: string | null = null
 
-    // Paginate through all posts to gather slugs
-    while (hasMore) {
-      const response: GetAllPostSlugsResponse = await wpgraphqlBatch<GetAllPostSlugsResponse>({
-        query: QUERY_ALL_POST_SLUGS,
-        variables: { first: 100, after },
-        revalidate: false,
-      })
+      while (hasMorePages) {
+        const response: GetAllPageSlugsResponse = await wpgraphqlBatch<GetAllPageSlugsResponse>({
+          query: QUERY_ALL_PAGE_SLUGS,
+          variables: { first: 100, after },
+        })
 
-      response.posts.nodes.forEach((node: { slug: string }) => {
-        allSlugs.push(node.slug)
-      })
+        response.pages.nodes.forEach((node: { slug: string | null }) => {
+          if (!node.slug) return
+          allSlugs.push(node.slug)
+        })
 
-      hasMore = response.posts.pageInfo.hasNextPage
-      after = response.posts.pageInfo.endCursor
-
-      console.log(`[generateStaticParams] Collected ${allSlugs.length} slugs so far...`)
+        hasMorePages = response.pages.pageInfo.hasNextPage
+        after = response.pages.pageInfo.endCursor
+      }
     }
 
-    console.log(`[generateStaticParams] Complete: Pre-built ${allSlugs.length} post routes`)
+    // Posts
+    {
+      let hasMore = true
+      let after: string | null = null
+
+      while (hasMore) {
+        const response: GetAllPostSlugsResponse = await wpgraphqlBatch<GetAllPostSlugsResponse>({
+          query: QUERY_ALL_POST_SLUGS,
+          variables: { first: 100, after },
+        })
+
+        response.posts.nodes.forEach((node: { slug: string | null }) => {
+          if (!node.slug) return
+          allSlugs.push(node.slug)
+        })
+
+        hasMore = response.posts.pageInfo.hasNextPage
+        after = response.posts.pageInfo.endCursor
+      }
+    }
+
+    console.log(`[generateStaticParams] Complete: Pre-built ${allSlugs.length} page+post routes`)
 
     return allSlugs.map((slug) => ({ slug }))
   } catch (error) {
-    console.error('[generateStaticParams] Failed to fetch post slugs:', error)
-    // On error, return empty array
-    // Next.js will fall back to on-demand ISR (slower first request, but still works)
+    console.error('[generateStaticParams] Failed to fetch slugs:', error)
     return []
   }
 }

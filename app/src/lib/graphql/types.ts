@@ -234,6 +234,16 @@ export interface PageACF {
 
 export type AcfSelectValue = string | string[] | null | undefined
 
+export interface GetAllPageSlugsResponse {
+  pages: {
+    nodes: { slug: string | null }[]
+    pageInfo: {
+      hasNextPage: boolean
+      endCursor: string | null
+    }
+  }
+}
+
 /**
  * Page node from WordPress
  */

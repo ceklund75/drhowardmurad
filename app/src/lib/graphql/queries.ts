@@ -390,6 +390,20 @@ export const QUERY_PAGE_BY_URI = `
   }
 `
 
+export const QUERY_ALL_PAGE_SLUGS = `
+query GetAllPageSlugs($first: Int!, $after: String) {
+    pages(first: $first, after: $after, where: { hasPassword: false }) {
+      nodes {
+        slug
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`
+
 /**
  * Fetch all categories (for navigation, filtering)
  * Optimized: Removed databaseId from fragment (not needed)
