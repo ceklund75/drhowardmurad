@@ -66,6 +66,7 @@ export function PostRenderer({ post }: PostRendererProps) {
                   width={blogPost.contentAssociatedImage.node.mediaDetails?.width || 800}
                   height={blogPost.contentAssociatedImage.node.mediaDetails?.height || 1200}
                   className="h-auto w-full"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
                 />
               </div>
               {blogPost.imagePhotoCredit && (
@@ -147,6 +148,7 @@ export function PostRenderer({ post }: PostRendererProps) {
                     width={blogPost.contentAssociatedImage.node.mediaDetails?.width || 800}
                     height={blogPost.contentAssociatedImage.node.mediaDetails?.height || 1200}
                     className="h-auto w-full"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 </div>
                 {blogPost.imagePhotoCredit && (

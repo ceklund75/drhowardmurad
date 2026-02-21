@@ -1,7 +1,7 @@
 import React from 'react'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { wpgraphql } from '@/lib/graphql/server'
+import { wpgraphql, wpgraphqlBatch } from '@/lib/graphql/server'
 import {
   QUERY_POSTS_BY_CATEGORY,
   QUERY_ALL_CATEGORIES,
@@ -10,6 +10,7 @@ import {
 import {
   GetPostsByCategoryResponse,
   GetAllCategorySlugsResponse,
+  GetAllCategoriesResponse,
   GetPageByUriResponse,
 } from '@/lib/graphql/types'
 import { themeClassFromCategory } from '@/lib/theme'
@@ -102,4 +103,20 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       </section>
     </>
   )
+}
+
+export const dynamicParams = true // allow any future categories to still work
+
+export async function generateStaticParams() {
+  try {
+    const response: GetAllCategoriesResponse = await wpgraphqlBatch<GetAllCategoriesResponse>({
+      query: QUERY_ALL_CATEGORIES,
+      variables: { first: 100 },
+    })
+
+    return response.categories.nodes.filter((c) => c.slug).map((c) => ({ slug: c.slug }))
+  } catch (error) {
+    console.error('[generateStaticParams/category] Failed:', error)
+    return []
+  }
 }

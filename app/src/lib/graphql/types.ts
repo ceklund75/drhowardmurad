@@ -309,6 +309,12 @@ export interface GetPostsByCategoryResponse {
   }
 }
 
+export interface GetAllCategoriesResponse {
+  categories: {
+    nodes: Category[]
+  }
+}
+
 // ============= Footer Types =============
 
 export interface FooterIconLink {

@@ -33,6 +33,8 @@ export function HomeHeroVideo({ hero }: HomeHeroVideoProps) {
           src={heroFallbackImage.node.mediaItemUrl}
           alt={heroFallbackImage.node.altText || ''}
           fill
+          priority
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
           className="object-contain"
         />
       )}
@@ -68,6 +70,9 @@ export function HomeHeroVideo({ hero }: HomeHeroVideoProps) {
                     src={heroRightImage.node.mediaItemUrl}
                     alt={heroRightImage.node.altText || ''}
                     fill
+                    priority
+                    fetchPriority="high"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
                     className="object-contain"
                   />
                 </div>
@@ -85,7 +90,10 @@ export function HomeHeroVideo({ hero }: HomeHeroVideoProps) {
               alt={heroMobileImage.node.altText || ''}
               width={635}
               height={853}
+              priority
+              fetchPriority="high"
               className="h-auto w-full object-contain"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
             />
           </div>
         )}

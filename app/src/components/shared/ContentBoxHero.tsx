@@ -27,7 +27,7 @@ export function ContentBoxHero({ hero, title, hideForm = false }: ContentboxHero
             fill
             className="object-cover object-[center_top]"
             priority
-            sizes="100vw"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             quality={90}
           />
         </div>
@@ -91,6 +91,7 @@ export function ContentBoxHero({ hero, title, hideForm = false }: ContentboxHero
                 className="object-cover object-center"
                 priority
                 quality={90}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
               />
             </div>
           )}

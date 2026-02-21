@@ -95,6 +95,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
               alt={sectionBgImage.node.altText || ''}
               fill
               className={cx('object-cover', bgImageObjectAlignment)}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           )}
 
@@ -160,7 +161,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
                 width={textImageAltImageMobile.node.mediaDetails?.width || 800}
                 height={textImageAltImageMobile.node.mediaDetails?.height || 600}
                 className="h-auto w-full"
-                sizes="100vw"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
               />
             </div>
           )}

@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 
 import { X, Smartphone } from 'lucide-react'
 
@@ -29,9 +30,11 @@ export function Icon({ kind, image, size = 54, className = '' }: IconProps) {
     const height = image.mediaDetails?.height || size
 
     return (
-      <img
+      <Image
         src={image.mediaItemUrl}
         alt={image.altText || iconKind}
+        width={width}
+        height={height}
         style={{ width, height }}
         className={className}
       />

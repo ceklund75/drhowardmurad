@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   images: {
     unoptimized: false,
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [320, 420, 640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     qualities: [25, 50, 75, 85, 90, 100],
     remotePatterns: [
       {
@@ -16,9 +19,9 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    cpus: 2, // max concurrent static generation workers
+    cpus: 2, // max concurrent static generation workers because wp engine keeps timing out with more than 2.
   },
-  staticPageGenerationTimeout: 120, // increase from default 60s
+  staticPageGenerationTimeout: 180, // increase from default 60s
 }
 
 export default nextConfig

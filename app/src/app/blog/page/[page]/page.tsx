@@ -59,3 +59,19 @@ export default async function BlogPageNumber({ params }: BlogPageNumberProps) {
     </>
   )
 }
+
+export const dynamicParams = true // page 6+ will still work on-demand
+
+export async function generateStaticParams() {
+  try {
+    const total = await getTotalBlogPages()
+    const prebuildLimit = Math.min(total, 5) // only prebuild first 5 pages
+
+    return Array.from({ length: prebuildLimit }, (_, i) => ({
+      page: String(i + 1),
+    }))
+  } catch (error) {
+    console.error('[generateStaticParams/blog/page] Failed:', error)
+    return [{ page: '1' }] // at minimum, always prebuild page 1
+  }
+}
