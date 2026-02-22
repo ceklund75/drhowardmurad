@@ -3,7 +3,6 @@ import { Header } from '@/components/header/Header'
 import { Footer } from '@/components/footer/Footer'
 import { BackToTopButton } from '@/components/ui/BackToTopButton'
 import { NavigationHandler } from '@/components/NavigationHandler'
-import { Suspense } from 'react'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -16,9 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="flex min-h-screen flex-col" id="top">
-        <Suspense fallback={<div>Loading...</div>}>
-          <NavigationHandler />
-        </Suspense>
+        <NavigationHandler />
         <Header />
         <main className="flex-1">{children}</main>
         <BackToTopButton />

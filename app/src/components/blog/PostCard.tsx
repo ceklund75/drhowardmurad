@@ -21,7 +21,7 @@ export default function PostCard({ post }: PostCardProps) {
             alt={imageAlt}
             fill
             className="object-cover object-center transition-transform duration-300 hover:scale-105 hover:opacity-50"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-gray-alt)]">

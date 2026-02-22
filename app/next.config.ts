@@ -7,8 +7,8 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: false,
     formats: ['image/avif', 'image/webp'],
-    deviceSizes: [320, 420, 640, 750, 828, 1080, 1200, 1920],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    deviceSizes: [384, 450, 640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
     qualities: [25, 50, 75, 85, 90, 100],
     remotePatterns: [
       {

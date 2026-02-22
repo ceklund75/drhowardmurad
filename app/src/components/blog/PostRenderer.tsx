@@ -65,8 +65,14 @@ export function PostRenderer({ post }: PostRendererProps) {
                   alt={blogPost.contentAssociatedImage.node.altText || ''}
                   width={blogPost.contentAssociatedImage.node.mediaDetails?.width || 800}
                   height={blogPost.contentAssociatedImage.node.mediaDetails?.height || 1200}
+                  // Keep priority for mobile LCP
+                  priority
+                  fetchPriority="high"
+                  quality={60}
                   className="h-auto w-full"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
+                  // Tell Next.js this image is only ever shown on screens smaller than 1024px.
+                  // After that, cap it so it doesn't generate w=1920 files.
+                  sizes="(max-width: 640px) 384px, (max-width: 1024px) 50vw, 400px"
                 />
               </div>
               {blogPost.imagePhotoCredit && (
@@ -142,13 +148,14 @@ export function PostRenderer({ post }: PostRendererProps) {
               <div className="flex flex-col items-end">
                 <div className="relative w-[85%]" style={{ aspectRatio: 'auto' }}>
                   <Image
-                    loading="eager"
                     src={blogPost.contentAssociatedImage.node.mediaItemUrl}
                     alt={blogPost.contentAssociatedImage.node.altText || ''}
                     width={blogPost.contentAssociatedImage.node.mediaDetails?.width || 800}
                     height={blogPost.contentAssociatedImage.node.mediaDetails?.height || 1200}
+                    loading="lazy"
+                    quality={75}
                     className="h-auto w-full"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    sizes="(min-width: 1024px) 33vw, 400px"
                   />
                 </div>
                 {blogPost.imagePhotoCredit && (
