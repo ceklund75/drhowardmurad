@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "experimental-analyze": "next experimental-analyze",
     "lint": "eslint",
     "extract-modals": "tsx scripts/extract-video-modals.ts > video-modals.json 2> extraction.log",
     "analyze-modals": "tsx scripts/analyze-video-modals.ts"
@@ -35,5 +36,11 @@
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5"
-  }
+  },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "not dead"
+  ]
 }

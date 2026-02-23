@@ -95,7 +95,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
               alt={sectionBgImage.node.altText || ''}
               fill
               className={cx('object-cover', bgImageObjectAlignment)}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
             />
           )}
 
