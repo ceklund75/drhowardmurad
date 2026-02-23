@@ -16,7 +16,7 @@ export function HomeHeroVideo({ hero }: HomeHeroVideoProps) {
   } = hero
 
   return (
-    <section className="relative min-h-90 overflow-hidden md:min-h-[520px] lg:min-h-[640px] xl:min-h-[800px]">
+    <section className="relative min-h-90 overflow-hidden md:min-h-130 lg:min-h-160 xl:min-h-200">
       {/* background video / images with absolute inset-0 */}
       {heroVideoUrl && (
         <video
@@ -43,7 +43,7 @@ export function HomeHeroVideo({ hero }: HomeHeroVideoProps) {
       <div className="absolute inset-0 hidden bg-white/10 md:block" />
 
       {/* Foreground layout – no h-full dependency on parents */}
-      <div className="relative z-10 hidden min-h-90 md:flex md:min-h-[520px] lg:min-h-[640px] xl:min-h-[800px]">
+      <div className="relative z-10 hidden min-h-90 md:flex md:min-h-130 lg:min-h-160 xl:min-h-200">
         <div className="mx-auto flex w-full max-w-7xl px-6">
           {/* Left: text */}
           <div className="flex w-7/12 items-center">
@@ -93,7 +93,7 @@ export function HomeHeroVideo({ hero }: HomeHeroVideoProps) {
               priority
               fetchPriority="high"
               className="h-auto w-full object-contain"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
+              sizes="(max-width: 480px) 360px, (max-width: 768px) 412px, 480px"
             />
           </div>
         )}

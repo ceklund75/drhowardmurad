@@ -23,16 +23,17 @@
     "react-icons": "^5.5.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.1.6",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^9",
-    "eslint-config-next": "16.1.4",
+    "eslint": "^10.0.1",
+    "eslint-config-next": "^0.2.4",
     "prettier": "^3.8.1",
     "tailwindcss": "^4",
-    "typescript": "^5",
-    "tsx": "^4.21.0"
+    "tsx": "^4.21.0",
+    "typescript": "^5"
   }
 }

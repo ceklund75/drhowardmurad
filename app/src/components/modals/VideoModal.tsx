@@ -3,13 +3,13 @@
 import { useEffect } from 'react'
 import { X } from 'lucide-react'
 
-interface VideoModalProps {
+export interface VideoModalProps {
   isOpen: boolean
   onClose: () => void
   videoUrl: string
 }
 
-export function VideoModal({ isOpen, onClose, videoUrl }: VideoModalProps) {
+export default function VideoModal({ isOpen, onClose, videoUrl }: VideoModalProps) {
   // Close on Escape key and prevent body scroll
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {

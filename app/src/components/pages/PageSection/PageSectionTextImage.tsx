@@ -161,7 +161,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
                 width={textImageAltImageMobile.node.mediaDetails?.width || 800}
                 height={textImageAltImageMobile.node.mediaDetails?.height || 600}
                 className="h-auto w-full"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
+                sizes="(max-width: 768px) 708px, (max-width: 1024px) 963px, 420px"
               />
             </div>
           )}

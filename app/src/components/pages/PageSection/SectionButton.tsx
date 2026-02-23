@@ -5,7 +5,14 @@ import { useState } from 'react'
 import { TextImageAltButton } from '@/lib/graphql/types'
 import { buttonClassName, normalizeAcfSelect } from '@/lib/ui'
 
-import { VideoModal } from '@/components/modals/VideoModal'
+//import { VideoModal } from '@/components/modals/VideoModal'
+import dynamic from 'next/dynamic'
+import type { VideoModalProps } from '@/components/modals/VideoModal'
+
+// load only on the client, and only when this component is rendered
+const VideoModal = dynamic<VideoModalProps>(() => import('@/components/modals/VideoModal'), {
+  ssr: false,
+})
 
 interface SectionButtonProps {
   button: TextImageAltButton

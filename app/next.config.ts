@@ -1,4 +1,9 @@
 import type { NextConfig } from 'next'
+import bundleAnalyzer from '@next/bundle-analyzer'
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+})
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -7,8 +12,8 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: false,
     formats: ['image/avif', 'image/webp'],
-    deviceSizes: [384, 450, 640, 750, 828, 1080, 1200, 1920],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    deviceSizes: [384, 450, 640, 750, 828, 1080, 1200, 1280, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 240, 320, 480, 640, 750, 828, 1080],
     qualities: [25, 50, 75, 85, 90, 100],
     remotePatterns: [
       {
@@ -24,4 +29,4 @@ const nextConfig: NextConfig = {
   staticPageGenerationTimeout: 180, // increase from default 60s
 }
 
-export default nextConfig
+export default withBundleAnalyzer(nextConfig)
