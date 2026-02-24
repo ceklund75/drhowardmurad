@@ -34,7 +34,7 @@ export async function buildRootResolverMetadata(slug: string): Promise<Metadata>
 export async function buildBlogIndexMetadata(page: number): Promise<Metadata> {
   const result = await wpgraphql<{ page: { title: string | null; tsfSeo: TsfSeo | null } | null }>({
     query: QUERY_PAGE_SEO_BY_URI,
-    variables: { id: `/blog` },
+    variables: { id: '/blog' },
     revalidate: 86400,
   })
   return metadataFromSeoEntity(result.page)
@@ -43,7 +43,7 @@ export async function buildBlogIndexMetadata(page: number): Promise<Metadata> {
 export async function buildHomeMetadata(): Promise<Metadata> {
   const result = await wpgraphql<{ page: { title: string | null; tsfSeo: TsfSeo | null } | null }>({
     query: QUERY_PAGE_SEO_BY_URI,
-    variables: { id: `/` },
+    variables: { id: '/' },
     revalidate: 86400,
   })
   return metadataFromSeoEntity(result.page)

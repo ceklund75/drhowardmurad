@@ -24,9 +24,9 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    cpus: 2, // max concurrent static generation workers because wp engine keeps timing out with more than 2.
+    cpus: 1, // max concurrent static generation workers because wp engine keeps timing out with more than 1.
   },
-  staticPageGenerationTimeout: 180, // increase from default 60s
+  staticPageGenerationTimeout: 300, // increase from default 60s
 }
 
 export default withBundleAnalyzer(nextConfig)
