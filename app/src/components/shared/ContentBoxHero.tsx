@@ -3,14 +3,21 @@ import type { PageHeroACF } from '@/lib/graphql/types'
 import { themeClassFromAcf } from '@/lib/theme'
 import { RawHtml } from '../RawHtml'
 import { NewsletterInlineForm } from '../forms/NewsletterInlineForm'
+import { cx } from '@/lib/ui'
 
 interface ContentboxHeroProps {
   hero: PageHeroACF
   title?: string
   hideForm?: boolean
+  hideHeroBody?: boolean
 }
 
-export function ContentBoxHero({ hero, title, hideForm = false }: ContentboxHeroProps) {
+export function ContentBoxHero({
+  hero,
+  title,
+  hideForm = false,
+  hideHeroBody = false,
+}: ContentboxHeroProps) {
   const themeClass = themeClassFromAcf(hero.heroThemeColor)
   const desktopBg = hero.heroBgImage?.node?.mediaItemUrl || ''
   const mobileBg = hero.heroMobileBgImage?.node?.mediaItemUrl || ''
@@ -46,7 +53,7 @@ export function ContentBoxHero({ hero, title, hideForm = false }: ContentboxHero
             )}
 
             {/* Body Text - Centered paragraphs */}
-            {hero.heroBody && (
+            {hero.heroBody && !hideHeroBody && (
               <div className="text-lg leading-snug text-balance text-white">
                 <RawHtml html={hero.heroBody} />
               </div>
@@ -99,14 +106,14 @@ export function ContentBoxHero({ hero, title, hideForm = false }: ContentboxHero
             <div className="bg-[var(--color-theme)]/80 p-2">
               <div className="border border-white p-6 text-center">
                 {hero.heroHeading && (
-                  <h2 className="h4 mb-1 text-[27px] leading-snug text-balance text-white italic">
+                  <h2 className={cx('h4 text-[27px] leading-snug text-balance text-white italic')}>
                     “{hero.heroHeading}”
                   </h2>
                 )}
 
-                {hero.heroBody && (
+                {hero.heroBody && !hideHeroBody && (
                   <div
-                    className="leading-snug text-white"
+                    className="mt-1 leading-snug text-white"
                     dangerouslySetInnerHTML={{ __html: hero.heroBody }}
                   />
                 )}

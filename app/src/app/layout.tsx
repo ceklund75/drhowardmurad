@@ -4,6 +4,16 @@ import { Footer } from '@/components/footer/Footer'
 import { BackToTopButton } from '@/components/ui/BackToTopButton'
 import { NavigationHandler } from '@/components/NavigationHandler'
 import { Suspense } from 'react'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  metadataBase: new URL('https://drhowardmurad.com'),
+  title: {
+    default: 'Dr. Howard Murad',
+    template: '%s | Dr. Howard Murad',
+  },
+  description: 'Father of Modern Wellness',
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

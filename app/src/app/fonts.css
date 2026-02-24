@@ -13,6 +13,7 @@
   font-style: italic;
   font-display: swap;
 }
+/*
 @font-face {
   font-family: 'Adobe Caslon Pro';
   src: url('/fonts/adobe-caslon-pro/ACaslonPro-SemiBold.woff') format('woff');
@@ -41,6 +42,7 @@
   font-style: italic;
   font-display: swap;
 }
+*/
 
 /* Barlow Semi Condensed */
 @font-face {
@@ -99,6 +101,7 @@
   font-style: italic;
   font-display: swap;
 }
+/*
 @font-face {
   font-family: 'Barlow Semi Condensed';
   src: url('/fonts/barlow-semi-condensed/BarlowSemiCondensed-Bold.woff') format('woff');
@@ -113,3 +116,4 @@
   font-style: italic;
   font-display: swap;
 }
+*/

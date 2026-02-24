@@ -135,6 +135,25 @@ export const FRAGMENT_POST_CARD = `
   }
 `
 
+export const FRAGMENT_TSFSEO_FIELDS = `
+  fragment TsfSeoFields on TSFSEO {
+    canonicalUrl
+    description
+    noarchive
+    nofollow
+    noindex
+    openGraphDescription
+    openGraphTitle
+    redirectUrl
+    socialImageId
+    socialImageUrl
+    title
+    twitterCardType
+    twitterDescription
+    twitterTitle
+  }
+`
+
 /**
  * Full post fields for single post pages
  * Excludes: content (not used), excerpt (not used), databaseId (not needed)
@@ -159,10 +178,49 @@ export const FRAGMENT_POST_FULL = `
     blogPost {
       ...BlogPostACFFields
     }
+    tsfSeo {
+      ...TsfSeoFields
+    }
   }
 `
 
 // ============= QUERIES =============
+
+export const QUERY_PAGE_SEO_BY_URI = `
+  ${FRAGMENT_TSFSEO_FIELDS}
+
+  query GetPageSeoByUri($id: ID!) {
+    page(id: $id, idType: URI) {
+      title
+      tsfSeo {
+        ...TsfSeoFields
+      }
+    }
+  }
+`
+
+export const QUERY_POST_SEO_BY_SLUG = `
+  ${FRAGMENT_TSFSEO_FIELDS}
+
+  query GetPostSeoBySlug($id: ID!) {
+    post(id: $id, idType: SLUG) {
+      title
+      excerpt
+      tsfSeo {
+        ...TsfSeoFields
+      }
+    }
+  }
+`
+
+export const QUERY_CATEGORY_BASICS = `
+  query GetCategoryBasics($slug: ID!) {
+    category(id: $slug, idType: SLUG) {
+      name
+      description
+    }
+  }
+`
 
 /**
  * Fetch single post by slug (for single post pages)
@@ -174,6 +232,7 @@ export const QUERY_POST_BY_SLUG = `
   ${FRAGMENT_LINK_FIELDS}
   ${FRAGMENT_BLOG_POST_ACF}
   ${FRAGMENT_POST_FULL}
+  ${FRAGMENT_TSFSEO_FIELDS}
   
   query GetPostBySlug($id: ID!) {
     post(id: $id, idType: SLUG) {
@@ -224,6 +283,20 @@ export const QUERY_ALL_POST_SLUGS = `
   }
 `
 
+export const QUERY_ALL_PAGE_SLUGS = `
+  query GetAllPageSlugs($first: Int = 100, $after: String) {
+    pages(first: $first, after: $after, where: { hasPassword: false }) {
+      nodes {
+        slug
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`
+
 /**
  * Fetch blog index page (hero + post grid)
  * Used by: /blog page
@@ -264,13 +337,16 @@ export const QUERY_BLOG_INDEX = `
 export const QUERY_PAGE_BY_URI = `
   ${FRAGMENT_IMAGE_FIELDS}
   ${FRAGMENT_PAGE_HERO}
+  ${FRAGMENT_TSFSEO_FIELDS}
   query GetPageByUri($id: ID!) {
     page(id: $id, idType: URI) {
       id
       uri
       slug
       title
-
+      tsfSeo {
+        ...TsfSeoFields
+      }
       pageHero {
         ...PageHeroFields
       }
@@ -385,20 +461,6 @@ export const QUERY_PAGE_BY_URI = `
         newsletterHeading
         newsletterSubheading
         newsletterButtonLabel
-      }
-    }
-  }
-`
-
-export const QUERY_ALL_PAGE_SLUGS = `
-query GetAllPageSlugs($first: Int!, $after: String) {
-    pages(first: $first, after: $after, where: { hasPassword: false }) {
-      nodes {
-        slug
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
       }
     }
   }

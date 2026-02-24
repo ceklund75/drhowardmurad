@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation'
 import { wpgraphql, wpgraphqlBatch } from '@/lib/graphql/server'
 import {
   QUERY_PAGE_BY_URI,
@@ -11,9 +12,21 @@ import {
   GetAllPostSlugsResponse,
   GetAllPageSlugsResponse,
 } from '@/lib/graphql/types'
-import { notFound } from 'next/navigation'
+
 import { PostRenderer } from '@/components/blog/PostRenderer'
 import { PageRenderer } from '@/components/pages/PageRenderer'
+
+import type { Metadata } from 'next'
+import { buildRootResolverMetadata } from '@/lib/seo/builders'
+
+type SlugParams = {
+  params: Promise<{ slug: string }>
+}
+
+export async function generateMetadata({ params }: SlugParams): Promise<Metadata> {
+  const { slug } = await params
+  return buildRootResolverMetadata(slug)
+}
 
 interface RootResolverPageProps {
   params: Promise<{ slug: string }>

@@ -4,6 +4,13 @@ import { fetchBlogPage, getTotalBlogPages } from '@/lib/blog/pagination'
 import BlogHero from '@/components/blog/BlogHero'
 import BlogGrid from '@/components/blog/BlogGrid'
 
+import type { Metadata } from 'next'
+import { buildBlogIndexMetadata } from '@/lib/seo/builders'
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildBlogIndexMetadata(1)
+}
+
 export default async function BlogPage() {
   const pageNumber = 1
 
@@ -18,7 +25,12 @@ export default async function BlogPage() {
   return (
     <>
       {data.page.pageHero && (
-        <BlogHero hero={data.page.pageHero} title={data.page.title} hideForm={false} />
+        <BlogHero
+          hero={data.page.pageHero}
+          title={data.page.title}
+          hideForm={true}
+          hideHeroBody={true}
+        />
       )}
 
       <section className="bg-gray-alt mx-auto p-4 lg:bg-white">

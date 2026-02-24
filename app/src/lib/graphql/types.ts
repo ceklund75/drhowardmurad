@@ -1,5 +1,4 @@
 /**
- * src/lib/graphql/types.ts
  * Complete TypeScript types for all WordPress content + ACF field groups
  * Matches: Posts, Pages, Categories, Footer, Menu
  */
@@ -366,4 +365,21 @@ export interface NavItem {
   href: string
   cssClasses?: string
   children: NavItem[]
+}
+
+export interface TsfSeo {
+  canonicalUrl?: string | null
+  description?: string | null
+  noarchive?: boolean | null
+  nofollow?: boolean | null
+  noindex?: boolean | null
+  openGraphDescription?: string | null
+  openGraphTitle?: string | null
+  redirectUrl?: string | null
+  socialImageId?: string | null
+  socialImageUrl?: string | null
+  title?: string | null
+  twitterCardType?: string | null
+  twitterDescription?: string | null
+  twitterTitle?: string | null
 }

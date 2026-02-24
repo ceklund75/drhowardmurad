@@ -3,6 +3,19 @@ import { fetchBlogPage, getTotalBlogPages } from '@/lib/blog/pagination'
 import BlogGrid from '@/components/blog/BlogGrid'
 import BlogHero from '@/components/blog/BlogHero'
 
+import type { Metadata } from 'next'
+import { buildBlogIndexMetadata } from '@/lib/seo/builders'
+
+type BlogPageParams = {
+  params: Promise<{ page: string }>
+}
+
+export async function generateMetadata({ params }: BlogPageParams): Promise<Metadata> {
+  const { page } = await params
+  const pageNumber = Number(page) || 1
+  return buildBlogIndexMetadata(pageNumber)
+}
+
 interface BlogPageNumberProps {
   params: Promise<{ page: string }>
 }

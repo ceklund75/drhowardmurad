@@ -16,9 +16,20 @@ import {
 import { themeClassFromCategory } from '@/lib/theme'
 import BlogGrid from '@/components/blog/BlogGrid'
 import BlogHero from '@/components/blog/BlogHero'
+import type { Metadata } from 'next'
+import { buildCategoryMetadata } from '@/lib/seo/builders'
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>
+}
+
+type CategoryParams = {
+  params: Promise<{ slug: string }>
+}
+
+export async function generateMetadata({ params }: CategoryParams): Promise<Metadata> {
+  const { slug } = await params
+  return buildCategoryMetadata(slug)
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
@@ -52,7 +63,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   return (
     <>
-      {blogPage?.pageHero && <BlogHero hero={blogPage.pageHero} hideForm={true} />}
+      {blogPage?.pageHero && (
+        <BlogHero hero={blogPage.pageHero} hideForm={true} hideHeroBody={true} />
+      )}
       {/* Breadcrumb Bar with ALL categories */}
       <div className="bg-gray-alt lg:bg-light-1 w-full pt-3.75 lg:pt-0">
         <div className="bg-light-1 mx-auto max-w-300 px-4 py-6">
