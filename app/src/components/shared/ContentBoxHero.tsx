@@ -36,7 +36,7 @@ export function ContentBoxHero({
             priority
             fetchPriority="high"
             sizes="(max-width: 1024px) 50vw, (max-width: 1280px) 80vw, 100vw"
-            quality={80}
+            quality={90}
           />
         </div>
       )}
