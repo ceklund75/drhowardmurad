@@ -1,4 +1,5 @@
 import React from 'react'
+import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { wpgraphql, wpgraphqlBatch } from '@/lib/graphql/server'
@@ -29,11 +30,13 @@ type CategoryParams = {
 
 export async function generateMetadata({ params }: CategoryParams): Promise<Metadata> {
   const { slug } = await params
-  return buildCategoryMetadata(slug)
+  const { isEnabled } = await draftMode()
+  return buildCategoryMetadata(slug, { preview: isEnabled })
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = await params
+  const { isEnabled } = await draftMode()
 
   const [postsData, categoriesData, blogPageData] = await Promise.all([
     wpgraphql<GetPostsByCategoryResponse>({
@@ -50,6 +53,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       query: QUERY_PAGE_BY_URI,
       variables: { id: '/blog' },
       revalidate: 3600,
+      preview: isEnabled,
     }),
   ])
 

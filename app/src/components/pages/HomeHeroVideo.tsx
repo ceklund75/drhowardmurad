@@ -72,8 +72,9 @@ export function HomeHeroVideo({ hero }: HomeHeroVideoProps) {
                     fill
                     priority
                     fetchPriority="high"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 575px"
                     className="object-contain"
+                    quality={90}
                   />
                 </div>
               </div>

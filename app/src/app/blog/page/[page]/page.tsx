@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { draftMode } from 'next/headers'
 import { fetchBlogPage, getTotalBlogPages } from '@/lib/blog/pagination'
 import BlogGrid from '@/components/blog/BlogGrid'
 import BlogHero from '@/components/blog/BlogHero'
@@ -13,7 +14,8 @@ type BlogPageParams = {
 export async function generateMetadata({ params }: BlogPageParams): Promise<Metadata> {
   const { page } = await params
   const pageNumber = Number(page) || 1
-  return buildBlogIndexMetadata(pageNumber)
+  const { isEnabled } = await draftMode()
+  return buildBlogIndexMetadata(pageNumber, { preview: isEnabled })
 }
 
 interface BlogPageNumberProps {
@@ -28,7 +30,13 @@ export default async function BlogPageNumber({ params }: BlogPageNumberProps) {
     notFound()
   }
 
-  const [data, totalPages] = await Promise.all([fetchBlogPage(pageNumber), getTotalBlogPages()])
+  const { isEnabled } = await draftMode()
+  const preview = isEnabled
+
+  const [data, totalPages] = await Promise.all([
+    fetchBlogPage(pageNumber, { preview }),
+    getTotalBlogPages({ preview }),
+  ])
 
   if (!data || !data.page) {
     notFound()

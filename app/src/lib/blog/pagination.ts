@@ -9,10 +9,19 @@ type PageCursor = {
   after: string | null
 }
 
+type PaginationOptions = {
+  preview?: boolean
+}
+
 let blogPageCursors: PageCursor[] | null = null
 let building = false
 
-async function buildBlogPageCursors(): Promise<PageCursor[]> {
+async function buildBlogPageCursors(preview: boolean = false): Promise<PageCursor[]> {
+  // In preview mode, always build fresh cursors without using the shared cache
+  if (preview) {
+    return buildBlogPageCursorsOnce(true)
+  }
+
   if (blogPageCursors && blogPageCursors.length > 0) {
     return blogPageCursors
   }
@@ -27,33 +36,7 @@ async function buildBlogPageCursors(): Promise<PageCursor[]> {
   building = true
 
   try {
-    const cursors: PageCursor[] = []
-    let after: string | null = null
-    let page = 1
-
-    while (true) {
-      // 1) Explicit type annotation on data
-      const data: GetBlogIndexResponse = await wpgraphql<GetBlogIndexResponse>({
-        query: QUERY_BLOG_INDEX,
-        variables: { first: PAGE_SIZE, after },
-        revalidate: false,
-      })
-
-      // 2) Destructure after typing data
-      const posts = data.posts
-
-      if (!posts.nodes.length) break
-
-      cursors.push({ page, after })
-
-      if (!posts.pageInfo.hasNextPage || !posts.pageInfo.endCursor) {
-        break
-      }
-
-      after = posts.pageInfo.endCursor
-      page += 1
-    }
-
+    const cursors = await buildBlogPageCursorsOnce(false)
     blogPageCursors = cursors
     return cursors
   } finally {
@@ -61,8 +44,40 @@ async function buildBlogPageCursors(): Promise<PageCursor[]> {
   }
 }
 
-export async function fetchBlogPage(page: number) {
-  const cursors = await buildBlogPageCursors()
+async function buildBlogPageCursorsOnce(preview: boolean): Promise<PageCursor[]> {
+  const cursors: PageCursor[] = []
+  let after: string | null = null
+  let page = 1
+
+  while (true) {
+    const data: GetBlogIndexResponse = await wpgraphql<GetBlogIndexResponse>({
+      query: QUERY_BLOG_INDEX,
+      variables: { first: PAGE_SIZE, after },
+      revalidate: false, // no ISR for cursor-building
+      preview,
+    })
+
+    const posts = data.posts
+
+    if (!posts.nodes.length) break
+
+    cursors.push({ page, after })
+
+    if (!posts.pageInfo.hasNextPage || !posts.pageInfo.endCursor) {
+      break
+    }
+
+    after = posts.pageInfo.endCursor
+    page += 1
+  }
+
+  return cursors
+}
+
+export async function fetchBlogPage(page: number, options: PaginationOptions = {}) {
+  const { preview = false } = options
+
+  const cursors = await buildBlogPageCursors(preview)
 
   const entry = cursors.find((c) => c.page === page)
   if (!entry) {
@@ -76,13 +91,16 @@ export async function fetchBlogPage(page: number) {
       first: PAGE_SIZE,
       after: entry.after,
     },
-    revalidate: 3600,
+    revalidate: preview ? false : 3600,
+    preview,
   })
 
   return data
 }
 
-export async function getTotalBlogPages(): Promise<number> {
-  const cursors = await buildBlogPageCursors()
+export async function getTotalBlogPages(options: PaginationOptions = {}): Promise<number> {
+  const { preview = false } = options
+
+  const cursors = await buildBlogPageCursors(preview)
   return cursors.length
 }

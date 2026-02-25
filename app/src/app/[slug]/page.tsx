@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { draftMode } from 'next/headers'
 import { wpgraphql, wpgraphqlBatch } from '@/lib/graphql/server'
 import {
   QUERY_PAGE_BY_URI,
@@ -25,7 +26,8 @@ type SlugParams = {
 
 export async function generateMetadata({ params }: SlugParams): Promise<Metadata> {
   const { slug } = await params
-  return buildRootResolverMetadata(slug)
+  const { isEnabled } = await draftMode()
+  return buildRootResolverMetadata(slug, { preview: isEnabled })
 }
 
 interface RootResolverPageProps {
@@ -37,12 +39,13 @@ export default async function RootResolverPage({ params }: RootResolverPageProps
 
   // Try Page first
   let page: GetPageByUriResponse['page'] | null = null
-
+  const { isEnabled } = await draftMode()
   try {
     const data = await wpgraphql<GetPageByUriResponse>({
       query: QUERY_PAGE_BY_URI,
       variables: { id: `/${slug}` },
       revalidate: 86400,
+      preview: isEnabled,
     })
     page = data.page
   } catch (err) {
@@ -61,6 +64,7 @@ export default async function RootResolverPage({ params }: RootResolverPageProps
       query: QUERY_POST_BY_SLUG,
       variables: { id: slug },
       revalidate: 86400,
+      preview: isEnabled,
     })
     post = data.post
   } catch (err) {

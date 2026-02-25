@@ -1,5 +1,4 @@
 'use server'
-
 import { wpgraphql } from '@/lib/graphql/server'
 import { QUERY_FOOTER_SETTINGS } from '@/lib/graphql/queries'
 import { FooterClient } from './FooterClient'

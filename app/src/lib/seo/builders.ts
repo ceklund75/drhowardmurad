@@ -9,13 +9,22 @@ import {
 } from '@/lib/graphql/queries'
 import { metadataFromSeoEntity } from './tsf'
 
-export async function buildRootResolverMetadata(slug: string): Promise<Metadata> {
+type SeoBuilderOptions = {
+  preview?: boolean
+}
+
+export async function buildRootResolverMetadata(
+  slug: string,
+  options: SeoBuilderOptions = {},
+): Promise<Metadata> {
+  const { preview = false } = options
   const pageResult = await wpgraphql<{
     page: { title: string | null; tsfSeo: TsfSeo | null } | null
   }>({
     query: QUERY_PAGE_SEO_BY_URI,
     variables: { id: `/${slug}` },
     revalidate: 86400,
+    preview,
   })
   if (pageResult.page) return metadataFromSeoEntity(pageResult.page)
 
@@ -31,31 +40,43 @@ export async function buildRootResolverMetadata(slug: string): Promise<Metadata>
   return { title: 'Page not found' }
 }
 
-export async function buildBlogIndexMetadata(page: number): Promise<Metadata> {
+export async function buildBlogIndexMetadata(
+  page: number,
+  options: SeoBuilderOptions = {},
+): Promise<Metadata> {
+  const { preview = false } = options
   const result = await wpgraphql<{ page: { title: string | null; tsfSeo: TsfSeo | null } | null }>({
     query: QUERY_PAGE_SEO_BY_URI,
     variables: { id: '/blog' },
     revalidate: 86400,
+    preview,
   })
   return metadataFromSeoEntity(result.page)
 }
 
-export async function buildHomeMetadata(): Promise<Metadata> {
+export async function buildHomeMetadata(options: SeoBuilderOptions = {}): Promise<Metadata> {
+  const { preview = false } = options
   const result = await wpgraphql<{ page: { title: string | null; tsfSeo: TsfSeo | null } | null }>({
     query: QUERY_PAGE_SEO_BY_URI,
     variables: { id: '/' },
     revalidate: 86400,
+    preview,
   })
   return metadataFromSeoEntity(result.page)
 }
 
-export async function buildCategoryMetadata(slug: string): Promise<Metadata> {
+export async function buildCategoryMetadata(
+  slug: string,
+  options: SeoBuilderOptions = {},
+): Promise<Metadata> {
+  const { preview = false } = options
   const result = await wpgraphql<{
     category: { name: string | null; description: string | null } | null
   }>({
     query: QUERY_CATEGORY_BASICS,
     variables: { slug },
     revalidate: 86400,
+    preview,
   })
 
   const category = result.category

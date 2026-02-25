@@ -8,22 +8,20 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
 
   const secret = searchParams.get('secret')
-  const slug = searchParams.get('slug') // e.g. "/about", "/blog/my-post"
+  const rawSlug = searchParams.get('slug') // "/about" or "about"
 
-  // 1) Validate secret
   if (!secret || !PREVIEW_SECRET || secret !== PREVIEW_SECRET) {
     return new Response('Invalid preview secret', { status: 401 })
   }
 
-  // 2) Validate slug
-  if (!slug) {
+  if (!rawSlug) {
     return new Response('Missing slug', { status: 400 })
   }
 
-  // 3) Enable draft mode (sets cookies)
   const draft = await draftMode()
   draft.enable()
 
-  // 4) Redirect to the slug we want to preview
+  const slug = rawSlug.startsWith('/') ? rawSlug : `/${rawSlug}`
+
   redirect(slug)
 }

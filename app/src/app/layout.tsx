@@ -6,6 +6,7 @@ import { NavigationHandler } from '@/components/NavigationHandler'
 import { Suspense } from 'react'
 import { Metadata } from 'next'
 import { caslon, barlowSemiCondensed } from './fonts'
+import PreviewBanner from './PreviewBanner'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://drhowardmurad.com'),
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Suspense fallback={null}>
           <NavigationHandler />
         </Suspense>
+        <PreviewBanner />
         <Header />
         <main className="flex-1">{children}</main>
         <BackToTopButton />
