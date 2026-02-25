@@ -28,8 +28,8 @@ export default async function BlogPage() {
         <BlogHero
           hero={data.page.pageHero}
           title={data.page.title}
-          hideForm={true}
-          hideHeroBody={true}
+          hideForm={false}
+          hideHeroBody={false}
         />
       )}
 

@@ -7,9 +7,7 @@ import { buildHomeMetadata } from '@/lib/seo/builders'
 import { buildHomeJsonLd } from '@/lib/seo/jsonLd'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const meta = await buildHomeMetadata()
-  console.log('[SEO] metadata for route', '/', JSON.stringify(meta, null, 2))
-  return meta
+ return await buildHomeMetadata()
 }
 export const revalidate = 86400
 

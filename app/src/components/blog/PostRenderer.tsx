@@ -81,7 +81,7 @@ export function PostRenderer({ post }: PostRendererProps) {
                     // Keep priority for mobile LCP
                     priority
                     fetchPriority="high"
-                    quality={60}
+                    quality={75}
                     className="h-auto w-full"
                     // Tell Next.js this image is only ever shown on screens smaller than 1024px.
                     // After that, cap it so it doesn't generate w=1920 files.

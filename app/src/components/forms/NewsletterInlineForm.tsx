@@ -25,7 +25,7 @@ export function NewsletterInlineForm({
     ? 'border-medium-purple text-medium-purple hover:bg-medium-purple border hover:text-white'
     : 'border-white text-[var(--color-theme)] bg-white hover:bg-transparent hover:text-white'
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit: React.SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
     setStatus('loading')
     setError(null)
@@ -41,8 +41,10 @@ export function NewsletterInlineForm({
       return
     }
 
-    if (!email) {
-      setError('Email is required.')
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address.')
       setStatus('error')
       return
     }
@@ -77,41 +79,43 @@ export function NewsletterInlineForm({
   }
 
   return (
-    <form className="flex flex-col gap-3 sm:flex-row sm:items-center" onSubmit={handleSubmit}>
-      <input
-        type="text"
-        name="firstName"
-        placeholder="First name"
-        required
-        className={cx('w-full border px-3 py-2 text-sm', inputClass)}
-      />
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        required
-        className={cx('w-full border px-3 py-2 text-sm', inputClass)}
-      />
-      <button
-        type="submit"
-        disabled={status === 'loading'}
-        className={cx(
-          'cursor-pointer border px-5 py-2 text-sm font-semibold whitespace-nowrap transition lg:w-[80%]',
-          inputButton,
+    <div>
+      <form className="flex flex-col gap-3 sm:flex-row sm:items-center" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="firstName"
+          placeholder="First name"
+          className={cx('w-full border px-3 py-2 text-sm', inputClass)}
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          autoComplete="Email"
+          className={cx('w-full border px-3 py-2 text-sm', inputClass)}
+        />
+        <button
+          type="submit"
+          disabled={status === 'loading'}
+          className={cx(
+            'cursor-pointer border px-5 py-2 text-sm font-semibold whitespace-nowrap uppercase transition lg:w-[80%]',
+            inputButton,
+          )}
+        >
+          {status === 'loading' ? 'Submitting…' : buttonLabel}
+        </button>
+      </form>
+      <div aria-live="polite">
+        {status === 'success' && (
+          <p className="text-sm text-green-700">You’re on the list. Thank you!</p>
         )}
-      >
-        {status === 'loading' ? 'Submitting…' : buttonLabel}
-      </button>
 
-      {status === 'success' && (
-        <p className="text-xs text-green-700">You’re on the list. Thank you!</p>
-      )}
+        {status === 'already' && (
+          <p className="text-sm text-green-700">You’re already subscribed with this email.</p>
+        )}
 
-      {status === 'already' && (
-        <p className="text-xs text-green-700">You’re already subscribed with this email.</p>
-      )}
-
-      {status === 'error' && error && <p className="text-xs text-red-700">{error}</p>}
-    </form>
+        {status === 'error' && error && <p className="text-sm text-red-700">{error}</p>}
+      </div>
+    </div>
   )
 }
