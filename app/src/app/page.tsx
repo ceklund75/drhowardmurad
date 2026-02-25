@@ -4,6 +4,7 @@ import { GetPageByUriResponse } from '@/lib/graphql/types'
 import { PageRenderer } from '@/components/pages/PageRenderer'
 import type { Metadata } from 'next'
 import { buildHomeMetadata } from '@/lib/seo/builders'
+import { buildHomeJsonLd } from '@/lib/seo/jsonLd'
 
 export async function generateMetadata(): Promise<Metadata> {
   const meta = await buildHomeMetadata()
@@ -25,5 +26,17 @@ export default async function HomePage() {
     return null
   }
 
-  return <PageRenderer page={page} />
+  const homeJsonLd = buildHomeJsonLd()
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(homeJsonLd).replace(/</g, '\\u003c'),
+        }}
+      />
+      {page && <PageRenderer page={page} />}
+    </>
+  )
 }

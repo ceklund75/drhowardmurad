@@ -5,6 +5,7 @@ import { BackToTopButton } from '@/components/ui/BackToTopButton'
 import { NavigationHandler } from '@/components/NavigationHandler'
 import { Suspense } from 'react'
 import { Metadata } from 'next'
+import { caslon, barlowSemiCondensed } from './fonts'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://drhowardmurad.com'),
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${barlowSemiCondensed.variable} ${caslon.variable}`}>
       <head>
         <script
           dangerouslySetInnerHTML={{

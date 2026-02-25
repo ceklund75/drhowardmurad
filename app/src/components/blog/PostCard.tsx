@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Post } from '@/lib/graphql/types'
 import { themeClassFromCategory } from '@/lib/theme'
+import { AsyncImage } from '../AsyncImage'
 
 interface PostCardProps {
   post: Post
@@ -16,7 +17,7 @@ export default function PostCard({ post }: PostCardProps) {
     <article className="post-card flex h-full flex-col">
       <Link href={post.uri} className="bg-dark-2 relative block aspect-square overflow-hidden">
         {hasImage ? (
-          <Image
+          <AsyncImage
             src={imageUrl}
             alt={imageAlt}
             fill

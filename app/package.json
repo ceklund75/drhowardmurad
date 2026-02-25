@@ -38,9 +38,9 @@
     "typescript": "^5"
   },
   "browserslist": [
-    "last 2 Chrome versions",
-    "last 2 Firefox versions",
-    "last 2 Safari versions",
-    "not dead"
+    ">0.5%",
+    "last 2 versions",
+    "not dead",
+    "not op_mini all"
   ]
 }

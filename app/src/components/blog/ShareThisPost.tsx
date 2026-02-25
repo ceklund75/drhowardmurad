@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability */
 'use client'
 import { JSX } from 'react'
 import type { Post } from '@/lib/graphql/types'

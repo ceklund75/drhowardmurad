@@ -4,6 +4,7 @@ import PageHero from './PageHero'
 import { PageSectionTextImage } from './PageSection/PageSectionTextImage'
 //import { PageSectionTextImageFixed } from './PageSectionTextImageFixed'
 import { PageNewsletterCta } from './PageNewsletterCta'
+import { buildPageJsonLd } from '@/lib/seo/jsonLd'
 
 interface PageRendererProps {
   page: Page
@@ -21,8 +22,16 @@ export function PageRenderer({ page }: PageRendererProps) {
   const heroType = resolveHeroType(pageHero)
   const altSections = pageTextImageAlt?.pageSectionsTextImageAlt ?? []
 
+  const jsonLd = buildPageJsonLd(page)
+
   return (
     <main className="bg-gray-alt">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
+        }}
+      />
       {heroType === 'home' && pageHero && <HomeHeroVideo hero={pageHero} />}
       {heroType === 'contentbox' && pageHero && (
         <PageHero hero={pageHero} title={page.title} hideForm={true} />

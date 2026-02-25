@@ -97,6 +97,7 @@ export function ContentBoxHero({
                 fill
                 className="object-cover object-center"
                 priority
+                fetchPriority="high"
                 quality={90}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
               />

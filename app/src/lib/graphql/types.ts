@@ -55,6 +55,7 @@ export interface Post {
   content?: string
   excerpt?: string
   date: string
+  modified: string
   featuredImage?: FeaturedImage
   categories: {
     nodes: Category[]

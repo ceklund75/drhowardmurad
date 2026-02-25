@@ -15,6 +15,7 @@ import { PageSectionCollapsibleList } from './PageSectionCollapsibleList'
 import { ExtendedImageAnchor } from './ExtendedImageAnchor'
 import { DesktopMainRow, DesktopCollapsibleRow } from './PageSectionRows'
 import { SectionButton } from './SectionButton'
+import { AsyncImage } from '@/components/AsyncImage'
 
 interface PageSectionTextImageProps {
   section: TextImageAltSection
@@ -155,7 +156,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
         <div className={cx('relatives space-y-6')}>
           {textImageAltImageMobile?.node?.mediaItemUrl && !textImageAltHideImageMobile && (
             <div className="relative w-full">
-              <Image
+              <AsyncImage
                 src={textImageAltImageMobile.node.mediaItemUrl}
                 alt={textImageAltImageMobile.node.altText || ''}
                 width={textImageAltImageMobile.node.mediaDetails?.width || 800}

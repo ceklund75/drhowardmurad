@@ -165,6 +165,7 @@ export const FRAGMENT_POST_FULL = `
     slug
     title
     date
+    modified
     featuredImage {
       node {
         ...ImageFields
@@ -192,6 +193,8 @@ export const QUERY_PAGE_SEO_BY_URI = `
   query GetPageSeoByUri($id: ID!) {
     page(id: $id, idType: URI) {
       title
+      date
+      modified
       tsfSeo {
         ...TsfSeoFields
       }
@@ -206,6 +209,8 @@ export const QUERY_POST_SEO_BY_SLUG = `
     post(id: $id, idType: SLUG) {
       title
       excerpt
+      date
+      modified
       tsfSeo {
         ...TsfSeoFields
       }
@@ -315,6 +320,8 @@ export const QUERY_BLOG_INDEX = `
       uri
       slug
       title
+      date
+      modified
       pageHero {
         ...PageHeroFields
       }
@@ -344,6 +351,8 @@ export const QUERY_PAGE_BY_URI = `
       uri
       slug
       title
+      date
+      modified
       tsfSeo {
         ...TsfSeoFields
       }

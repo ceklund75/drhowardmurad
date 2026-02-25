@@ -9,6 +9,7 @@ import {
 } from '@/lib/ui'
 import { PageSectionCollapsibleList } from './PageSectionCollapsibleList'
 import { SectionButton } from './SectionButton'
+import { AsyncImage } from '@/components/AsyncImage'
 
 export function DesktopMainRow(props: {
   imageSide: 'left' | 'right'
@@ -72,7 +73,7 @@ export function DesktopMainRow(props: {
               heightConfig.imageHeight.xl,
             )}
           >
-            <Image
+            <AsyncImage
               src={textImageAltImageDesktop.node.mediaItemUrl}
               alt={textImageAltImageDesktop.node.altText || ''}
               fill

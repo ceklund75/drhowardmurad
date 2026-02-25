@@ -41,7 +41,7 @@ export function MobileMenu({
 
   return (
     <nav aria-label="Mobile primary">
-      <ul className="nav-menu space-y-4 px-6">
+      <ul className="nav-menu space-y-4 px-8">
         {items.map((item) => {
           const hasChildren = item.children.length > 0
           const expanded = openIds.has(item.id)
@@ -59,7 +59,7 @@ export function MobileMenu({
               <div className="flex items-center gap-2">
                 <Link
                   href={item.href}
-                  className="menu-link text-lg font-medium tracking-wide uppercase transition-colors"
+                  className="menu-link text-2xl font-medium tracking-wide uppercase transition-colors"
                   onClick={(e) => {
                     // Don't close immediately - let Next.js start navigation first
                     setTimeout(() => onNavigate(), 50)
@@ -105,7 +105,7 @@ export function MobileMenu({
                         <li key={child.id}>
                           <Link
                             href={child.href}
-                            className="menu-link block text-lg font-medium uppercase transition-colors"
+                            className="menu-link block text-2xl font-medium uppercase transition-colors"
                             onClick={(e) => {
                               // Don't close immediately - let Next.js start navigation first
                               setTimeout(() => onNavigate(), 50)
