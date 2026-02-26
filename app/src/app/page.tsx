@@ -8,8 +8,8 @@ import { buildHomeMetadata } from '@/lib/seo/builders'
 import { buildHomeJsonLd } from '@/lib/seo/jsonLd'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { isEnabled } = await draftMode()
-  return buildHomeMetadata({ preview: isEnabled })
+  //const { isEnabled } = await draftMode()
+  return buildHomeMetadata({ preview: false })
 }
 export const revalidate = false //86400
 

@@ -1,5 +1,6 @@
 import { PageHeroACF } from '@/lib/graphql/types'
 import Image from 'next/image'
+import { HomeHeroVideoClient } from './PageSection/HomeHeroVideoClient'
 
 interface HomeHeroVideoProps {
   hero: PageHeroACF
@@ -19,24 +20,7 @@ export function HomeHeroVideo({ hero }: HomeHeroVideoProps) {
     <section className="relative min-h-90 overflow-hidden md:min-h-130 lg:min-h-160 xl:min-h-200">
       {/* background video / images with absolute inset-0 */}
       {heroVideoUrl && (
-        <video
-          className="fade-in fade-1200 absolute inset-0 hidden h-full w-full object-cover md:block"
-          src={heroVideoUrl}
-          autoPlay
-          muted
-          loop={false}
-          playsInline
-        />
-      )}
-      {!heroVideoUrl && heroFallbackImage?.node?.mediaItemUrl && (
-        <Image
-          src={heroFallbackImage.node.mediaItemUrl}
-          alt={heroFallbackImage.node.altText || ''}
-          fill
-          priority
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
-          className="object-contain"
-        />
+        <HomeHeroVideoClient src={heroVideoUrl} poster={heroFallbackImage?.node?.mediaItemUrl} />
       )}
 
       {/* Light overlay */}

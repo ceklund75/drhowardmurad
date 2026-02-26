@@ -30,8 +30,8 @@ type CategoryParams = {
 
 export async function generateMetadata({ params }: CategoryParams): Promise<Metadata> {
   const { slug } = await params
-  const { isEnabled } = await draftMode()
-  return buildCategoryMetadata(slug, { preview: isEnabled })
+  //const { isEnabled } = await draftMode()
+  return buildCategoryMetadata(slug, { preview: false })
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {

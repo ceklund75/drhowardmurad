@@ -14,8 +14,8 @@ type BlogPageParams = {
 export async function generateMetadata({ params }: BlogPageParams): Promise<Metadata> {
   const { page } = await params
   const pageNumber = Number(page) || 1
-  const { isEnabled } = await draftMode()
-  return buildBlogIndexMetadata(pageNumber, { preview: isEnabled })
+  //const { isEnabled } = await draftMode()
+  return buildBlogIndexMetadata(pageNumber, { preview: false })
 }
 
 interface BlogPageNumberProps {

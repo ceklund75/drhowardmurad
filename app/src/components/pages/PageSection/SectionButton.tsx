@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { TextImageAltButton } from '@/lib/graphql/types'
 import { buttonClassName, normalizeAcfSelect } from '@/lib/ui'
 
-//import { VideoModal } from '@/components/modals/VideoModal'
 import dynamic from 'next/dynamic'
 import type { VideoModalProps } from '@/components/modals/VideoModal'
 

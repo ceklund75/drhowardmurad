@@ -34,6 +34,10 @@ type GetPostByIdPreviewResponse = {
   post: GetPostBySlugResponse['post'] // same Post shape
 }
 
+interface RootResolverPageProps {
+  params: Promise<{ slug: string }>
+}
+
 async function getPreviewParams() {
   const hdrs = await headers()
   const url = hdrs.get('x-next-url') // or use a custom header via middleware
@@ -48,47 +52,46 @@ async function getPreviewParams() {
 
 export async function generateMetadata({ params }: SlugParams): Promise<Metadata> {
   const { slug } = await params
-  const { isEnabled } = await draftMode()
-  return buildRootResolverMetadata(slug, { preview: isEnabled })
-}
-
-interface RootResolverPageProps {
-  params: Promise<{ slug: string }>
+  // Always treat as published for SEO – no draftMode, no headers.
+  return buildRootResolverMetadata(slug, { preview: false })
 }
 
 export default async function RootResolverPage({ params }: RootResolverPageProps) {
   const { slug } = await params
-  // Try Page first
-  let page: GetPageByUriResponse['page'] | null = null
   const { isEnabled } = await draftMode()
+
+  if (!isEnabled) {
+    return resolvePublishedPageOrPost(slug, { preview: false })
+  }
+
   const { previewId, previewType } = await getPreviewParams()
 
-  // If we're in draft mode and have a previewId, prefer the preview query first
-  if (isEnabled && previewId && previewType === 'page') {
+  if (previewId && previewType === 'page') {
     const data = await wpgraphql<GetPageByIdPreviewResponse>({
       query: QUERY_PAGE_PREVIEW_BY_ID,
       variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
       preview: true,
       revalidate: false,
     })
-    if (data?.page) {
-      return <PageRenderer page={data.page} />
-    }
+    if (data?.page) return <PageRenderer page={data.page} />
   }
 
-  if (isEnabled && previewId && previewType === 'post') {
+  if (previewId && previewType === 'post') {
     const data = await wpgraphql<GetPostByIdPreviewResponse>({
       query: QUERY_POST_PREVIEW_BY_ID,
       variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
       preview: true,
       revalidate: false,
     })
-    if (data?.post) {
-      return <PostRenderer post={data.post} />
-    }
+    if (data?.post) return <PostRenderer post={data.post} />
   }
 
-  //pages on this route won't be revalidated as they aren't intended to change. If one does change, we need to run a rebuild
+  return resolvePublishedPageOrPost(slug, { preview: true })
+}
+
+async function resolvePublishedPageOrPost(slug: string, options: { preview: boolean }) {
+  const { preview } = options
+
   const staticPageSlugs = new Set([
     'innovator-pioneer',
     'holistic-wellness',
@@ -97,42 +100,37 @@ export default async function RootResolverPage({ params }: RootResolverPageProps
     'publications',
   ])
   const revalidateOption = staticPageSlugs.has(slug) ? false : 86400
+
+  // Try Page first
   try {
     const data = await wpgraphql<GetPageByUriResponse>({
       query: QUERY_PAGE_BY_URI,
       variables: { id: `/${slug}` },
       revalidate: revalidateOption,
-      preview: isEnabled,
+      preview,
     })
-    page = data.page
+    if (data.page) {
+      return <PageRenderer page={data.page} />
+    }
   } catch (err) {
     console.log('[RootResolver] Page query failed:', err instanceof Error ? err.message : err)
   }
 
-  if (page) {
-    return <PageRenderer page={page} />
-  }
-
   // Try Post second
-  let post: GetPostBySlugResponse['post'] | null = null
-
   try {
     const data = await wpgraphql<GetPostBySlugResponse>({
       query: QUERY_POST_BY_SLUG,
       variables: { id: slug },
       revalidate: revalidateOption,
-      preview: isEnabled,
+      preview,
     })
-    post = data.post
+    if (data.post) {
+      return <PostRenderer post={data.post} />
+    }
   } catch (err) {
     console.log('[RootResolver] Post query failed:', err instanceof Error ? err.message : err)
   }
 
-  if (post) {
-    return <PostRenderer post={post} />
-  }
-
-  // Neither found
   notFound()
 }
 
