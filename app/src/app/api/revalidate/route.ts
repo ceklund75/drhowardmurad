@@ -9,11 +9,15 @@ export async function GET(req: NextRequest) {
   const secret = searchParams.get('secret')
   const path = searchParams.get('path')
 
+  console.log('[revalidate] incoming', { path, secretPresent: !!secret })
+
   if (!secret || secret !== WORDPRESS_REVALIDATE_SECRET) {
+    console.warn('[revalidate] invalid secret', { secret })
     return new Response('Invalid secret', { status: 401 })
   }
 
   if (!path || !path.startsWith('/')) {
+    console.warn('[revalidate] invalid path', { path })
     return new Response('Missing or invalid path', { status: 400 })
   }
 
