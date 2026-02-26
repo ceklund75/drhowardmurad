@@ -34,6 +34,7 @@ export default async function PrivacyPolicyPage() {
   const data = await wpgraphql<PrivacyPolicyResult>({
     query: PRIVACY_POLICY_QUERY,
     preview: isEnabled,
+    revalidate: false,
   })
 
   const page = data?.page

@@ -42,6 +42,25 @@ export const FRAGMENT_LINK_FIELDS = `
   }
 `
 
+export const FRAGMENT_TSFSEO_FIELDS = `
+  fragment TsfSeoFields on TSFSEO {
+    canonicalUrl
+    description
+    noarchive
+    nofollow
+    noindex
+    openGraphDescription
+    openGraphTitle
+    redirectUrl
+    socialImageId
+    socialImageUrl
+    title
+    twitterCardType
+    twitterDescription
+    twitterTitle
+  }
+`
+
 /**
  * Blog post ACF fields (full detail for single posts ONLY)
  */
@@ -100,6 +119,150 @@ export const FRAGMENT_PAGE_HERO = `
     }
   }
 `
+// Text/Image Alt section selection, exactly as in your query
+export const FRAGMENT_PAGE_TEXT_IMAGE_ALT_SECTION = `
+  fragment PageTextImageAltSection on Page {
+    pageTextImageAlt {
+      pageSectionsTextImageAlt {
+        sectionAnchorId
+        sectionBgColor
+        sectionBgHasOverlay
+        sectionBgImage {
+          node {
+            ...ImageFields
+          }
+        }
+        textImageAltAutoAlternate
+        textImageAltBody
+        textImageAltButtonLabel
+        textImageAltButtonUrl
+        textImageAltButton {
+          buttonLabel
+          buttonType
+          buttonLink {
+            linkType
+            internalLink {
+              nodes {
+                __typename
+                ... on Page {
+                  id
+                  uri
+                }
+                ... on Post {
+                  id
+                  uri
+                }
+                ... on MediaItem {
+                  id
+                  mediaItemUrl
+                }
+              }
+            }
+            externalUrl
+            externalTarget
+          }
+          buttonModal {
+            modalType
+            modalContent
+          }
+        }
+        textImageAltCollapsibleItems {
+          textImageAltCollapsibleContent
+          textImageAltCollapsibleTitle
+        }
+        textImageAltContentAlignment
+        textImageAltExtendedImage {
+          node {
+            ...ImageFields
+          }
+        }
+        textImageAltHeading
+        textImageAltHideImageMobile
+        textImageAltImageDesktop {
+          node {
+            ...ImageFields
+          }
+        }
+        textImageAltImageHeightPreset
+        textImageAltImageObjectPosition
+        textImageAltImageObjectFit
+        textImageAltImageMobile {
+          node {
+            ...ImageFields
+          }
+        }
+        textImageAltThemeColor
+        textImageAltSubheading
+        textImageAltLayoutType
+      }
+    }
+  }
+`
+
+// Text/Image Fixed section selection, exactly as in your query
+export const FRAGMENT_PAGE_TEXT_IMAGE_FIXED_SECTION = `
+  fragment PageTextImageFixedSection on Page {
+    pageTextImageFixed {
+      pageSectionsTextImageFixed {
+        sectionBgColor
+        sectionBgHasOverlay
+        sectionBgImage {
+          node {
+            ...ImageFields
+          }
+        }
+        textImageFixedLayoutType
+        textImageFixedImageDesktop {
+          node {
+            ...ImageFields
+          }
+        }
+        textImageFixedImageMobile {
+          node {
+            ...ImageFields
+          }
+        }
+        textImageFixedHideImageMobile
+        textImageFixedSubheading
+        textImageFixedHeading
+        textImageFixedBody
+        textImageFixedButtonLabel
+        textImageFixedButtonUrl
+        textImageFixedThemeColor
+      }
+    }
+  }
+`
+export const FRAGMENT_PAGE_FIELDS = `
+  ${FRAGMENT_IMAGE_FIELDS}
+  ${FRAGMENT_PAGE_HERO}
+  ${FRAGMENT_TSFSEO_FIELDS}
+  ${FRAGMENT_PAGE_TEXT_IMAGE_ALT_SECTION}
+  ${FRAGMENT_PAGE_TEXT_IMAGE_FIXED_SECTION}
+
+  fragment PageFields on Page {
+    id
+    uri
+    slug
+    title
+    date
+    modified
+    tsfSeo {
+      ...TsfSeoFields
+    }
+    pageHero {
+      ...PageHeroFields
+    }
+    ...PageTextImageAltSection
+    ...PageTextImageFixedSection
+    pageNewsletterCta {
+      newsletterBgColor
+      newsletterHeading
+      newsletterSubheading
+      newsletterButtonLabel
+    }
+  }
+`
 
 /**
  * Pagination info for cursor-based pagination
@@ -134,26 +297,6 @@ export const FRAGMENT_POST_CARD = `
     }
   }
 `
-
-export const FRAGMENT_TSFSEO_FIELDS = `
-  fragment TsfSeoFields on TSFSEO {
-    canonicalUrl
-    description
-    noarchive
-    nofollow
-    noindex
-    openGraphDescription
-    openGraphTitle
-    redirectUrl
-    socialImageId
-    socialImageUrl
-    title
-    twitterCardType
-    twitterDescription
-    twitterTitle
-  }
-`
-
 /**
  * Full post fields for single post pages
  * Excludes: content (not used), excerpt (not used), databaseId (not needed)
@@ -186,6 +329,28 @@ export const FRAGMENT_POST_FULL = `
 `
 
 // ============= QUERIES =============
+
+export const QUERY_PAGE_PREVIEW_BY_ID = `
+ ${FRAGMENT_PAGE_FIELDS}
+query PreviewPageById($id: ID!, $idType: PageIdType, $asPreview: Boolean!) {
+  page(id: $id, idType: $idType, asPreview: $asPreview) {
+    ...PageFields
+  }
+}`
+
+export const QUERY_POST_PREVIEW_BY_ID = `
+  ${FRAGMENT_IMAGE_FIELDS}
+  ${FRAGMENT_CATEGORY_FIELDS}
+  ${FRAGMENT_LINK_FIELDS}
+  ${FRAGMENT_BLOG_POST_ACF}
+  ${FRAGMENT_POST_FULL}
+  ${FRAGMENT_TSFSEO_FIELDS}
+ 
+  query PreviewPostById($id: ID!, $idType: PostIdType, $asPreview: Boolean!) {
+  post(id: $id, idType: $idType, asPreview: $asPreview) {
+    ...PostFullFields
+  }
+}`
 
 export const QUERY_PAGE_SEO_BY_URI = `
   ${FRAGMENT_TSFSEO_FIELDS}
@@ -342,135 +507,10 @@ export const QUERY_BLOG_INDEX = `
  * Fetch page by URI (for static pages)
  */
 export const QUERY_PAGE_BY_URI = `
-  ${FRAGMENT_IMAGE_FIELDS}
-  ${FRAGMENT_PAGE_HERO}
-  ${FRAGMENT_TSFSEO_FIELDS}
+  ${FRAGMENT_PAGE_FIELDS}
   query GetPageByUri($id: ID!) {
     page(id: $id, idType: URI) {
-      id
-      uri
-      slug
-      title
-      date
-      modified
-      tsfSeo {
-        ...TsfSeoFields
-      }
-      pageHero {
-        ...PageHeroFields
-      }
-
-      pageTextImageAlt {
-        pageSectionsTextImageAlt {
-          sectionAnchorId
-          sectionBgColor
-          sectionBgHasOverlay
-          sectionBgImage {
-            node {
-              ...ImageFields
-            }
-          }
-          textImageAltAutoAlternate
-          textImageAltBody
-          textImageAltButtonLabel
-          textImageAltButtonUrl
-           textImageAltButton {
-            buttonLabel
-            buttonType
-            buttonLink {
-              linkType
-              internalLink {
-                nodes {
-                  __typename
-                  ... on Page {
-                    id
-                    uri
-                  }
-                  ... on Post {
-                    id
-                    uri
-                  }
-                  ... on MediaItem {
-                    id
-                    mediaItemUrl                  
-                  }  
-                }
-              }
-              externalUrl
-              externalTarget
-            }
-            buttonModal {
-              modalType
-              modalContent
-            }
-          }
-          textImageAltCollapsibleItems {
-            textImageAltCollapsibleContent
-            textImageAltCollapsibleTitle
-          }
-          textImageAltContentAlignment
-          textImageAltExtendedImage {
-            node {
-              ...ImageFields
-            }
-          }
-          textImageAltHeading
-          textImageAltHideImageMobile
-          textImageAltImageDesktop {
-            node {
-              ...ImageFields
-            }
-          }
-          textImageAltImageHeightPreset
-          textImageAltImageObjectPosition
-          textImageAltImageObjectFit
-          textImageAltImageMobile {
-            node {
-              ...ImageFields
-            }
-          }
-          textImageAltThemeColor
-          textImageAltSubheading
-          textImageAltLayoutType
-        }
-      }
-
-      pageTextImageFixed {
-        pageSectionsTextImageFixed {
-          sectionBgColor
-          sectionBgHasOverlay
-          sectionBgImage {
-            node {
-              ...ImageFields
-            }
-          }
-          textImageFixedLayoutType
-          textImageFixedImageDesktop {
-            node {
-              ...ImageFields
-            }
-          }
-          textImageFixedImageMobile {
-            node {
-              ...ImageFields
-            }
-          }
-          textImageFixedHideImageMobile
-          textImageFixedSubheading
-          textImageFixedHeading
-          textImageFixedBody
-          textImageFixedButtonLabel
-          textImageFixedButtonUrl
-          textImageFixedThemeColor
-        }
-      }
-
-      pageNewsletterCta {
-        newsletterBgColor
-        newsletterHeading
-        newsletterSubheading
-        newsletterButtonLabel
-      }
+      ...PageFields
     }
   }
 `

@@ -81,7 +81,7 @@ export function PostRenderer({ post }: PostRendererProps) {
                     // Keep priority for mobile LCP
                     priority
                     fetchPriority="high"
-                    quality={75}
+                    quality={85}
                     className="h-auto w-full"
                     // Tell Next.js this image is only ever shown on screens smaller than 1024px.
                     // After that, cap it so it doesn't generate w=1920 files.
@@ -165,8 +165,9 @@ export function PostRenderer({ post }: PostRendererProps) {
                       alt={blogPost.contentAssociatedImage.node.altText || ''}
                       width={blogPost.contentAssociatedImage.node.mediaDetails?.width || 800}
                       height={blogPost.contentAssociatedImage.node.mediaDetails?.height || 1200}
-                      loading="lazy"
-                      quality={75}
+                      loading="eager"
+                      priority
+                      quality={85}
                       className="h-auto w-full"
                       sizes="(min-width: 1024px) 33vw, 400px"
                     />

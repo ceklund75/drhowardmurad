@@ -91,7 +91,7 @@ export async function fetchBlogPage(page: number, options: PaginationOptions = {
       first: PAGE_SIZE,
       after: entry.after,
     },
-    revalidate: preview ? false : 3600,
+    revalidate: preview ? false : 86400,
     preview,
   })
 
