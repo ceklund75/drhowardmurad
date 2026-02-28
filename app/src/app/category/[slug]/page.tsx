@@ -64,11 +64,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   const allCategories = categoriesData.categories.nodes
   const blogPage = blogPageData.page
+  const title = `${blogPage?.title} - ${slug.charAt(0).toUpperCase() + slug.slice(1)}`
 
   return (
     <>
       {blogPage?.pageHero && (
-        <BlogHero hero={blogPage.pageHero} hideForm={true} hideHeroBody={true} />
+        <BlogHero hero={blogPage.pageHero} title={title} hideForm={true} hideHeroBody={true} />
       )}
       {/* Breadcrumb Bar with ALL categories */}
       <div className="bg-gray-alt lg:bg-light-1 w-full pt-3.75 lg:pt-0">

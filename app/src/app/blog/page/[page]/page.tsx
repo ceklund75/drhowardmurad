@@ -44,6 +44,8 @@ export default async function BlogPageNumber({ params }: BlogPageNumberProps) {
 
   const { page: wpPage, posts } = data
 
+  const title = pageNumber > 1 ? `${wpPage.title} - Page ${pageNumber}` : wpPage.title
+
   if (!posts.nodes.length) {
     notFound()
   }
@@ -52,7 +54,7 @@ export default async function BlogPageNumber({ params }: BlogPageNumberProps) {
     <>
       {/* Optional: reuse hero or simplified heading */}
       {wpPage.pageHero && (
-        <BlogHero hero={wpPage.pageHero} title={wpPage.title} hideForm={true} hideHeroBody={true} />
+        <BlogHero hero={wpPage.pageHero} title={title} hideForm={true} hideHeroBody={true} />
       )}
       <section className="mx-auto p-4">
         <BlogGrid posts={posts.nodes} />
