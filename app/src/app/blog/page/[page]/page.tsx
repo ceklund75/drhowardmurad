@@ -51,7 +51,9 @@ export default async function BlogPageNumber({ params }: BlogPageNumberProps) {
   return (
     <>
       {/* Optional: reuse hero or simplified heading */}
-      {wpPage.pageHero && <BlogHero hero={wpPage.pageHero} title={wpPage.title} hideForm={true} />}
+      {wpPage.pageHero && (
+        <BlogHero hero={wpPage.pageHero} title={wpPage.title} hideForm={true} hideHeroBody={true} />
+      )}
       <section className="mx-auto p-4">
         <BlogGrid posts={posts.nodes} />
 

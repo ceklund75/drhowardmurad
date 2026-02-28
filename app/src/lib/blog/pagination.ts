@@ -85,14 +85,16 @@ export async function fetchBlogPage(page: number, options: PaginationOptions = {
     return null
   }
 
+  console.log('QUERY_BLOG_INDEX: ', QUERY_BLOG_INDEX)
+  //console.log('WP_GRAPHQL_URL at runtime:', process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_ENDPOINT)
   const data = await wpgraphql<GetBlogIndexResponse>({
     query: QUERY_BLOG_INDEX,
     variables: {
       first: PAGE_SIZE,
       after: entry.after,
     },
-    revalidate: preview ? false : 86400,
-    preview,
+    revalidate: false, //preview ? false : 86400,
+    preview: false,
   })
 
   return data

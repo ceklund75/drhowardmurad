@@ -107,6 +107,11 @@ export const FRAGMENT_PAGE_HERO = `
         ...ImageFields
       }
     }
+    heroMobileBgImage{
+      node {
+        ...ImageFields
+      }
+    }  
     heroMobileImage {
       node {
         ...ImageFields

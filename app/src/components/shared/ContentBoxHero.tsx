@@ -23,7 +23,7 @@ export function ContentBoxHero({
   const mobileBg = hero.heroMobileBgImage?.node?.mediaItemUrl || ''
   const mobileSrc = mobileBg || desktopBg
   const desktopSrc = desktopBg
-
+  // console.log('hero: ', hero)
   return (
     <section className="bg-gray-alt relative overflow-hidden">
       {desktopSrc && (

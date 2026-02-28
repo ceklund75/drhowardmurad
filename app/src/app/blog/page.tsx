@@ -22,6 +22,8 @@ export default async function BlogPage() {
 
   const { posts } = data
 
+  //console.log('data: ', data)
+
   return (
     <>
       {data.page.pageHero && (

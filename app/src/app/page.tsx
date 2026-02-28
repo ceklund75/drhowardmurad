@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   //const { isEnabled } = await draftMode()
   return buildHomeMetadata({ preview: false })
 }
-export const revalidate = false //86400
+export const revalidate = 86400
 
 export default async function HomePage() {
   const { isEnabled } = await draftMode()

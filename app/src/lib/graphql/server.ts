@@ -62,7 +62,7 @@ export async function wpgraphql<T>({
     }
 
     const json = await res.json()
-
+    //console.log('BLOG INDEX RAW', JSON.stringify(json, null, 2))
     if (json.errors?.length) {
       console.error('[wpgraphql] GraphQL errors:', json.errors)
       throw new Error(json.errors[0]?.message || 'GraphQL request failed')
