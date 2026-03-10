@@ -8,6 +8,7 @@ import { ExpandedContent } from '../ExpandedContent'
 import { ShareThisPost } from './ShareThisPost'
 import { PageNewsletterCta } from '../pages/PageNewsletterCta'
 import { buildPostJsonLd } from '@/lib/seo/jsonLd'
+import { AsyncImage } from '../AsyncImage'
 
 interface PostRendererProps {
   post: Post
@@ -79,7 +80,7 @@ export function PostRenderer({ post }: PostRendererProps) {
                     width={blogPost.contentAssociatedImage.node.mediaDetails?.width || 800}
                     height={blogPost.contentAssociatedImage.node.mediaDetails?.height || 1200}
                     // Keep priority for mobile LCP
-                    priority
+                    preload
                     fetchPriority="high"
                     quality={85}
                     className="h-auto w-full"
@@ -160,13 +161,13 @@ export function PostRenderer({ post }: PostRendererProps) {
               {blogPost?.contentAssociatedImage?.node && (
                 <div className="flex flex-col items-end">
                   <div className="relative w-[85%]" style={{ aspectRatio: 'auto' }}>
-                    <Image
+                    <AsyncImage
                       src={blogPost.contentAssociatedImage.node.mediaItemUrl}
                       alt={blogPost.contentAssociatedImage.node.altText || ''}
                       width={blogPost.contentAssociatedImage.node.mediaDetails?.width || 800}
                       height={blogPost.contentAssociatedImage.node.mediaDetails?.height || 1200}
                       loading="eager"
-                      priority
+                      preload
                       quality={85}
                       className="h-auto w-full"
                       sizes="(min-width: 1024px) 33vw, 400px"

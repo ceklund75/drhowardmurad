@@ -23,10 +23,15 @@ export async function GET(request: NextRequest) {
   const draft = await draftMode()
   draft.enable()
 
-  const slug = rawSlug.startsWith('/') ? rawSlug : `/${rawSlug}`
-  const target = new URL(slug, url.origin)
-  if (id) target.searchParams.set('previewId', id)
-  if (type) target.searchParams.set('previewType', type)
+  const normalizedSlug = rawSlug === '/' ? '' : rawSlug.replace(/^\//, '')
+  const basePath = normalizedSlug ? `/${normalizedSlug}` : '/'
 
-  redirect(slug)
+  const search = new URLSearchParams()
+  if (id) search.set('previewId', id)
+  if (type) search.set('previewType', type)
+
+  const target = search.toString() ? `${basePath}?${search.toString()}` : basePath
+
+  // Make sure we actually redirect
+  redirect(target)
 }
