@@ -20,8 +20,10 @@ import { PostRenderer } from '@/components/blog/PostRenderer'
 import { PageRenderer } from '@/components/pages/PageRenderer'
 
 import type { Metadata } from 'next'
-import { buildRootResolverMetadata } from '@/lib/seo/builders'
+import { buildRootResolverMetadataFromResolved } from '@/lib/seo/builders'
 import logger from '@/lib/logger'
+import { resolveBySlug } from '@/lib/graphql/resolveBySlug'
+import type { ResolvedBySlug as ResolvedContent } from '@/lib/graphql/resolveBySlug'
 
 type GetPageByIdPreviewResponse = {
   page: GetPageByUriResponse['page'] // same Page shape
@@ -59,17 +61,16 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }): Promise<Metadata> {
-  const resolvedParams = await params
-  const resolvedSearchParams = await searchParams
+  const { slug } = await params
+  const sp = await searchParams
 
-  // Check for preview params BEFORE calling buildRootResolverMetadata
-  if (resolvedSearchParams.previewId && resolvedSearchParams.previewType) {
-    return {
-      title: 'Preview | Dr. Howard Murad',
-    }
+  if (sp.previewId && sp.previewType) {
+    return { title: 'Preview | Dr. Howard Murad' }
   }
+
   try {
-    return buildRootResolverMetadata(resolvedParams.slug, { preview: false })
+    const resolved = await resolveBySlug(slug, { preview: false })
+    return buildRootResolverMetadataFromResolved(slug, resolved, { preview: false })
   } catch (error) {
     logger.error({ error }, 'generateMetadata failed')
     return {
@@ -77,130 +78,6 @@ export async function generateMetadata({
       description: 'Father of Modern Wellness',
     }
   }
-}
-
-export default async function RootResolverPage({ params, searchParams }: RootResolverPageProps) {
-  const { slug } = await params
-  const resolvedSearchParams = await searchParams
-  const previewId = resolvedSearchParams.previewId as string | null
-  const previewType = resolvedSearchParams.previewType as string | null
-
-  const draft = await draftMode()
-
-  if (previewId && previewType) {
-    draft.enable()
-  }
-
-  // PRIORITY 1: Direct HWP searchParams (bypasses middleware)
-  if (previewId && previewType === 'post') {
-    try {
-      const data = await wpgraphql<GetPostByIdPreviewResponse>({
-        query: QUERY_POST_PREVIEW_BY_ID,
-        variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
-        preview: true,
-        revalidate: false,
-      })
-      if (data?.post) return <PostRenderer post={data.post} />
-    } catch (error) {
-      logger.error({ slug, error }, 'GetPostByIdPreviewResponseWPGraphQL fetch failed.')
-    }
-  }
-
-  if (previewId && previewType === 'page') {
-    try {
-      const data = await wpgraphql<GetPageByIdPreviewResponse>({
-        query: QUERY_PAGE_PREVIEW_BY_ID,
-        variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
-        preview: true,
-        revalidate: false,
-      })
-      if (data?.page) return <PageRenderer page={data.page} />
-    } catch (error) {
-      logger.error({ slug: '/', error }, 'GetPageByIdPreviewResponse WPGraphQL fetch failed.')
-    }
-  }
-
-  // Your existing middleware logic (PRIORITY 2)
-  if (!draft.isEnabled) {
-    return resolvePublishedPageOrPost(slug, { preview: false })
-  }
-
-  const { previewId: headerPreviewId, previewType: headerPreviewType } = await getPreviewParams()
-
-  if (headerPreviewId && headerPreviewType === 'page') {
-    try {
-      const data = await wpgraphql<GetPageByIdPreviewResponse>({
-        query: QUERY_PAGE_PREVIEW_BY_ID,
-        variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
-        preview: true,
-        revalidate: false,
-      })
-      if (data?.page) return <PageRenderer page={data.page} />
-    } catch (error) {
-      logger.error({ slug: '/', error }, 'GetPageByIdPreviewResponse WPGraphQL fetch failed.')
-    }
-  }
-
-  if (headerPreviewId && headerPreviewType === 'post') {
-    try {
-      const data = await wpgraphql<GetPostByIdPreviewResponse>({
-        query: QUERY_POST_PREVIEW_BY_ID,
-        variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
-        preview: true,
-        revalidate: false,
-      })
-      if (data?.post) return <PostRenderer post={data.post} />
-    } catch (error) {
-      logger.error({ slug: '/', error }, 'GetPostByIdPreviewResponse WPGraphQL fetch failed.')
-    }
-  }
-
-  return resolvePublishedPageOrPost(slug, { preview: true })
-}
-
-async function resolvePublishedPageOrPost(slug: string, options: { preview: boolean }) {
-  const { preview } = options
-
-  const staticPageSlugs = new Set([
-    'innovator-pioneer',
-    'holistic-wellness',
-    'dr-murads-life-story',
-    'books',
-    'publications',
-  ])
-  const revalidateOption = staticPageSlugs.has(slug) ? false : 86400
-
-  // Try Page first
-  try {
-    const data = await wpgraphql<GetPageByUriResponse>({
-      query: QUERY_PAGE_BY_URI,
-      variables: { id: `/${slug}` },
-      revalidate: revalidateOption,
-      preview,
-    })
-    if (data.page) {
-      return <PageRenderer page={data.page} />
-    }
-  } catch (error) {
-    logger.error({ slug: '/', error }, 'Page WPGraphQL fetch failed.')
-  }
-
-  // Try Post second
-  try {
-    const data = await wpgraphql<GetPostBySlugResponse>({
-      query: QUERY_POST_BY_SLUG,
-      variables: { id: slug },
-      revalidate: revalidateOption,
-      preview,
-    })
-    if (data.post) {
-      return <PostRenderer post={data.post} />
-    }
-  } catch (error) {
-    logger.error({ slug: '/', error }, 'Post WPGraphQL fetch failed.')
-  }
-
-  notFound()
 }
 
 export async function generateStaticParams() {
@@ -250,11 +127,148 @@ export async function generateStaticParams() {
     }
 
     allSlugs.push('preview')
-    console.log(`[generateStaticParams] Complete: Pre-built ${allSlugs.length} page+post routes`)
+    logger.info(`[generateStaticParams] Complete: Pre-built ${allSlugs.length} page+post routes`)
 
     return allSlugs.map((slug) => ({ slug }))
   } catch (error) {
-    console.error('[generateStaticParams] Failed to fetch slugs:', error)
+    logger.error({ error }, '[generateStaticParams] Failed to fetch slugs:')
     return []
+  }
+}
+
+export default async function RootResolverPage({ params, searchParams }: RootResolverPageProps) {
+  const { slug } = await params
+  const resolvedSearchParams = await searchParams
+  const previewId = resolvedSearchParams.previewId as string | null
+  const previewType = resolvedSearchParams.previewType as string | null
+
+  const draft = await draftMode()
+
+  if (previewId && previewType) {
+    draft.enable()
+    // PRIORITY 1: Direct HWP searchParams (bypasses middleware)
+    const directPreview = await resolvePreviewContent({ previewId, previewType })
+    if (directPreview) return renderResolved(directPreview)
+  }
+
+  // PRIORITY 2: If draft not enabled, just serve published content
+  if (!draft.isEnabled) {
+    const resolved = await resolvePublishedContent(slug, { preview: false })
+    return renderResolved(resolved)
+  }
+
+  // PRIORITY 3: Headers-based preview via middleware
+  const { previewId: headerPreviewId, previewType: headerPreviewType } = await getPreviewParams()
+
+  if (headerPreviewId && headerPreviewType) {
+    const headerPreview = await resolvePreviewContent({
+      previewId: headerPreviewId,
+      previewType: headerPreviewType,
+    })
+    if (headerPreview) return renderResolved(headerPreview)
+  }
+
+  // PRIORITY 4: Draft mode enabled but no specific preview entity → preview of published
+  const resolved = await resolvePublishedContent(slug, { preview: true })
+  return renderResolved(resolved)
+}
+
+async function resolvePublishedContent(
+  slug: string,
+  options: { preview: boolean },
+): Promise<ResolvedContent> {
+  const { preview } = options
+
+  const staticPageSlugs = new Set([
+    'innovator-pioneer',
+    'holistic-wellness',
+    'dr-murads-life-story',
+    'books',
+    'publications',
+  ])
+  const revalidateOption = staticPageSlugs.has(slug) ? false : 86400
+
+  // Try Page first
+  try {
+    const pageData = await wpgraphql<GetPageByUriResponse>({
+      query: QUERY_PAGE_BY_URI,
+      variables: { id: `/${slug}` },
+      revalidate: revalidateOption,
+      preview,
+    })
+
+    if (pageData.page) {
+      return { kind: 'page', page: pageData.page }
+    }
+  } catch (error) {
+    logger.error({ slug, error }, 'Page WPGraphQL fetch failed.')
+  }
+
+  // Then Post
+  try {
+    const postData = await wpgraphql<GetPostBySlugResponse>({
+      query: QUERY_POST_BY_SLUG,
+      variables: { id: slug },
+      revalidate: revalidateOption,
+      preview,
+    })
+
+    if (postData.post) {
+      return { kind: 'post', post: postData.post }
+    }
+  } catch (error) {
+    logger.error({ slug, error }, 'Post WPGraphQL fetch failed.')
+  }
+
+  return { kind: 'none' }
+}
+
+async function resolvePreviewContent(args: {
+  previewId: string
+  previewType: string
+}): Promise<ResolvedContent | null> {
+  const { previewId, previewType } = args
+  const id = Number(previewId)
+
+  if (previewType === 'page') {
+    try {
+      const data = await wpgraphql<GetPageByIdPreviewResponse>({
+        query: QUERY_PAGE_PREVIEW_BY_ID,
+        variables: { id, idType: 'DATABASE_ID', asPreview: true },
+        preview: true,
+        revalidate: false,
+      })
+      if (data?.page) return { kind: 'page', page: data.page }
+    } catch (error) {
+      logger.error({ previewId, error }, 'GetPageByIdPreviewResponse WPGraphQL fetch failed.')
+    }
+  }
+
+  if (previewType === 'post') {
+    try {
+      const data = await wpgraphql<GetPostByIdPreviewResponse>({
+        query: QUERY_POST_PREVIEW_BY_ID,
+        variables: { id, idType: 'DATABASE_ID', asPreview: true },
+        preview: true,
+        revalidate: false,
+      })
+      if (data?.post) return { kind: 'post', post: data.post }
+    } catch (error) {
+      logger.error({ previewId, error }, 'GetPostByIdPreviewResponse WPGraphQL fetch failed.')
+    }
+  }
+
+  return null
+}
+
+function renderResolved(resolved: ResolvedContent) {
+  switch (resolved.kind) {
+    case 'page':
+      return <PageRenderer page={resolved.page} />
+    case 'post':
+      return <PostRenderer post={resolved.post} />
+    case 'none':
+    default:
+      return notFound()
   }
 }

@@ -8,6 +8,7 @@ import {
   QUERY_CATEGORY_BASICS,
 } from '@/lib/graphql/queries'
 import { metadataFromSeoEntity } from './tsf'
+import type { ResolvedBySlug } from '../graphql/resolveBySlug'
 
 type SeoBuilderOptions = {
   preview?: boolean
@@ -38,6 +39,46 @@ export async function buildRootResolverMetadata(
   })
   if (postResult.post) return metadataFromSeoEntity(postResult.post)
 
+  return { title: 'Page not found' }
+}
+
+export async function buildRootResolverMetadataFromResolved(
+  slug: string,
+  resolved: ResolvedBySlug,
+  options: SeoBuilderOptions = {},
+): Promise<Metadata> {
+  const { preview = false } = options
+
+  // If your page/post types already include tsfSeo, you can shortcut here.
+  // For now, assume they DON'T, and keep the current SEO queries:
+
+  if (resolved.kind === 'page') {
+    const pageResult = await wpgraphql<{
+      page: { title: string | null; tsfSeo: TsfSeo | null } | null
+    }>({
+      query: QUERY_PAGE_SEO_BY_URI,
+      variables: { id: `/${slug}` },
+      revalidate: 86400,
+      preview,
+    })
+
+    if (pageResult.page) return metadataFromSeoEntity(pageResult.page)
+  }
+
+  if (resolved.kind === 'post') {
+    const postResult = await wpgraphql<{
+      post: { title: string | null; excerpt: string | null; tsfSeo: TsfSeo | null } | null
+    }>({
+      query: QUERY_POST_SEO_BY_SLUG,
+      variables: { id: slug },
+      revalidate: 86400,
+      preview,
+    })
+
+    if (postResult.post) return metadataFromSeoEntity(postResult.post)
+  }
+
+  // If nothing resolved, keep current fallback
   return { title: 'Page not found' }
 }
 
