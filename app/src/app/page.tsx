@@ -6,26 +6,40 @@ import { PageRenderer } from '@/components/pages/PageRenderer'
 import type { Metadata } from 'next'
 import { buildHomeMetadata } from '@/lib/seo/builders'
 import { buildHomeJsonLd } from '@/lib/seo/jsonLd'
+import logger from '@/lib/logger'
 
 export async function generateMetadata(): Promise<Metadata> {
-  //const { isEnabled } = await draftMode()
-  return buildHomeMetadata({ preview: false })
+  try {
+    return buildHomeMetadata({ preview: false })
+  } catch (error) {
+    logger.error({ error }, 'generateMetadata failed')
+    return {
+      title: 'Dr. Howard Murad',
+      description: 'Father of Modern Wellness',
+    }
+  }
 }
 export const revalidate = 86400
 
 export default async function HomePage() {
   const { isEnabled } = await draftMode()
-  const data = await wpgraphql<GetPageByUriResponse>({
-    query: QUERY_PAGE_BY_URI,
-    variables: { id: '/' },
-    revalidate,
-    preview: isEnabled,
-  })
+  let safePage = undefined
+  try {
+    const data = await wpgraphql<GetPageByUriResponse>({
+      query: QUERY_PAGE_BY_URI,
+      variables: { id: '/' },
+      revalidate,
+      preview: isEnabled,
+    })
 
-  const page = data.page
-  if (!page) {
-    // Optional: fall back or notFound()
-    return null
+    const page = data.page
+    if (!page) {
+      // Optional: fall back or notFound()
+      return null
+    }
+    safePage = page
+  } catch (error) {
+    logger.error({ slug: '/', error }, 'WPGraphQL fetch failed.')
   }
 
   const homeJsonLd = buildHomeJsonLd()
@@ -38,7 +52,7 @@ export default async function HomePage() {
           __html: JSON.stringify(homeJsonLd).replace(/</g, '\\u003c'),
         }}
       />
-      {page && <PageRenderer page={page} />}
+      {safePage && <PageRenderer page={safePage} />}
     </>
   )
 }

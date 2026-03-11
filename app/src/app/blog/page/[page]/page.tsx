@@ -6,16 +6,25 @@ import BlogHero from '@/components/blog/BlogHero'
 
 import type { Metadata } from 'next'
 import { buildBlogIndexMetadata } from '@/lib/seo/builders'
+import logger from '@/lib/logger'
 
 type BlogPageParams = {
   params: Promise<{ page: string }>
 }
 
 export async function generateMetadata({ params }: BlogPageParams): Promise<Metadata> {
-  const { page } = await params
-  const pageNumber = Number(page) || 1
-  //const { isEnabled } = await draftMode()
-  return buildBlogIndexMetadata(pageNumber, { preview: false })
+  try {
+    const { page } = await params
+    const pageNumber = Number(page) || 1
+    //const { isEnabled } = await draftMode()
+    return buildBlogIndexMetadata(pageNumber, { preview: false })
+  } catch (error) {
+    logger.error({ error }, 'generateMetadata failed')
+    return {
+      title: 'Dr. Howard Murad',
+      description: 'Father of Modern Wellness',
+    }
+  }
 }
 
 interface BlogPageNumberProps {

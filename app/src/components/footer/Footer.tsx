@@ -3,6 +3,7 @@ import { wpgraphql } from '@/lib/graphql/server'
 import { QUERY_FOOTER_SETTINGS } from '@/lib/graphql/queries'
 import { FooterClient } from './FooterClient'
 import type { GetFooterResponse } from '@/lib/graphql/types'
+import logger from '@/lib/logger'
 
 export async function Footer() {
   let footerSettings: GetFooterResponse['footer']['footerSettings'] | null = null
@@ -13,7 +14,7 @@ export async function Footer() {
     })
     footerSettings = data?.footer?.footerSettings
   } catch (error) {
-    console.error('[Footer] Failed to fetch:', error)
+    logger.error({ slug: '/', error }, 'Footer WPGraphQL fetch failed.')
   }
 
   if (!footerSettings) {

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { logClientError } from '@/lib/utils/logError'
 
 export default function Error({
   error,
@@ -10,7 +11,10 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
-    console.error(error)
+    logClientError(
+      { message: error.message, digest: error.digest },
+      { pathname: window.location.pathname },
+    )
   }, [error])
 
   return (

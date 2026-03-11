@@ -21,6 +21,7 @@ import { PageRenderer } from '@/components/pages/PageRenderer'
 
 import type { Metadata } from 'next'
 import { buildRootResolverMetadata } from '@/lib/seo/builders'
+import logger from '@/lib/logger'
 
 type GetPageByIdPreviewResponse = {
   page: GetPageByUriResponse['page'] // same Page shape
@@ -67,8 +68,15 @@ export async function generateMetadata({
       title: 'Preview | Dr. Howard Murad',
     }
   }
-
-  return buildRootResolverMetadata(resolvedParams.slug, { preview: false })
+  try {
+    return buildRootResolverMetadata(resolvedParams.slug, { preview: false })
+  } catch (error) {
+    logger.error({ error }, 'generateMetadata failed')
+    return {
+      title: 'Dr. Howard Murad',
+      description: 'Father of Modern Wellness',
+    }
+  }
 }
 
 export default async function RootResolverPage({ params, searchParams }: RootResolverPageProps) {
@@ -85,23 +93,31 @@ export default async function RootResolverPage({ params, searchParams }: RootRes
 
   // PRIORITY 1: Direct HWP searchParams (bypasses middleware)
   if (previewId && previewType === 'post') {
-    const data = await wpgraphql<GetPostByIdPreviewResponse>({
-      query: QUERY_POST_PREVIEW_BY_ID,
-      variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
-      preview: true,
-      revalidate: false,
-    })
-    if (data?.post) return <PostRenderer post={data.post} />
+    try {
+      const data = await wpgraphql<GetPostByIdPreviewResponse>({
+        query: QUERY_POST_PREVIEW_BY_ID,
+        variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
+        preview: true,
+        revalidate: false,
+      })
+      if (data?.post) return <PostRenderer post={data.post} />
+    } catch (error) {
+      logger.error({ slug, error }, 'GetPostByIdPreviewResponseWPGraphQL fetch failed.')
+    }
   }
 
   if (previewId && previewType === 'page') {
-    const data = await wpgraphql<GetPageByIdPreviewResponse>({
-      query: QUERY_PAGE_PREVIEW_BY_ID,
-      variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
-      preview: true,
-      revalidate: false,
-    })
-    if (data?.page) return <PageRenderer page={data.page} />
+    try {
+      const data = await wpgraphql<GetPageByIdPreviewResponse>({
+        query: QUERY_PAGE_PREVIEW_BY_ID,
+        variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
+        preview: true,
+        revalidate: false,
+      })
+      if (data?.page) return <PageRenderer page={data.page} />
+    } catch (error) {
+      logger.error({ slug: '/', error }, 'GetPageByIdPreviewResponse WPGraphQL fetch failed.')
+    }
   }
 
   // Your existing middleware logic (PRIORITY 2)
@@ -112,23 +128,31 @@ export default async function RootResolverPage({ params, searchParams }: RootRes
   const { previewId: headerPreviewId, previewType: headerPreviewType } = await getPreviewParams()
 
   if (headerPreviewId && headerPreviewType === 'page') {
-    const data = await wpgraphql<GetPageByIdPreviewResponse>({
-      query: QUERY_PAGE_PREVIEW_BY_ID,
-      variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
-      preview: true,
-      revalidate: false,
-    })
-    if (data?.page) return <PageRenderer page={data.page} />
+    try {
+      const data = await wpgraphql<GetPageByIdPreviewResponse>({
+        query: QUERY_PAGE_PREVIEW_BY_ID,
+        variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
+        preview: true,
+        revalidate: false,
+      })
+      if (data?.page) return <PageRenderer page={data.page} />
+    } catch (error) {
+      logger.error({ slug: '/', error }, 'GetPageByIdPreviewResponse WPGraphQL fetch failed.')
+    }
   }
 
   if (headerPreviewId && headerPreviewType === 'post') {
-    const data = await wpgraphql<GetPostByIdPreviewResponse>({
-      query: QUERY_POST_PREVIEW_BY_ID,
-      variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
-      preview: true,
-      revalidate: false,
-    })
-    if (data?.post) return <PostRenderer post={data.post} />
+    try {
+      const data = await wpgraphql<GetPostByIdPreviewResponse>({
+        query: QUERY_POST_PREVIEW_BY_ID,
+        variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
+        preview: true,
+        revalidate: false,
+      })
+      if (data?.post) return <PostRenderer post={data.post} />
+    } catch (error) {
+      logger.error({ slug: '/', error }, 'GetPostByIdPreviewResponse WPGraphQL fetch failed.')
+    }
   }
 
   return resolvePublishedPageOrPost(slug, { preview: true })
@@ -157,8 +181,8 @@ async function resolvePublishedPageOrPost(slug: string, options: { preview: bool
     if (data.page) {
       return <PageRenderer page={data.page} />
     }
-  } catch (err) {
-    console.log('[RootResolver] Page query failed:', err instanceof Error ? err.message : err)
+  } catch (error) {
+    logger.error({ slug: '/', error }, 'Page WPGraphQL fetch failed.')
   }
 
   // Try Post second
@@ -172,8 +196,8 @@ async function resolvePublishedPageOrPost(slug: string, options: { preview: bool
     if (data.post) {
       return <PostRenderer post={data.post} />
     }
-  } catch (err) {
-    console.log('[RootResolver] Post query failed:', err instanceof Error ? err.message : err)
+  } catch (error) {
+    logger.error({ slug: '/', error }, 'Post WPGraphQL fetch failed.')
   }
 
   notFound()

@@ -6,9 +6,18 @@ import BlogGrid from '@/components/blog/BlogGrid'
 
 import type { Metadata } from 'next'
 import { buildBlogIndexMetadata } from '@/lib/seo/builders'
+import logger from '@/lib/logger'
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildBlogIndexMetadata(1)
+  try {
+    return buildBlogIndexMetadata(1)
+  } catch (error) {
+    logger.error({ error }, 'generateMetadata failed')
+    return {
+      title: 'Dr. Howard Murad',
+      description: 'Father of Modern Wellness',
+    }
+  }
 }
 
 export default async function BlogPage() {

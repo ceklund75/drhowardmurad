@@ -19,7 +19,7 @@ import BlogGrid from '@/components/blog/BlogGrid'
 import BlogHero from '@/components/blog/BlogHero'
 import type { Metadata } from 'next'
 import { buildCategoryMetadata } from '@/lib/seo/builders'
-
+import logger from '@/lib/logger'
 interface CategoryPageProps {
   params: Promise<{ slug: string }>
 }
@@ -29,9 +29,17 @@ type CategoryParams = {
 }
 
 export async function generateMetadata({ params }: CategoryParams): Promise<Metadata> {
-  const { slug } = await params
-  //const { isEnabled } = await draftMode()
-  return buildCategoryMetadata(slug, { preview: false })
+  try {
+    const { slug } = await params
+    //const { isEnabled } = await draftMode()
+    return buildCategoryMetadata(slug, { preview: false })
+  } catch (error) {
+    logger.error({ error }, 'generateMetadata failed')
+    return {
+      title: 'Dr. Howard Murad',
+      description: 'Father of Modern Wellness',
+    }
+  }
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
