@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   const previewId = searchParams.get('previewId')
   const previewType = searchParams.get('previewType')
 
-  console.log('[API/preview] params:', { preview, slug, previewId, previewType })
+  //console.log('[API/preview] params:', { preview, slug, previewId, previewType })
 
   if (preview !== 'true' || !previewId || !previewType) {
     console.log('[API/preview] Unauthorized')
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
   const draft = await draftMode()
   draft.enable()
-  console.log('[API/preview] draftMode enabled')
+  // console.log('[API/preview] draftMode enabled')
 
   // IMPORTANT: Build a proper path, not a full URL, for redirect()
   // Next.js redirect() accepts a relative path just fine.
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
 
   const redirectTo = query ? `${path}?${query}` : path
 
-  console.log('[API/preview] redirecting to:', redirectTo)
+  // console.log('[API/preview] redirecting to:', redirectTo)
 
   redirect(redirectTo)
 }

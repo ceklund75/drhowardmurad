@@ -26,7 +26,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     noStore()
   }
 
-  console.log('LAYOUT draftMode.isEnabled:', isEnabled)
+  //  console.log('LAYOUT draftMode.isEnabled:', isEnabled)
 
   return (
     <html lang="en" className={`${barlowSemiCondensed.variable} ${caslon.variable}`}>

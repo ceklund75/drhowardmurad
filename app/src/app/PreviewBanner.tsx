@@ -13,7 +13,7 @@ export default function PreviewBanner({ isDraft }: Props) {
     window.location.href = '/api/exit-preview'
   }
 
-  console.log('PreviewBanner rendered with isDraft:', isDraft)
+  // console.log('PreviewBanner rendered with isDraft:', isDraft)
 
   return (
     <div className="fixed top-0 right-0 left-0 z-9999 bg-yellow-400/70 px-4 py-2 text-sm text-black">
