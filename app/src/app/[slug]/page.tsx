@@ -42,6 +42,18 @@ interface RootResolverPageProps {
   }>
 }
 
+const STATIC_PAGE_SLUGS = new Set([
+  'innovator-pioneer',
+  'holistic-wellness',
+  'dr-murads-life-story',
+  'books',
+  'publications',
+])
+
+function isStaticSlug(slug: string) {
+  return STATIC_PAGE_SLUGS.has(slug)
+}
+
 async function getPreviewParams() {
   const hdrs = await headers()
   const url = hdrs.get('x-next-url') // or use a custom header via middleware
@@ -142,6 +154,24 @@ export default async function RootResolverPage({ params, searchParams }: RootRes
   const previewId = resolvedSearchParams.previewId as string | null
   const previewType = resolvedSearchParams.previewType as string | null
 
+  const hasUrlPreview = !!previewId && !!previewType
+
+  // FAST PATH: no preview flags + known-static slug → skip draftMode/resolveBySlug
+  if (!hasUrlPreview && isStaticSlug(slug)) {
+    const pageData = await wpgraphql<GetPageByUriResponse>({
+      query: QUERY_PAGE_BY_URI,
+      variables: { id: `/${slug}` },
+      revalidate: false, // fully static
+      preview: false,
+    })
+
+    if (pageData.page) {
+      return <PageRenderer page={pageData.page} />
+    }
+
+    return notFound()
+  }
+
   const draft = await draftMode()
 
   if (previewId && previewType) {
@@ -153,7 +183,7 @@ export default async function RootResolverPage({ params, searchParams }: RootRes
 
   // PRIORITY 2: If draft not enabled, just serve published content
   if (!draft.isEnabled) {
-    const resolved = await resolvePublishedContent(slug, { preview: false })
+    const resolved = await resolveBySlug(slug, { preview: false })
     return renderResolved(resolved)
   }
 
@@ -169,58 +199,8 @@ export default async function RootResolverPage({ params, searchParams }: RootRes
   }
 
   // PRIORITY 4: Draft mode enabled but no specific preview entity → preview of published
-  const resolved = await resolvePublishedContent(slug, { preview: true })
+  const resolved = await resolveBySlug(slug, { preview: true })
   return renderResolved(resolved)
-}
-
-async function resolvePublishedContent(
-  slug: string,
-  options: { preview: boolean },
-): Promise<ResolvedContent> {
-  const { preview } = options
-
-  const staticPageSlugs = new Set([
-    'innovator-pioneer',
-    'holistic-wellness',
-    'dr-murads-life-story',
-    'books',
-    'publications',
-  ])
-  const revalidateOption = staticPageSlugs.has(slug) ? false : 86400
-
-  // Try Page first
-  try {
-    const pageData = await wpgraphql<GetPageByUriResponse>({
-      query: QUERY_PAGE_BY_URI,
-      variables: { id: `/${slug}` },
-      revalidate: revalidateOption,
-      preview,
-    })
-
-    if (pageData.page) {
-      return { kind: 'page', page: pageData.page }
-    }
-  } catch (error) {
-    logger.error({ slug, error }, 'Page WPGraphQL fetch failed.')
-  }
-
-  // Then Post
-  try {
-    const postData = await wpgraphql<GetPostBySlugResponse>({
-      query: QUERY_POST_BY_SLUG,
-      variables: { id: slug },
-      revalidate: revalidateOption,
-      preview,
-    })
-
-    if (postData.post) {
-      return { kind: 'post', post: postData.post }
-    }
-  } catch (error) {
-    logger.error({ slug, error }, 'Post WPGraphQL fetch failed.')
-  }
-
-  return { kind: 'none' }
 }
 
 async function resolvePreviewContent(args: {
