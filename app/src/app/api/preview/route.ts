@@ -2,36 +2,38 @@ import { draftMode } from 'next/headers'
 import { redirect } from 'next/navigation'
 import type { NextRequest } from 'next/server'
 
-const PREVIEW_SECRET = process.env.WP_PREVIEW_SECRET
-
 export async function GET(request: NextRequest) {
-  const url = new URL(request.url)
+  const { searchParams } = new URL(request.url)
 
-  const secret = url.searchParams.get('secret')
-  const rawSlug = url.searchParams.get('slug')
-  const id = url.searchParams.get('id')
-  const type = url.searchParams.get('type')
+  const preview = searchParams.get('preview')
+  const slug = searchParams.get('slug') || '/'
+  const previewId = searchParams.get('previewId')
+  const previewType = searchParams.get('previewType')
 
-  if (!secret || !PREVIEW_SECRET || secret !== PREVIEW_SECRET) {
-    return new Response('Invalid preview secret', { status: 401 })
-  }
+  console.log('[API/preview] params:', { preview, slug, previewId, previewType })
 
-  if (!rawSlug) {
-    return new Response('Missing slug', { status: 400 })
+  if (preview !== 'true' || !previewId || !previewType) {
+    console.log('[API/preview] Unauthorized')
+    return new Response('Unauthorized', { status: 401 })
   }
 
   const draft = await draftMode()
   draft.enable()
+  console.log('[API/preview] draftMode enabled')
 
-  const normalizedSlug = rawSlug === '/' ? '' : rawSlug.replace(/^\//, '')
-  const basePath = normalizedSlug ? `/${normalizedSlug}` : '/'
+  // IMPORTANT: Build a proper path, not a full URL, for redirect()
+  // Next.js redirect() accepts a relative path just fine.
+  const path = slug.startsWith('/') ? slug : `/${slug}`
 
-  const search = new URLSearchParams()
-  if (id) search.set('previewId', id)
-  if (type) search.set('previewType', type)
+  // Optionally keep previewId/previewType in the URL if your page uses them
+  const query = new URLSearchParams({
+    previewId,
+    previewType,
+  }).toString()
 
-  const target = search.toString() ? `${basePath}?${search.toString()}` : basePath
+  const redirectTo = query ? `${path}?${query}` : path
 
-  // Make sure we actually redirect
-  redirect(target)
+  console.log('[API/preview] redirecting to:', redirectTo)
+
+  redirect(redirectTo)
 }

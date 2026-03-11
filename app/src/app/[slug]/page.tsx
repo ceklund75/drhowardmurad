@@ -22,10 +22,6 @@ import { PageRenderer } from '@/components/pages/PageRenderer'
 import type { Metadata } from 'next'
 import { buildRootResolverMetadata } from '@/lib/seo/builders'
 
-type SlugParams = {
-  params: Promise<{ slug: string }>
-}
-
 type GetPageByIdPreviewResponse = {
   page: GetPageByUriResponse['page'] // same Page shape
 }
@@ -36,6 +32,11 @@ type GetPostByIdPreviewResponse = {
 
 interface RootResolverPageProps {
   params: Promise<{ slug: string }>
+  searchParams: Promise<{
+    preview?: string
+    previewId?: string
+    previewType?: string
+  }>
 }
 
 async function getPreviewParams() {
@@ -50,21 +51,48 @@ async function getPreviewParams() {
   }
 }
 
-export async function generateMetadata({ params }: SlugParams): Promise<Metadata> {
-  const { slug } = await params
-  // Always treat as published for SEO – no draftMode, no headers.
-  return buildRootResolverMetadata(slug, { preview: false })
-}
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}): Promise<Metadata> {
+  const resolvedParams = await params
+  const resolvedSearchParams = await searchParams
 
-export default async function RootResolverPage({ params }: RootResolverPageProps) {
-  const { slug } = await params
-  const { isEnabled } = await draftMode()
-
-  if (!isEnabled) {
-    return resolvePublishedPageOrPost(slug, { preview: false })
+  // Check for preview params BEFORE calling buildRootResolverMetadata
+  if (resolvedSearchParams.previewId && resolvedSearchParams.previewType) {
+    return {
+      title: 'Preview | Dr. Howard Murad',
+    }
   }
 
-  const { previewId, previewType } = await getPreviewParams()
+  return buildRootResolverMetadata(resolvedParams.slug, { preview: false })
+}
+
+export default async function RootResolverPage({ params, searchParams }: RootResolverPageProps) {
+  const { slug } = await params
+  const resolvedSearchParams = await searchParams
+  const previewId = resolvedSearchParams.previewId as string | null
+  const previewType = resolvedSearchParams.previewType as string | null
+
+  const draft = await draftMode()
+
+  if (previewId && previewType) {
+    draft.enable()
+  }
+
+  // PRIORITY 1: Direct HWP searchParams (bypasses middleware)
+  if (previewId && previewType === 'post') {
+    const data = await wpgraphql<GetPostByIdPreviewResponse>({
+      query: QUERY_POST_PREVIEW_BY_ID,
+      variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
+      preview: true,
+      revalidate: false,
+    })
+    if (data?.post) return <PostRenderer post={data.post} />
+  }
 
   if (previewId && previewType === 'page') {
     const data = await wpgraphql<GetPageByIdPreviewResponse>({
@@ -76,7 +104,24 @@ export default async function RootResolverPage({ params }: RootResolverPageProps
     if (data?.page) return <PageRenderer page={data.page} />
   }
 
-  if (previewId && previewType === 'post') {
+  // Your existing middleware logic (PRIORITY 2)
+  if (!draft.isEnabled) {
+    return resolvePublishedPageOrPost(slug, { preview: false })
+  }
+
+  const { previewId: headerPreviewId, previewType: headerPreviewType } = await getPreviewParams()
+
+  if (headerPreviewId && headerPreviewType === 'page') {
+    const data = await wpgraphql<GetPageByIdPreviewResponse>({
+      query: QUERY_PAGE_PREVIEW_BY_ID,
+      variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
+      preview: true,
+      revalidate: false,
+    })
+    if (data?.page) return <PageRenderer page={data.page} />
+  }
+
+  if (headerPreviewId && headerPreviewType === 'post') {
     const data = await wpgraphql<GetPostByIdPreviewResponse>({
       query: QUERY_POST_PREVIEW_BY_ID,
       variables: { id: Number(previewId), idType: 'DATABASE_ID', asPreview: true },
@@ -180,6 +225,7 @@ export async function generateStaticParams() {
       }
     }
 
+    allSlugs.push('preview')
     console.log(`[generateStaticParams] Complete: Pre-built ${allSlugs.length} page+post routes`)
 
     return allSlugs.map((slug) => ({ slug }))

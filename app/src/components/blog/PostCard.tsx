@@ -25,8 +25,8 @@ export default function PostCard({ post }: PostCardProps) {
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-gray-alt)]">
-            <span className="text-lg font-medium text-[var(--color-gray-1)]">{post.title}</span>
+          <div className="bg-gray-alt absolute inset-0 flex items-center justify-center">
+            <span className="text-gray-1 text-lg font-medium">{post.title}</span>
           </div>
         )}
       </Link>

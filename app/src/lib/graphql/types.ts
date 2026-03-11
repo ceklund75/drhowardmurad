@@ -87,6 +87,16 @@ export interface GetAllPostSlugsResponse {
   }
 }
 
+export interface PreviewLookupPost {
+  databaseId: number
+  uri: string | null
+  status: string
+}
+
+export interface GetPreviewLookupResponse {
+  post: PreviewLookupPost | null
+}
+
 // ============= Page + ACF Types =============
 
 /**

@@ -520,6 +520,16 @@ export const QUERY_PAGE_BY_URI = `
   }
 `
 
+export const QUERY_PREVIEW_POST = `query PreviewPost($id: ID!) {
+  post(id: $id, idType: DATABASE_ID) {
+    databaseId
+    status
+    slug
+    uri
+    isPreview
+  }
+}`
+
 /**
  * Fetch all categories (for navigation, filtering)
  * Optimized: Removed databaseId from fragment (not needed)

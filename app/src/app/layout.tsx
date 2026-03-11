@@ -7,6 +7,8 @@ import { Suspense } from 'react'
 import { Metadata } from 'next'
 import { caslon, barlowSemiCondensed } from './fonts'
 import PreviewBanner from './PreviewBanner'
+import { draftMode } from 'next/headers'
+import { unstable_noStore as noStore } from 'next/cache'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://drhowardmurad.com'),
@@ -17,7 +19,15 @@ export const metadata: Metadata = {
   description: 'Father of Modern Wellness',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const { isEnabled } = await draftMode()
+
+  if (isEnabled) {
+    noStore()
+  }
+
+  console.log('LAYOUT draftMode.isEnabled:', isEnabled)
+
   return (
     <html lang="en" className={`${barlowSemiCondensed.variable} ${caslon.variable}`}>
       <head>
@@ -31,7 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Suspense fallback={null}>
           <NavigationHandler />
         </Suspense>
-        <PreviewBanner />
+        <PreviewBanner isDraft={isEnabled} />
         <Header />
         <main className="flex-1">{children}</main>
         <BackToTopButton />

@@ -1,18 +1,30 @@
-// app/PreviewBanner.tsx
-import { draftMode } from 'next/headers'
-import Link from 'next/link'
+'use client'
 
-export default async function PreviewBanner() {
-  const { isEnabled } = await draftMode()
+type Props = {
+  isDraft: boolean
+}
 
-  if (!isEnabled) return null
+export default function PreviewBanner({ isDraft }: Props) {
+  // Just derive visibility from the prop – no local state.
+  if (!isDraft) return null
+
+  const exitPreview = () => {
+    // Hard redirect to server route that disables draft mode.
+    window.location.href = '/api/exit-preview'
+  }
+
+  console.log('PreviewBanner rendered with isDraft:', isDraft)
 
   return (
-    <div className="bg-yellow-500 px-4 py-2 text-sm text-black">
+    <div className="fixed top-0 right-0 left-0 z-9999 bg-yellow-400/70 px-4 py-2 text-sm text-black">
       Preview mode active.{' '}
-      <Link href="/api/exit-preview" className="underline">
+      <button
+        type="button"
+        onClick={exitPreview}
+        className="ml-1 cursor-pointer underline hover:no-underline"
+      >
         Exit preview
-      </Link>
+      </button>
     </div>
   )
 }

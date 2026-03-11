@@ -26,6 +26,7 @@ export async function buildRootResolverMetadata(
     revalidate: 86400,
     preview,
   })
+
   if (pageResult.page) return metadataFromSeoEntity(pageResult.page)
 
   const postResult = await wpgraphql<{

@@ -53,7 +53,7 @@
   --color-gradient-purple: rgb(86 43 136);
   --color-gradient-pink: rgb(212 13 139);
 
-  /* Spacing scale (8px base tokens you specified) */
+  /* Spacing scale (8px base) */
   --spacing-1: 4px;
   --spacing-2: 8px;
   --spacing-3: 12px;
@@ -67,7 +67,7 @@
   --spacing-20: 80px;
   --spacing-24: 96px;
 
-  /* Type scale tokens (custom names, so you can do text-h1, text-menu, etc.) */
+  /* Type scale tokens */
   --text-h1: 45px;
   --text-h1--line-height: 54px;
 
@@ -113,7 +113,7 @@
   /* Default “accent” used by themed headings/buttons */
   --color-theme: var(--color-pink);
 
-  /* Button text on colored backgrounds (fixed, per your decision) */
+  /* Button text on colored backgrounds  */
   --color-theme-contrast: var(--color-white);
 
   /* Global link behavior (independent of section theme) */
