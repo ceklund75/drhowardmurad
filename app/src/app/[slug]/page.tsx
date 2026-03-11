@@ -42,6 +42,8 @@ interface RootResolverPageProps {
   }>
 }
 
+export const dynamicParams = false
+
 const STATIC_PAGE_SLUGS = new Set([
   'innovator-pioneer',
   'holistic-wellness',
