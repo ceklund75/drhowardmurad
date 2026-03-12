@@ -6,7 +6,7 @@ import { NavigationHandler } from '@/components/NavigationHandler'
 import { Suspense } from 'react'
 import { Metadata } from 'next'
 import { caslon, barlowSemiCondensed } from './fonts'
-import PreviewBanner from './PreviewBanner'
+//import PreviewBanner from './PreviewBanner'
 // import { draftMode } from 'next/headers'
 // import { unstable_noStore as noStore } from 'next/cache'
 
@@ -35,7 +35,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Suspense fallback={null}>
           <NavigationHandler />
         </Suspense>
-        <PreviewBanner isDraft={isEnabled} />
+        {/* <PreviewBanner isDraft={isEnabled} /> */}
         <Header />
         <main className="flex-1">{children}</main>
         <BackToTopButton />

@@ -1,4 +1,3 @@
-import { draftMode } from 'next/headers'
 import { wpgraphql } from '@/lib/graphql/server'
 import { QUERY_PAGE_BY_URI } from '@/lib/graphql/queries'
 import { GetPageByUriResponse } from '@/lib/graphql/types'
@@ -22,14 +21,13 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 86400
 
 export default async function HomePage() {
-  const { isEnabled } = await draftMode()
   let safePage = undefined
   try {
     const data = await wpgraphql<GetPageByUriResponse>({
       query: QUERY_PAGE_BY_URI,
       variables: { id: '/' },
       revalidate,
-      preview: isEnabled,
+      preview: false,
     })
 
     const page = data.page

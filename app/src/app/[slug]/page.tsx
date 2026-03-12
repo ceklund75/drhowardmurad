@@ -1,17 +1,7 @@
 import { notFound } from 'next/navigation'
-import { wpgraphql, wpgraphqlBatch } from '@/lib/graphql/server'
-import {
-  QUERY_PAGE_BY_URI,
-  QUERY_POST_BY_SLUG,
-  QUERY_ALL_POST_SLUGS,
-  QUERY_ALL_PAGE_SLUGS,
-} from '@/lib/graphql/queries'
-import {
-  GetPageByUriResponse,
-  GetPostBySlugResponse,
-  GetAllPostSlugsResponse,
-  GetAllPageSlugsResponse,
-} from '@/lib/graphql/types'
+import { wpgraphqlBatch } from '@/lib/graphql/server'
+import { QUERY_ALL_POST_SLUGS, QUERY_ALL_PAGE_SLUGS } from '@/lib/graphql/queries'
+import { GetAllPostSlugsResponse, GetAllPageSlugsResponse } from '@/lib/graphql/types'
 
 import { PostRenderer } from '@/components/blog/PostRenderer'
 import { PageRenderer } from '@/components/pages/PageRenderer'

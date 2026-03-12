@@ -1,5 +1,4 @@
 import { wpgraphql } from '@/lib/graphql/server'
-import { draftMode } from 'next/headers'
 
 type PrivacyPolicyResult = {
   page: {
@@ -30,10 +29,9 @@ query getPrivacyPolicy {
 export const revalidate = 86400 // match your global default if you want
 
 export default async function PrivacyPolicyPage() {
-  const { isEnabled } = await draftMode()
   const data = await wpgraphql<PrivacyPolicyResult>({
     query: PRIVACY_POLICY_QUERY,
-    preview: isEnabled,
+    preview: false,
     revalidate: false,
   })
 
