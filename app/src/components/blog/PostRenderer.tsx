@@ -124,7 +124,7 @@ export function PostRenderer({ post }: PostRendererProps) {
               <ActionButtons
                 amazonUrl={blogPost.amazonBookUrl}
                 learnMoreUrl={blogPost.learnMoreUrl}
-                videoPopupClassName={blogPost.videoPopupButton}
+                videoContent={blogPost.videoContent}
               />
               <ShareThisPost post={post} />
             </article>
@@ -150,7 +150,7 @@ export function PostRenderer({ post }: PostRendererProps) {
                 <ActionButtons
                   amazonUrl={blogPost.amazonBookUrl}
                   learnMoreUrl={blogPost.learnMoreUrl}
-                  videoPopupClassName={blogPost.videoPopupButton}
+                  videoContent={blogPost.videoContent}
                 />
                 <ShareThisPost post={post} />
               </article>

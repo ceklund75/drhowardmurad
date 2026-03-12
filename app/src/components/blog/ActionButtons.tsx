@@ -1,22 +1,20 @@
 import Link from 'next/link'
 import { buttonClassName } from '@/lib/ui'
+import PostVideoButton from './PostVideoButton'
 
 interface ActionButtonsProps {
   amazonUrl?: string | null
   learnMoreUrl?: string | null
-  videoPopupClassName?: string | null
+  //videoPopupClassName?: string | null
+  videoContent?: string | null
 }
 
 function isInternalUrl(url: string): boolean {
   return url.startsWith('/') || url.startsWith('#') || url.indexOf('drhowardmurad.com') != -1
 }
 
-export function ActionButtons({
-  amazonUrl,
-  learnMoreUrl,
-  videoPopupClassName,
-}: ActionButtonsProps) {
-  if (!amazonUrl && !learnMoreUrl && !videoPopupClassName) return null
+export function ActionButtons({ amazonUrl, learnMoreUrl, videoContent }: ActionButtonsProps) {
+  if (!amazonUrl && !learnMoreUrl && !videoContent) return null
 
   return (
     <div className="mb-6 flex flex-wrap gap-4">
@@ -47,10 +45,11 @@ export function ActionButtons({
           </a>
         ))}
 
-      {videoPopupClassName && (
-        <button type="button" className={buttonClassName(`button-theme ${videoPopupClassName}`)}>
-          Watch Video
-        </button>
+      {videoContent && (
+        <PostVideoButton
+          videoUrl={videoContent}
+          className={buttonClassName(`button-theme cursor-pointer`)}
+        />
       )}
     </div>
   )

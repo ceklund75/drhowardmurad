@@ -76,6 +76,7 @@ export const FRAGMENT_BLOG_POST_ACF = `
     amazonBookUrl
     learnMoreUrl
     videoPopupButton
+    videoContent
     imagePhotoCredit
     imagePhotoCreditLink {
       ...LinkFields

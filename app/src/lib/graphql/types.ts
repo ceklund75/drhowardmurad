@@ -34,6 +34,7 @@ export interface BlogPostACF {
   amazonBookUrl?: string
   learnMoreUrl?: string
   videoPopupButton?: string
+  videoContent?: string
   imagePhotoCredit?: string
   imagePhotoCreditLink?: PhotoCreditLink
 }
