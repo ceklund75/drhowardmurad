@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dr. Howard Murad — Website
+
+Frontend for the Dr. Howard Murad website, migrated from WordPress/Uncode to a headless **Next.js + TypeScript** stack. I designed and implemented the entire application end to end.
+
+**Tech:** Next.js · TypeScript · Tailwind CSS · GraphQL
+
+---
+
+## Role
+
+I led the full migration and build, including architecture, data modeling, GraphQL integration, UI/UX, accessibility, SEO, and deployment automation.
+
+---
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies and start the dev server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+The app runs at http://localhost:3000.
+
+Scripts
+Command	Description
+npm run dev	Development server
+npm run build	Production build
+npm run start	Serve production build
+npm run lint	Run linters
+npm run analyze	Bundle analysis
+Environment Variables
+Create a .env.local in the app/ folder:
+
+bash
+NEXT_PUBLIC_GRAPHQL_ENDPOINT=   # GraphQL API URL
+NEXT_PUBLIC_ANALYTICS_ID=       # Analytics ID (if applicable)
+See src/lib/graphql/client.ts for the full list of expected variables.
+
+Project Structure
+text
+src/
+├── app/          # App Router pages, layouts, API routes
+├── components/   # UI components (header, footer, blog, modals)
+└── lib/          # GraphQL client/queries, SEO helpers, utilities
+public/           # Static assets
+scripts/          # Content extraction and analysis scripts
+Key Areas
+Routing & layouts: src/app/
+
+Blog & content: src/components/blog/
+
+Video modal: src/components/modals/VideoModal.tsx
+
+GraphQL: src/lib/graphql/ — queries and client for server/client usage
+
+SEO & metadata: src/lib/seo/ — JSON-LD and meta helpers
+
+Styles: tailwind.config.ts, src/app/globals.css
+
+Deployment
+Deploy to Vercel, Netlify, or any Next.js-compatible host:
+
+Set environment variables in your hosting provider.
+
+Build command: npm run build
+
+Start command: npm run start
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
