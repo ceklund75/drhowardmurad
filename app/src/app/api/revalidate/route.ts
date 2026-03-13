@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server'
 import { revalidatePath } from 'next/cache'
+import logger from '@/lib/logger'
 
 const WORDPRESS_REVALIDATE_SECRET = process.env.WORDPRESS_REVALIDATE_SECRET
 

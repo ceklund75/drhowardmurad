@@ -364,6 +364,7 @@ export const QUERY_PAGE_SEO_BY_URI = `
   query GetPageSeoByUri($id: ID!) {
     page(id: $id, idType: URI) {
       title
+      uri
       date
       modified
       tsfSeo {
@@ -379,6 +380,7 @@ export const QUERY_POST_SEO_BY_SLUG = `
   query GetPostSeoBySlug($id: ID!) {
     post(id: $id, idType: SLUG) {
       title
+      uri
       excerpt
       date
       modified

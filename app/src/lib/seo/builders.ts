@@ -49,15 +49,12 @@ export async function buildRootResolverMetadataFromResolved(
 ): Promise<Metadata> {
   const { preview = false } = options
 
-  // If your page/post types already include tsfSeo, you can shortcut here.
-  // For now, assume they DON'T, and keep the current SEO queries:
-
   if (resolved.kind === 'page') {
     const pageResult = await wpgraphql<{
       page: { title: string | null; tsfSeo: TsfSeo | null } | null
     }>({
       query: QUERY_PAGE_SEO_BY_URI,
-      variables: { id: `/${slug}` },
+      variables: { id: slug }, //`/${slug}`
       revalidate: 86400,
       preview,
     })
