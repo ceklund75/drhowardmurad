@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'hmurad02.wpengine.com',
+        hostname: 'cms.drhowardmurad.com',
         pathname: '/wp-content/uploads/**',
       },
     ],
