@@ -30,13 +30,12 @@ export function ContentBoxHero({
         <div className="absolute inset-0 z-0 hidden lg:block">
           <Image
             src={desktopSrc}
-            alt=""
+            alt={hero.heroBgImage?.node?.altText || ''}
             fill
             className="object-cover object-[center_top]"
-            priority
-            fetchPriority="high"
+            preload
             sizes="(max-width: 1024px) 50vw, (max-width: 1280px) 80vw, 100vw"
-            quality={90}
+            quality={85}
           />
         </div>
       )}
@@ -93,12 +92,11 @@ export function ContentBoxHero({
             <div className="relative mt-2 aspect-1000/500 w-full">
               <Image
                 src={mobileSrc}
-                alt=""
+                alt={hero.heroMobileBgImage?.node?.altText || ''}
                 fill
                 className="object-cover object-center"
-                priority
-                fetchPriority="high"
-                quality={90}
+                preload
+                quality={85}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
               />
             </div>

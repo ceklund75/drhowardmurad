@@ -6,10 +6,11 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   images: {
     unoptimized: false,
-    formats: ['image/avif', 'image/webp'],
+    formats: ['image/webp'],
     deviceSizes: [384, 450, 640, 750, 828, 1080, 1200, 1280, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 240, 320, 480, 640, 750, 828, 1080],
-    qualities: [25, 50, 60, 70, 75, 80, 85, 90, 95, 100],
+    qualities: [75, 85],
+    minimumCacheTTL: 2678400,
     remotePatterns: [
       {
         protocol: 'https',
