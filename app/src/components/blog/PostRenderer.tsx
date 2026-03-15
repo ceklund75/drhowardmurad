@@ -79,14 +79,12 @@ export function PostRenderer({ post }: PostRendererProps) {
                     alt={blogPost.contentAssociatedImage.node.altText || ''}
                     width={blogPost.contentAssociatedImage.node.mediaDetails?.width || 800}
                     height={blogPost.contentAssociatedImage.node.mediaDetails?.height || 1200}
-                    // Keep priority for mobile LCP
                     preload
-                    fetchPriority="high"
-                    quality={85}
+                    quality={75}
                     className="h-auto w-full"
                     // Tell Next.js this image is only ever shown on screens smaller than 1024px.
                     // After that, cap it so it doesn't generate w=1920 files.
-                    sizes="(max-width: 640px) 384px, (max-width: 1024px) 50vw, 400px"
+                    sizes="(max-width: 640px) 384px, (max-width: 1024px) 50vw, 640px"
                   />
                 </div>
                 {blogPost.imagePhotoCredit && (
@@ -166,9 +164,7 @@ export function PostRenderer({ post }: PostRendererProps) {
                       alt={blogPost.contentAssociatedImage.node.altText || ''}
                       width={blogPost.contentAssociatedImage.node.mediaDetails?.width || 800}
                       height={blogPost.contentAssociatedImage.node.mediaDetails?.height || 1200}
-                      loading="eager"
-                      preload
-                      quality={85}
+                      quality={75}
                       className="h-auto w-full"
                       sizes="(min-width: 1024px) 33vw, 400px"
                     />

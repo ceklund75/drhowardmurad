@@ -34,8 +34,9 @@ export function ContentBoxHero({
             fill
             className="object-cover object-[center_top]"
             preload
-            sizes="(max-width: 1024px) 50vw, (max-width: 1280px) 80vw, 100vw"
-            quality={85}
+            sizes="(max-width: 1024px) 100vw, 1280px"
+            // sizes="(max-width: 1024px) 50vw, (max-width: 1280px) 80vw, 100vw"
+            quality={75}
           />
         </div>
       )}
@@ -96,8 +97,8 @@ export function ContentBoxHero({
                 fill
                 className="object-cover object-center"
                 preload
-                quality={85}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
+                quality={75}
+                sizes="100vw"
               />
             </div>
           )}

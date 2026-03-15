@@ -79,6 +79,7 @@ export function ExtendedImageAnchor({
           objectPosition: positionValue,
         }}
         priority
+        quality={75}
         sizes="(max-width: 640px) 100vw, 1000px"
       />
     </div>

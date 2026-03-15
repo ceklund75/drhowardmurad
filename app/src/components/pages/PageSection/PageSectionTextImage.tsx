@@ -95,8 +95,9 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
               src={sectionBgImage.node.mediaItemUrl}
               alt={sectionBgImage.node.altText || ''}
               fill
+              quality={75}
               className={cx('object-cover', bgImageObjectAlignment)}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+              sizes="100vw"
             />
           )}
 
@@ -162,7 +163,7 @@ export function PageSectionTextImage({ section, index }: PageSectionTextImagePro
                 width={textImageAltImageMobile.node.mediaDetails?.width || 800}
                 height={textImageAltImageMobile.node.mediaDetails?.height || 600}
                 className="h-auto w-full"
-                //sizes="(max-width: 768px) 708px, (max-width: 1024px) 963px, 420px"
+                quality={75}
                 sizes="(max-width: 768px) 100vw, 100vw"
               />
             </div>

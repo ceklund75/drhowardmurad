@@ -51,6 +51,7 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
               src="/images/dhm-logo-signature.svg"
               alt="Dr. Howard Murad"
               fill={true}
+              unoptimized
               onClick={() => setMobileMenuOpen(false)}
             />
           </Link>

@@ -58,7 +58,7 @@ export function HomeHeroVideo({ hero }: HomeHeroVideoProps) {
                     fetchPriority="high"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 575px"
                     className="object-contain"
-                    quality={85}
+                    quality={75}
                   />
                 </div>
               </div>
@@ -75,7 +75,8 @@ export function HomeHeroVideo({ hero }: HomeHeroVideoProps) {
               alt={heroMobileImage.node.altText || ''}
               width={635}
               height={853}
-              priority
+              preload
+              quality={75}
               fetchPriority="high"
               className="h-auto w-full object-contain"
               sizes="(max-width: 480px) 360px, (max-width: 768px) 412px, 480px"

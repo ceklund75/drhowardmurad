@@ -37,6 +37,7 @@ export function Icon({ kind, image, size = 54, className = '' }: IconProps) {
         height={height}
         style={{ width, height }}
         className={className}
+        unoptimized
       />
     )
   }

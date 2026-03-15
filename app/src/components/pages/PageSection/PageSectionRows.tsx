@@ -82,6 +82,7 @@ export function DesktopMainRow(props: {
                 objectFit: fitValue,
                 objectPosition: positionValue,
               }}
+              quality={75}
               sizes="(max-width: 640px) 100vw, 600px"
             />
           </div>
