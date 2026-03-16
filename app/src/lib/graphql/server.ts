@@ -31,7 +31,7 @@ function getPreviewAuthHeader(): string {
 export async function wpgraphql<T>({
   query,
   variables,
-  revalidate = 3600,
+  revalidate = 2592000,
   preview = false,
 }: FetchGraphQLOptions): Promise<T> {
   try {

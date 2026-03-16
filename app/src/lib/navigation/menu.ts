@@ -60,7 +60,7 @@ export async function getPrimaryMenu(location: string = 'PRIMARY'): Promise<NavI
   const data = await wpgraphql<MenuQuery>({
     query,
     variables: { location },
-    revalidate: 86400,
+    revalidate: 2592000,
   })
   return buildTree(data.menuItems.nodes)
 }

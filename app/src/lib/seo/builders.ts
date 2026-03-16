@@ -24,7 +24,7 @@ export async function buildRootResolverMetadata(
   }>({
     query: QUERY_PAGE_SEO_BY_URI,
     variables: { id: `/${slug}` },
-    revalidate: 86400,
+    revalidate: 2592000,
     preview,
   })
 
@@ -35,7 +35,7 @@ export async function buildRootResolverMetadata(
   }>({
     query: QUERY_POST_SEO_BY_SLUG,
     variables: { id: slug },
-    revalidate: 86400,
+    revalidate: 2592000,
   })
   if (postResult.post) return metadataFromSeoEntity(postResult.post)
 
@@ -55,7 +55,7 @@ export async function buildRootResolverMetadataFromResolved(
     }>({
       query: QUERY_PAGE_SEO_BY_URI,
       variables: { id: slug }, //`/${slug}`
-      revalidate: 86400,
+      revalidate: 2592000,
       preview,
     })
 
@@ -68,7 +68,7 @@ export async function buildRootResolverMetadataFromResolved(
     }>({
       query: QUERY_POST_SEO_BY_SLUG,
       variables: { id: slug },
-      revalidate: 86400,
+      revalidate: 2592000,
       preview,
     })
 
@@ -87,7 +87,7 @@ export async function buildBlogIndexMetadata(
   const result = await wpgraphql<{ page: { title: string | null; tsfSeo: TsfSeo | null } | null }>({
     query: QUERY_PAGE_SEO_BY_URI,
     variables: { id: '/blog' },
-    revalidate: 86400,
+    revalidate: 2592000,
     preview,
   })
   return metadataFromSeoEntity(result.page)
@@ -98,7 +98,7 @@ export async function buildHomeMetadata(options: SeoBuilderOptions = {}): Promis
   const result = await wpgraphql<{ page: { title: string | null; tsfSeo: TsfSeo | null } | null }>({
     query: QUERY_PAGE_SEO_BY_URI,
     variables: { id: '/' },
-    revalidate: 86400,
+    revalidate: 2592000,
     preview,
   })
   return metadataFromSeoEntity(result.page)
@@ -114,7 +114,7 @@ export async function buildCategoryMetadata(
   }>({
     query: QUERY_CATEGORY_BASICS,
     variables: { slug },
-    revalidate: 86400,
+    revalidate: 2592000,
     preview,
   })
 

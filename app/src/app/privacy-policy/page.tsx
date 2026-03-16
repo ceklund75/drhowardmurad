@@ -26,7 +26,7 @@ query getPrivacyPolicy {
   }
 }
 `
-export const revalidate = 86400 // match your global default if you want
+export const revalidate = 2592000 // match your global default if you want
 
 export default async function PrivacyPolicyPage() {
   const data = await wpgraphql<PrivacyPolicyResult>({

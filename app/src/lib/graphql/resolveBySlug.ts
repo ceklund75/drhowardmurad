@@ -22,7 +22,7 @@ export const resolveBySlug = cache(
       'books',
       'publications',
     ])
-    const revalidateOption = staticPageSlugs.has(slug) ? false : 86400
+    const revalidateOption = staticPageSlugs.has(slug) ? false : 2592000
 
     // Try Page first
     try {

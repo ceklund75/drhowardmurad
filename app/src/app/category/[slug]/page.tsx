@@ -47,17 +47,17 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     wpgraphql<GetPostsByCategoryResponse>({
       query: QUERY_POSTS_BY_CATEGORY,
       variables: { slug, first: 50, after: null },
-      revalidate: 3600,
+      revalidate: 2592000,
     }),
     wpgraphql<GetAllCategorySlugsResponse>({
       query: QUERY_ALL_CATEGORIES,
       variables: { first: 100 },
-      revalidate: 86400,
+      revalidate: 2592000,
     }),
     wpgraphql<GetPageByUriResponse>({
       query: QUERY_PAGE_BY_URI,
       variables: { id: '/blog' },
-      revalidate: 86400,
+      revalidate: 2592000,
       preview: false,
     }),
   ])

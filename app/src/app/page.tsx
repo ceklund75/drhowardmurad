@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
     }
   }
 }
-export const revalidate = 86400
+export const revalidate = 2592000 // 30 days
 
 export default async function HomePage() {
   let safePage = undefined
