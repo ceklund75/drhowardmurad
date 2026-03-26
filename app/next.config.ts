@@ -25,6 +25,15 @@ const nextConfig: NextConfig = {
     cpus: 1, // max concurrent static generation workers because wp engine keeps timing out with more than 1.
   },
   staticPageGenerationTimeout: 300, // increase from default 60s
+  async redirects() {
+    return [
+      {
+        source: '/wp-content/uploads/:path*',
+        destination: 'https://cms.drhowardmurad.com/wp-content/uploads/:path*',
+        permanent: true, // 308
+      },
+    ]
+  },
 }
 
 export default nextConfig

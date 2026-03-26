@@ -52,6 +52,7 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
               alt="Dr. Howard Murad"
               fill={true}
               unoptimized
+              loading="eager"
               onClick={() => setMobileMenuOpen(false)}
             />
           </Link>
