@@ -131,7 +131,7 @@ export function PostRenderer({ post }: PostRendererProps) {
           {/* Desktop Two-Column Layout (>= lg:1024px) */}
           <div className="hidden w-full gap-12 lg:flex">
             {/* Left Column - 50% width minus half gap */}
-            <div className="flex w-[calc(50%-12px)] justify-end py-6">
+            <div className="flex w-[calc(50%-12px)] justify-end py-6 lg:mx-4 xl:mx-0">
               <article
                 className="w-full max-w-xl"
                 style={{ marginLeft: 'calc((100vw - 1200px) / 2)' }}

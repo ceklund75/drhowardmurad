@@ -100,7 +100,7 @@ export function ContentBoxHero({
                 preload
                 loading="eager"
                 quality={75}
-                sizes="100vw"
+                sizes="90vw"
               />
             </div>
           )}

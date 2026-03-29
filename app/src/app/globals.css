@@ -249,6 +249,33 @@
     margin: 18px 0 0 0;
     padding: 0;
   }
+
+  blockquote {
+    margin: var(--spacing-5) 0;
+    padding-left: var(--spacing-4);
+    border-left: 3px solid var(--color-light-3);
+    color: var(--color-gray-1);
+    font-family: var(--font-heading);
+    font-size: var(--text-h4);
+    line-height: var(--text-h4--line-height);
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  blockquote p {
+    margin: 0;
+    font-size: var(--text-h4);
+    line-height: var(--text-h4--line-height);
+  }
+
+  blockquote cite {
+    display: block;
+    margin-top: var(--spacing-2);
+    font-style: normal;
+    font-size: var(--text-small);
+    color: var(--color-light-4);
+  }
+
   @media (max-width: 569px) {
     ul,
     ol {
@@ -473,6 +500,8 @@
 }
 
 html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
 }

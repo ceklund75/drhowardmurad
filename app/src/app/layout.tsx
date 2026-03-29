@@ -23,7 +23,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const isEnabled = false
 
   return (
-    <html lang="en" className={`${barlowSemiCondensed.variable} ${caslon.variable}`}>
+    <html
+      lang="en"
+      className={`${barlowSemiCondensed.variable} ${caslon.variable}`}
+      data-scroll-behavior="smooth"
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{

@@ -59,7 +59,7 @@ export function MobileMenu({
               <div className="flex items-center gap-2">
                 <Link
                   href={item.href}
-                  className="menu-link text-2xl font-medium tracking-wide uppercase transition-colors"
+                  className="menu-link text-2xl tracking-wide uppercase transition-colors"
                   onClick={(e) => {
                     // Don't close immediately - let Next.js start navigation first
                     setTimeout(() => onNavigate(), 50)

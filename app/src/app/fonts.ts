@@ -40,6 +40,11 @@ export const barlowSemiCondensed = localFont({
       weight: '400',
       style: 'italic',
     },
+    {
+      path: '../../public/fonts/barlow-semi-condensed/BarlowSemiCondensed-SemiBold.woff',
+      weight: '500',
+      style: 'normal',
+    },
   ],
   variable: '--font-body',
   display: 'swap',

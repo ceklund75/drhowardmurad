@@ -68,7 +68,7 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
                   <li key={item.id} className="menu-item relative">
                     <Link
                       href={item.href}
-                      className={`menu-item text-menu flex items-center gap-2 font-medium tracking-wide uppercase transition-colors ${
+                      className={`menu-item text-menu flex items-center gap-2 tracking-wide uppercase transition-colors ${
                         isActive ? 'text-gold' : 'hover:text-gold text-white'
                       }`}
                     >
@@ -104,7 +104,7 @@ export function HeaderClient({ items }: { items: NavItem[] }) {
           <div className="mobile-menu flex items-center gap-4 lg:hidden">
             <button
               onClick={() => setMobileMenuOpen((v) => !v)}
-              className="relative inline-flex h-6 w-6 items-center justify-center text-white"
+              className="relative inline-flex h-6 w-6 cursor-pointer items-center justify-center text-white"
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileMenuOpen}
               aria-controls={panelId}
