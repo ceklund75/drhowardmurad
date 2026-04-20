@@ -266,6 +266,7 @@ export const FRAGMENT_PAGE_FIELDS = `
       newsletterHeading
       newsletterSubheading
       newsletterButtonLabel
+      enableForm
     }
   }
 `

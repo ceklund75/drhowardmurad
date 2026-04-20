@@ -6,7 +6,13 @@ interface PageNewsletterCtaProps {
 }
 
 export function PageNewsletterCta({ cta }: PageNewsletterCtaProps) {
-  const { newsletterBgColor, newsletterHeading, newsletterSubheading, newsletterButtonLabel } = cta
+  const {
+    newsletterBgColor,
+    newsletterHeading,
+    newsletterSubheading,
+    newsletterButtonLabel,
+    enableForm,
+  } = cta
 
   return (
     <section className={newsletterBgColor ?? 'bg-gray-alt'}>
@@ -22,9 +28,11 @@ export function PageNewsletterCta({ cta }: PageNewsletterCtaProps) {
               <p className="text-[var(--color-medium-purple)]">{newsletterSubheading}</p>
             )}
 
-            <div className="mt-4">
-              <NewsletterInlineForm buttonLabel={newsletterButtonLabel || 'Sign Up'} />
-            </div>
+            {enableForm && (
+              <div className="mt-4">
+                <NewsletterInlineForm buttonLabel={newsletterButtonLabel || 'Sign Up'} />
+              </div>
+            )}
           </div>
         </div>
       </div>

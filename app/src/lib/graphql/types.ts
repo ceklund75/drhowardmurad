@@ -230,6 +230,7 @@ export interface PageNewsletterCtaACF {
   newsletterHeading?: string
   newsletterSubheading?: string
   newsletterButtonLabel?: string
+  enableForm?: boolean
 }
 
 /**
